@@ -43,18 +43,17 @@ type StepTyper interface {
 	getType() string
 }
 
-type StepProtoType struct {
-	Type string
-}
-
-func (p StepProtoType) getType() string {
-	return p.Type
-}
-
 type RunStep func(TestStep) (StepTyper, []Metric)
+
 type TestStep struct {
 	Common
 	RunF RunStep
+	StepType    string
+	Parameters []string
+}
+
+func (step TestStep) getType() string {
+	return step.StepType
 }
 
 // Result
