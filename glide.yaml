@@ -1,2 +1,10 @@
 package: .
-import: []
+import:
+- package: google.golang.org/grpc
+- package: github.com/sirupsen/logrus
+- package: golang.org/x/crypto
+  subpackages:
+  - ssh/terminal
+- package: github.com/golang/protobuf
+  subpackages:
+  - protoc-gen-go
