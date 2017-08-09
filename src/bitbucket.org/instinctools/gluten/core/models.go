@@ -49,7 +49,8 @@ type TestStep struct {
 	Common
 	RunF RunStep
 	StepType    string
-	Parameters []string
+	Parameters map[string]string
+	Substeps []TestStep
 }
 
 func (step TestStep) getType() string {
