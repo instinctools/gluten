@@ -25,13 +25,13 @@ func (runner *DefaultRunner) Run(c interface{}) {
 		}
 	case TestStep:
 		step := c.(TestStep)
-		typer, metrics := step.RunF(step)
+		stepType, metrics := step.RunF(step)
 		runner.Handler.Handle(StepResult{
 				Metrics: metrics,
 				ElapsedTime: 1,
 				RunID: "id1",
 				Status: "Completed",
-				StepType: typer.getType(),
+				StepType: stepType,
 		})
 	default:
 		panic("Unknow type for running")

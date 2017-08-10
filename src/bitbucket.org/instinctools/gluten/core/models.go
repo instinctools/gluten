@@ -39,22 +39,18 @@ func (tcase *TestCase) Add(step TestStep) {
 }
 
 // Step
-type StepTyper interface {
-	getType() string
-}
+type RunStep func(TestStep) (string, []Metric)
+type BeforeStep func(TestStep)
 
-type RunStep func(TestStep) (StepTyper, []Metric)
+func DoNothing(step TestStep){
+}
 
 type TestStep struct {
 	Common
+	BeforeF BeforeStep
 	RunF RunStep
-	StepType    string
 	Parameters map[string]string
 	Substeps []TestStep
-}
-
-func (step TestStep) getType() string {
-	return step.StepType
 }
 
 // Result
