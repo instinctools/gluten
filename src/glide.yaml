@@ -1,5 +1,11 @@
 package: .
 import:
+- package: github.com/golang/protobuf
+  subpackages:
+  - proto
+- package: google.golang.org/grpc
+  version: v1.5.1
+- package: github.com/julienschmidt/httprouter
 - package: github.com/sirupsen/logrus
   version: 1.0.2
 - package: gopkg.in/gemnasium/logrus-airbrake-hook.v2
