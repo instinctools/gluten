@@ -1,0 +1,8 @@
+package: .
+import:
+- package: github.com/golang/protobuf
+  subpackages:
+  - proto
+- package: google.golang.org/grpc
+  version: v1.5.1
+- package: github.com/julienschmidt/httprouter
