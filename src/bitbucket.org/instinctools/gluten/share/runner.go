@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-    _ "github.com/lib/pq"
     "gluten/src/bitbucket.org/instinctools/gluten/share/prst"
 )
 
