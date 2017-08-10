@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Created by .ignore support plugin (hsz.mobi)
 ### Go template
 # Binaries for programs and plugins
@@ -20,3 +21,7 @@
 vendor/
 pkg/
 src/glide.lock
+/.project
+/src/glide.lock
+/src/vendor/
+/pkg/
