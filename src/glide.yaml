@@ -1,0 +1,8 @@
+package: .
+import:
+- package: github.com/sirupsen/logrus
+  version: 1.0.2
+- package: gopkg.in/gemnasium/logrus-airbrake-hook.v2
+  version: v3.0.1
+- package: gopkg.in/airbrake/gobrake.v3
+  version: v3.0.1
