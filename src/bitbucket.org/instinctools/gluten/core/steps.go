@@ -7,6 +7,34 @@ import (
 const TYPE_REQUEST string = "REQUEST"
 const TYPE_COMPOSITE string = "COMPOSITE"
 
+const GET_REQUEST_STEP = "GET_REQUEST_STEP"
+const COMPOSITE_STEP = "COMPOSITE_STEP"
+const REPEAT_STEP = "REPEAT_STEP"
+const PARALLEL_STEP = "PARALLEL_STEP"
+
+// Step registry & Step factory
+type newStepF func(name string, params map[string]interface{}, substeps []TestStep) TestStep
+var stepFactories = make(map[string]newStepF)
+
+func RegisterStepFactory(name string, factory newStepF) {
+    if factory == nil {
+        panic("Factory does not exist.")
+    }
+    stepFactories[name] = factory
+}
+
+func NewStep(step string, name string, params map[string]interface{}, substeps []TestStep) TestStep{
+	return stepFactories[step](name, params, substeps)
+}
+
+func init() {
+    RegisterStepFactory(GET_REQUEST_STEP, newGetRequestStep)
+    RegisterStepFactory(COMPOSITE_STEP, newCompositeStep)
+    RegisterStepFactory(REPEAT_STEP, newRepeaterStep)
+    RegisterStepFactory(PARALLEL_STEP, newParallelStep)
+}
+
+
 //  Requests steps
 //	GetRequestStep
 type GetRequestStep struct {
@@ -14,7 +42,7 @@ type GetRequestStep struct {
 	url string
 }
 
-func newGetRequestStep(name string, params map[string]interface{}, substeps []TestStep) *GetRequestStep {
+func newGetRequestStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
 	//validate and preset parameters
 	url := params["URL"]
 	resolvedurl := ""
@@ -48,6 +76,7 @@ func (step *GetRequestStep) GetStepType() string {
 }
 
 func (step *GetRequestStep) BeforeStep() {
+	//Do nothing
 }
 
 func (step *GetRequestStep) Run() []Metric {
@@ -65,7 +94,7 @@ type CompositeStep struct {
 	BaseTestStep
 }
 
-func newCompositeStep(name string, params map[string]interface{}, substeps []TestStep) *CompositeStep {
+func newCompositeStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
 	//validate and preset parameters
 	return &CompositeStep{
 		BaseTestStep{Common{name}, params, substeps},
@@ -105,7 +134,7 @@ type RepeaterStep struct {
 	repeats int
 }
 
-func newRepeaterStep(name string, params map[string]interface{}, substeps []TestStep) *RepeaterStep {
+func newRepeaterStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
 	//validate and preset parameters
 	rawRepeats := params["REPEATS"]
 	var resolvedRepeats int
@@ -156,7 +185,7 @@ type ParallelStep struct {
 	threads int
 }
 
-func newParallelStep(name string, params map[string]interface{}, substeps []TestStep) *ParallelStep {
+func newParallelStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
 	//validate and preset parameters
 	//validate and preset parameters
 	rawThreads := params["THREADS"]
@@ -196,9 +225,7 @@ func (step *ParallelStep) BeforeStep() {
 func (step *ParallelStep) Run() []Metric {
 	success_repeats := 0
 	for i := 0; i < step.threads; i++ {
-		go func() {
-			step.CompositeStep.Run()
-		}()
+		go step.CompositeStep.Run()
 		success_repeats++
 	}
 	return []Metric{Metric{Key: "SUCCESS_REPEATS", Val: success_repeats}}

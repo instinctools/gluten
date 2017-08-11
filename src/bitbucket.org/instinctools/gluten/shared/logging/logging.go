@@ -11,7 +11,7 @@ type Fields map[string]interface{}
 
 func init() {
 	// Log as JSON instead of the default ASCII formatter.
-	logger.Formatter = &log.JSONFormatter{}
+	logger.Formatter = &log.TextFormatter{}
 
 	// Output to stdout instead of the default stderr
 	// Can be any io.Writer, see below for File example
