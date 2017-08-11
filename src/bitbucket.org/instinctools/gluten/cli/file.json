@@ -1,0 +1,45 @@
+{
+  "project": {
+    "name": "111111",
+    "testSuits": [
+      {
+        "name": "222222",
+        "testCases": [
+          {
+            "name": "333333",
+            "testSteps": [
+              {
+                "name": "444444",
+                "type": "GETRequest",
+                "params": [
+                  {
+                    "key": "URL",
+                    "value": "https://google.com"
+                  },
+                  {
+                    "key": "HEADER",
+                    "value": "AUTHENTICATION: Barrier (jgpoqmoglih1p9j9)"
+                  }
+                ]
+              },
+              {
+                "name": "444444",
+                "type": "POSTRequest",
+                "params": [
+                  {
+                    "key": "URL",
+                    "value": "https://google.com"
+                  },
+                  {
+                    "key": "BODY",
+                    "value": "Dima molodec toghe"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
