@@ -1,12 +1,14 @@
 package: .
 import:
-- package: google.golang.org/grpc
-- package: github.com/sirupsen/logrus
-- package: golang.org/x/crypto
-  subpackages:
-  - ssh/terminal
 - package: github.com/golang/protobuf
   subpackages:
-  - protoc-gen-go
-- package: github.com/jinzhu/gorm
-  version: ~1.0.0
+  - proto
+- package: google.golang.org/grpc
+  version: v1.5.1
+- package: github.com/julienschmidt/httprouter
+- package: github.com/sirupsen/logrus
+  version: 1.0.2
+- package: gopkg.in/gemnasium/logrus-airbrake-hook.v2
+  version: v3.0.1
+- package: gopkg.in/airbrake/gobrake.v3
+  version: v3.0.1
