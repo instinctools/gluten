@@ -1,28 +1,104 @@
 package core
 
-import ()
+import (
+)
 
+//Common
+type Common struct {
+	Name string
+}
 
-
+// Project
 type Project struct {
-	Name      string
+	Common
 	Scenarios []TestScenario
 }
 
-func (p *Project) addScenario(ts TestScenario) {
+func (p *Project) Add(ts TestScenario) {
 	p.Scenarios = append(p.Scenarios, ts)
 }
 
+func (p *Project) GetAllSteps() [] TestStep {
+	steps := []TestStep{}
+	for _, scenario := range p.Scenarios {
+		for _, tcase := range scenario.Cases {
+			for _, step := range tcase.Steps {
+				steps = append (steps, step)
+				collectSubSteps(step, steps)
+			}
+		}	
+	}
+	return steps
+}
+
+func collectSubSteps(t TestStep, accum []TestStep) {
+	for _, tstep := range t.GetSubSteps() {
+		accum = append (accum, tstep)
+		if len (tstep.GetSubSteps()) != 0 {
+			collectSubSteps(tstep, accum)
+		}
+	}
+}
+
+// Scenario
 type TestScenario struct {
-	Name  string
+	Common
 	Cases []TestCase
 }
 
+func (ts *TestScenario) Add(tc TestCase) {
+	ts.Cases = append(ts.Cases, tc)
+}
+
+// Case
 type TestCase struct {
-	Name  string
+	Common
 	Steps []TestStep
 }
 
-type TestStep struct {
-	Name string
+func (tcase *TestCase) Add(step TestStep) {
+	tcase.Steps = append(tcase.Steps, step)
 }
+
+// Step
+type TestStep interface {
+	GetCommon() Common
+	GetParams() map[string]interface{}
+	GetSubSteps() []TestStep
+	GetStepType() string 
+	
+	BeforeStep()	
+	Run() []Metric
+}
+
+type BaseTestStep struct {
+	Common
+	Parameters map[string]interface{}
+	Substeps []TestStep
+}
+
+
+// Result
+type StepResult struct {
+	ExecutionID string
+	Status      string
+	StepType    string
+	Metrics     []Metric
+}
+
+// Metric
+type Metric struct {
+	Key string
+	Val interface{}
+}
+
+// TestRunner
+type TestRunner interface {
+	Run(c interface{})
+}
+
+// ResultHandler
+type ResultHandler interface {
+	Handle(result StepResult)
+}
+
