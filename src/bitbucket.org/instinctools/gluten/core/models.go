@@ -18,6 +18,28 @@ func (p *Project) Add(ts TestScenario) {
 	p.Scenarios = append(p.Scenarios, ts)
 }
 
+func (p *Project) GetAllSteps() [] TestStep {
+	steps := []TestStep{}
+	for _, scenario := range p.Scenarios {
+		for _, tcase := range scenario.Cases {
+			for _, step := range tcase.Steps {
+				steps = append (steps, step)
+				collectSubSteps(step, steps)
+			}
+		}	
+	}
+	return steps
+}
+
+func collectSubSteps(t TestStep, accum []TestStep) {
+	for _, tstep := range t.GetSubSteps() {
+		accum = append (accum, tstep)
+		if len (tstep.GetSubSteps()) != 0 {
+			collectSubSteps(tstep, accum)
+		}
+	}
+}
+
 // Scenario
 type TestScenario struct {
 	Common
@@ -39,19 +61,22 @@ func (tcase *TestCase) Add(step TestStep) {
 }
 
 // Step
-type RunStep func(TestStep) (string, []Metric)
-type BeforeStep func(TestStep)
-
-func DoNothing(step TestStep){
+type TestStep interface {
+	GetCommon() Common
+	GetParams() map[string]interface{}
+	GetSubSteps() []TestStep
+	GetStepType() string 
+	
+	BeforeStep()	
+	Run() []Metric
 }
 
-type TestStep struct {
+type BaseTestStep struct {
 	Common
-	BeforeF BeforeStep
-	RunF RunStep
-	Parameters map[string]string
+	Parameters map[string]interface{}
 	Substeps []TestStep
 }
+
 
 // Result
 type StepResult struct {
@@ -65,7 +90,7 @@ type StepResult struct {
 // Metric
 type Metric struct {
 	Key string
-	Val string
+	Val interface{}
 }
 
 // TestRunner
