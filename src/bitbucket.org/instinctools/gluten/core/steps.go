@@ -187,7 +187,6 @@ type ParallelStep struct {
 
 func newParallelStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
 	//validate and preset parameters
-	//validate and preset parameters
 	rawThreads := params["THREADS"]
 	var resolvedThreads int
 	switch rawThreads.(type) {

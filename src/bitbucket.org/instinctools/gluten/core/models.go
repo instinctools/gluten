@@ -80,9 +80,8 @@ type BaseTestStep struct {
 
 // Result
 type StepResult struct {
-	RunID       string
+	ExecutionID string
 	Status      string
-	ElapsedTime int16
 	StepType    string
 	Metrics     []Metric
 }

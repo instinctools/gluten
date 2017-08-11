@@ -12,10 +12,10 @@ type ProjectModifier interface {
 
 type SplitLoadModifier struct {
 	
-	loadSpliter LoadSplitter
 	
 }
 
+/*
 func (m *SplitLoadModifier) Modify(p core.Project) core.Project {
 	for _, tstep := range p.GetAllSteps() {
 		newSteps := m.loadSpliter.Split(tstep)
@@ -26,3 +26,4 @@ func (m *SplitLoadModifier) Modify(p core.Project) core.Project {
 	return p
 }
 
+*/
