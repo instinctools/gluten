@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-    "gluten/src/bitbucket.org/instinctools/gluten/share/prst"
+    "gluten/share/prst"
 )
 
 func main() {

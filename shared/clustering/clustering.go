@@ -1,7 +1,7 @@
 package clustering
 
 import (
-	core "bitbucket.org/instinctools/gluten/core"
+	core "gluten/core"
 )
 
 const CLUSTER_WRAPPER_STEP = "CLUSTER_WRAPPER_STEP"

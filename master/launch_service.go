@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
+	pb "gluten/cli/proto_service"
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

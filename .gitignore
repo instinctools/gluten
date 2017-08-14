@@ -3,3 +3,6 @@
 /src/vendor/
 /bin/
 /pkg/
+.idea/
+glide.lock
+vendor/

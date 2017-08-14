@@ -1,7 +1,7 @@
 package main
 
 import (
-	core "bitbucket.org/instinctools/gluten/core"
+	core "gluten/core"
 //	log "bitbucket.org/instinctools/gluten/shared/logging"
 	"time"	
 )

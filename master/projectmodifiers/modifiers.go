@@ -1,7 +1,7 @@
 package projectmodifiers
 
 import (
-	core "bitbucket.org/instinctools/gluten/core"
+	core "gluten/core"
 )
 
 type ProjectModifier interface {

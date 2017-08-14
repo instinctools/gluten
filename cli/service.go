@@ -6,9 +6,6 @@ import (
 	"log"
 )
 
-//for example
-const default_path string = "/home/INSTINCTOOLS/[username]/go-tutorial/src/cli/file.json"
-
 func ReadJsonFile(pathToFile string) string {
 	plan, _ := ioutil.ReadFile(pathToFile)
 	data := JsonModel{}
