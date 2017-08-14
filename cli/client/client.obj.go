@@ -2,12 +2,13 @@ package client
 
 import (
 	"log"
+
+	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 )
 
-func LaunchClient(address string, json string)  {
+func LaunchClient(address string, json string) {
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -16,7 +17,6 @@ func LaunchClient(address string, json string)  {
 	}
 	defer conn.Close()
 	c := pb.NewProtoServiceClient(conn)
-
 
 	r, err := c.SendConfig(context.Background(), &pb.ParamsRequest{Url: address, Body: json})
 	if err != nil {

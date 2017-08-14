@@ -1,13 +1,14 @@
 package main
 
 import (
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 	"flag"
 	"fmt"
-	"golang.org/x/net/context"
 	"log"
 	"os"
 	"strings"
+
+	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
+	"golang.org/x/net/context"
 )
 
 const separator string = ":"
@@ -52,6 +53,5 @@ func main() {
 		rpc_port := separator + *rpcCommand
 		LaunchServer(rpc_port)
 
-		
 	}
 }

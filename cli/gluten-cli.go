@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
 	obj "bitbucket.org/instinctools/gluten/cli/client"
 )
 
@@ -30,7 +31,7 @@ func main() {
 
 	//run command
 	masterCommand := runOwnerCommand.String("m", "", "-master, [address:port]")
-	pathToFileCommand := runOwnerCommand.String("pf", "", "-path_to_file, [filename]." +
+	pathToFileCommand := runOwnerCommand.String("pf", "", "-path_to_file, [filename]."+
 		" If the file path is not specified, it will use the standard path ")
 
 	//generate command
@@ -57,7 +58,7 @@ func main() {
 		if *masterCommand == "" || *pathToFileCommand == "" {
 			runOwnerCommand.PrintDefaults()
 			os.Exit(1)
-		}else {
+		} else {
 			json := ReadJsonFile(*pathToFileCommand)
 			obj.LaunchClient(*masterCommand, json)
 			os.Exit(1)
@@ -68,7 +69,7 @@ func main() {
 		if *autoGenerateFileCommand == "" {
 			generateOwnerCommand.PrintDefaults()
 			os.Exit(1)
-		}else {
+		} else {
 			AutoGenerateConfig(*autoGenerateFileCommand)
 			os.Exit(1)
 		}

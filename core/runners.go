@@ -1,9 +1,5 @@
 package core
 
-import (
-
-)
-
 type DefaultRunner struct {
 	Handler ResultHandler
 }
@@ -12,7 +8,7 @@ func (runner *DefaultRunner) Run(c interface{}) {
 	//TODO - generate id here
 }
 
-func (runner *DefaultRunner) run1(c interface{}, execId string){
+func (runner *DefaultRunner) run1(c interface{}, execId string) {
 	//TODO - fix code dup in switch
 	switch c.(type) {
 	case Project:
@@ -31,14 +27,13 @@ func (runner *DefaultRunner) run1(c interface{}, execId string){
 		step := c.(TestStep)
 		metrics := step.Run()
 		runner.Handler.Handle(StepResult{
-				Metrics: metrics,
-				ExecutionID: execId,
-				Status: "Completed",
-				StepType: step.GetStepType(),
+			Metrics:     metrics,
+			ExecutionID: execId,
+			Status:      "Completed",
+			StepType:    step.GetStepType(),
 		})
 	default:
 		panic("Unknow type for running")
 	}
-	
-}
 
+}

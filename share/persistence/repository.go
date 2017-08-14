@@ -14,14 +14,14 @@ func CloseConnection() {
 	db.Close()
 }
 
-func CreateExecution(execution Execution) Execution{
+func CreateExecution(execution Execution) Execution {
 	tx := db.Begin()
 	err := tx.Create(&execution).Error
 	if err != nil {
 		tx.Rollback()
 	}
 	tx.Commit()
-	
+
 	return execution
 }
 

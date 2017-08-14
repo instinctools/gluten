@@ -1,8 +1,9 @@
 package logging
 
 import (
-	log "github.com/sirupsen/logrus"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var logger = log.New()
@@ -21,9 +22,6 @@ func init() {
 	logger.Level = log.DebugLevel
 }
 
-
 func WithFields(fields Fields) *log.Entry {
 	return logger.WithFields(log.Fields(fields))
 }
-
-

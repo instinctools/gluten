@@ -7,13 +7,13 @@ import (
 const CLUSTER_WRAPPER_STEP = "CLUSTER_WRAPPER_STEP"
 
 func init() {
-    core.RegisterStepFactory(CLUSTER_WRAPPER_STEP, newClusteringWrapperStep)
+	core.RegisterStepFactory(CLUSTER_WRAPPER_STEP, newClusteringWrapperStep)
 }
 
 //ClusteringWrapperStep
 type ClusteringWrapperStep struct {
 	core.CompositeStep
-	cluster *ClusterContext
+	cluster     *ClusterContext
 	wrappedStep core.TestStep
 }
 
@@ -30,7 +30,7 @@ func newClusteringWrapperStep(name string, params map[string]interface{}, subste
 	if len(substeps) != 1 {
 		panic("Number of sub steps can't be different then 1")
 	}
-	
+
 	return &ClusteringWrapperStep{
 		core.CompositeStep{core.BaseTestStep{core.Common{name}, params, substeps}},
 		&resolvedcluster,
@@ -75,13 +75,10 @@ func (node *ClusterNode) SubmitAndExecute(step core.TestStep) {
 }
 
 type ClusterContext struct {
-	
 	nodes []ClusterNode
-	
 }
 
 func (context *ClusterContext) GetNodes() []ClusterNode {
 	return context.nodes
 
 }
-

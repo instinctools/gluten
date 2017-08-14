@@ -5,14 +5,10 @@ import (
 )
 
 type ProjectModifier interface {
-	
 	Modify(p core.Project) core.Project
-	
 }
 
 type SplitLoadModifier struct {
-	
-	
 }
 
 /*
@@ -22,7 +18,7 @@ func (m *SplitLoadModifier) Modify(p core.Project) core.Project {
 		groupingStep := core.NewStep(core.COMPOSITE_STEP, tstep.GetCommon().Name, nil, newSteps)
 		tstep = groupingStep
 	}
-	
+
 	return p
 }
 

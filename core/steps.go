@@ -14,26 +14,26 @@ const PARALLEL_STEP = "PARALLEL_STEP"
 
 // Step registry & Step factory
 type newStepF func(name string, params map[string]interface{}, substeps []TestStep) TestStep
+
 var stepFactories = make(map[string]newStepF)
 
 func RegisterStepFactory(name string, factory newStepF) {
-    if factory == nil {
-        panic("Factory does not exist.")
-    }
-    stepFactories[name] = factory
+	if factory == nil {
+		panic("Factory does not exist.")
+	}
+	stepFactories[name] = factory
 }
 
-func NewStep(step string, name string, params map[string]interface{}, substeps []TestStep) TestStep{
+func NewStep(step string, name string, params map[string]interface{}, substeps []TestStep) TestStep {
 	return stepFactories[step](name, params, substeps)
 }
 
 func init() {
-    RegisterStepFactory(GET_REQUEST_STEP, newGetRequestStep)
-    RegisterStepFactory(COMPOSITE_STEP, newCompositeStep)
-    RegisterStepFactory(REPEAT_STEP, newRepeaterStep)
-    RegisterStepFactory(PARALLEL_STEP, newParallelStep)
+	RegisterStepFactory(GET_REQUEST_STEP, newGetRequestStep)
+	RegisterStepFactory(COMPOSITE_STEP, newCompositeStep)
+	RegisterStepFactory(REPEAT_STEP, newRepeaterStep)
+	RegisterStepFactory(PARALLEL_STEP, newParallelStep)
 }
-
 
 //  Requests steps
 //	GetRequestStep

@@ -1,8 +1,9 @@
-package main 
+package main
 
 import (
 	"fmt"
-    "bitbucket.org/instinctools/gluten/share/persistence"
+
+	"bitbucket.org/instinctools/gluten/share/persistence"
 )
 
 func main() {
@@ -12,16 +13,15 @@ func main() {
 	metrics := []persistence.Metric{metric1, metric2}
 	result := persistence.NewExecutionResult(metrics)
 	execution := persistence.NewExecution("params", result)
-	
+
 	fmt.Println(metrics)
 	fmt.Println(result)
 	fmt.Println(execution)
-	
+
 	fmt.Println(persistence.CreateExecution(execution))
 	executionDB := persistence.GetExecution(1)
 	fmt.Println(executionDB)
-	
+
 	persistence.DeleteExecution(executionDB)
-	
 
 }

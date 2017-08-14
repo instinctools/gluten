@@ -1,8 +1,5 @@
 package core
 
-import (
-)
-
 //Common
 type Common struct {
 	Name string
@@ -18,23 +15,23 @@ func (p *Project) Add(ts TestScenario) {
 	p.Scenarios = append(p.Scenarios, ts)
 }
 
-func (p *Project) GetAllSteps() [] TestStep {
+func (p *Project) GetAllSteps() []TestStep {
 	steps := []TestStep{}
 	for _, scenario := range p.Scenarios {
 		for _, tcase := range scenario.Cases {
 			for _, step := range tcase.Steps {
-				steps = append (steps, step)
+				steps = append(steps, step)
 				collectSubSteps(step, steps)
 			}
-		}	
+		}
 	}
 	return steps
 }
 
 func collectSubSteps(t TestStep, accum []TestStep) {
 	for _, tstep := range t.GetSubSteps() {
-		accum = append (accum, tstep)
-		if len (tstep.GetSubSteps()) != 0 {
+		accum = append(accum, tstep)
+		if len(tstep.GetSubSteps()) != 0 {
 			collectSubSteps(tstep, accum)
 		}
 	}
@@ -65,18 +62,17 @@ type TestStep interface {
 	GetCommon() Common
 	GetParams() map[string]interface{}
 	GetSubSteps() []TestStep
-	GetStepType() string 
-	
-	BeforeStep()	
+	GetStepType() string
+
+	BeforeStep()
 	Run() []Metric
 }
 
 type BaseTestStep struct {
 	Common
 	Parameters map[string]interface{}
-	Substeps []TestStep
+	Substeps   []TestStep
 }
-
 
 // Result
 type StepResult struct {
@@ -101,4 +97,3 @@ type TestRunner interface {
 type ResultHandler interface {
 	Handle(result StepResult)
 }
-
