@@ -1,4 +1,4 @@
-package prst
+package persistence
 
 import (
 	"time"

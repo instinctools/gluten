@@ -1,8 +1,7 @@
-package prst
+package persistence
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 )
 

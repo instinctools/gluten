@@ -1,4 +1,4 @@
-package prst
+package persistence
 
 import (
 	"github.com/jinzhu/gorm"
