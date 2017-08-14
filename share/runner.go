@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-    "gluten/share/persistence"
+    "bitbucket.org/instinctools/gluten/share/persistence"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package core
 
 import (
-	log "gluten/shared/logging"
+	log "bitbucket.org/instinctools/gluten/shared/logging"
 )
 
 type LoggableResultHandler struct {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "gluten/cli/proto_service"
+	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 	"flag"
 	"fmt"
 	"golang.org/x/net/context"
