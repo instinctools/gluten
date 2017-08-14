@@ -26,6 +26,6 @@ type Params struct {
 	Value string `json:"value"`
 }
 
-type JsonModel struct {
+type JSONModel struct {
 	Project Project `json:"project"`
 }

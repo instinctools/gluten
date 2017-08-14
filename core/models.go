@@ -1,11 +1,11 @@
 package core
 
-//Common
+// Common ...
 type Common struct {
 	Name string
 }
 
-// Project
+// Project ...
 type Project struct {
 	Common
 	Scenarios []TestScenario
@@ -37,7 +37,7 @@ func collectSubSteps(t TestStep, accum []TestStep) {
 	}
 }
 
-// Scenario
+// TestScenario ...
 type TestScenario struct {
 	Common
 	Cases []TestCase
@@ -47,7 +47,7 @@ func (ts *TestScenario) Add(tc TestCase) {
 	ts.Cases = append(ts.Cases, tc)
 }
 
-// Case
+// TestCase ...
 type TestCase struct {
 	Common
 	Steps []TestStep
@@ -57,7 +57,7 @@ func (tcase *TestCase) Add(step TestStep) {
 	tcase.Steps = append(tcase.Steps, step)
 }
 
-// Step
+// TestStep ...
 type TestStep interface {
 	GetCommon() Common
 	GetParams() map[string]interface{}
@@ -74,7 +74,7 @@ type BaseTestStep struct {
 	Substeps   []TestStep
 }
 
-// Result
+// StepResult ...
 type StepResult struct {
 	ExecutionID string
 	Status      string
@@ -82,18 +82,18 @@ type StepResult struct {
 	Metrics     []Metric
 }
 
-// Metric
+// Metric ...
 type Metric struct {
 	Key string
 	Val interface{}
 }
 
-// TestRunner
+// TestRunner ...
 type TestRunner interface {
 	Run(c interface{})
 }
 
-// ResultHandler
+// ResultHandler ...
 type ResultHandler interface {
 	Handle(result StepResult)
 }

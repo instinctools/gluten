@@ -6,22 +6,22 @@ import (
 	"log"
 )
 
-func ReadJsonFile(pathToFile string) string {
+func ReadJSONFile(pathToFile string) string {
 	plan, _ := ioutil.ReadFile(pathToFile)
-	data := JsonModel{}
+	data := JSONModel{}
 	err := json.Unmarshal(plan, &data)
 	if err != nil {
-		log.Printf("File not found", err)
+		log.Println("File not found", err)
 	}
 	str, err := json.Marshal(data)
 	if err != nil {
-		log.Printf("Bad convert", err)
+		log.Println("Bad convert", err)
 	}
 	return string(str)
 }
 
 func AutoGenerateConfig(filename string) {
-	generateJson := JsonModel{
+	generateJSON := JSONModel{
 		Project{
 			Name: "1",
 			TestSuits: []TestSuite{
@@ -42,9 +42,12 @@ func AutoGenerateConfig(filename string) {
 			},
 		},
 	}
-	response, err := json.Marshal(generateJson)
+	response, err := json.Marshal(generateJSON)
 	if err != nil {
-		log.Printf("Bad convert", err)
+		log.Fatal("Bad convert", err)
 	}
-	ioutil.WriteFile(filename, response, 0644)
+	err = ioutil.WriteFile(filename, response, 0644)
+	if err != nil {
+		log.Fatal("Fatal error for writing", err)
+	}
 }

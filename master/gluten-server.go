@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
 	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 	"golang.org/x/net/context"
@@ -13,25 +12,14 @@ import (
 
 const separator string = ":"
 
-type stringList []string
-
-func (s *stringList) String() string {
-	return fmt.Sprintf("%v", *s)
-}
-
-func (s *stringList) Set(value string) error {
-	*s = strings.Split(value, ",")
-	return nil
-}
-
 type server struct{}
 
 func (s *server) SendConfig(ctx context.Context, in *pb.ParamsRequest) (*pb.ReplyMessage, error) {
-	log.Println("Request body: %v", in.Body)
+	log.Println("Request body: ", in.Body)
 	return &pb.ReplyMessage{Message: "Good day " + "sir."}, nil
 }
 
-func main() {
+func RunServer() {
 
 	webCommand := flag.String("web-port", "", "port for start web-server, [:port]")
 	rpcCommand := flag.String("rpc-port", "", "port for create RPC-server, [:port].")
@@ -48,10 +36,10 @@ func main() {
 		os.Exit(1)
 	} else {
 		fmt.Println("Server is started")
-		web_port := separator + *webCommand
-		LaunchWebServer(web_port)
-		rpc_port := separator + *rpcCommand
-		LaunchServer(rpc_port)
+		webPort := separator + *webCommand
+		LaunchWebServer(webPort)
+		rpcPort := separator + *rpcCommand
+		LaunchServer(rpcPort)
 
 	}
 }

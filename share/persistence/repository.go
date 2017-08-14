@@ -31,8 +31,9 @@ func GetExecution(id uint) Execution {
 	return execution
 }
 
-// FIXME: Only one delete operation is needed
+// DeleteExecution ...
 func DeleteExecution(execution Execution) {
+	//TODO: Only one delete operation is needed
 	db.Delete(&execution.Result.Metrics)
 	db.Delete(&execution.Result)
 	db.Delete(&execution)

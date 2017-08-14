@@ -2,15 +2,18 @@ package core
 
 import (
 	"net/http"
+	"log"
 )
 
-const TYPE_REQUEST string = "REQUEST"
-const TYPE_COMPOSITE string = "COMPOSITE"
-
-const GET_REQUEST_STEP = "GET_REQUEST_STEP"
-const COMPOSITE_STEP = "COMPOSITE_STEP"
-const REPEAT_STEP = "REPEAT_STEP"
-const PARALLEL_STEP = "PARALLEL_STEP"
+// TypeComposite & GetRequestStepConstant for global export
+const (
+	TypeComposite          string = "COMPOSITE"
+	typeRequest            string = "REQUEST"
+	GetRequestStepConstant        = "GetRequestStep"
+	compositeStep                 = "compositeStep"
+	repeatStep                    = "repeatStep"
+	parallelStep                  = "parallelStep"
+)
 
 // Step registry & Step factory
 type newStepF func(name string, params map[string]interface{}, substeps []TestStep) TestStep
@@ -29,14 +32,13 @@ func NewStep(step string, name string, params map[string]interface{}, substeps [
 }
 
 func init() {
-	RegisterStepFactory(GET_REQUEST_STEP, newGetRequestStep)
-	RegisterStepFactory(COMPOSITE_STEP, newCompositeStep)
-	RegisterStepFactory(REPEAT_STEP, newRepeaterStep)
-	RegisterStepFactory(PARALLEL_STEP, newParallelStep)
+	RegisterStepFactory(GetRequestStepConstant, newGetRequestStep)
+	RegisterStepFactory(compositeStep, newCompositeStep)
+	RegisterStepFactory(repeatStep, newRepeaterStep)
+	RegisterStepFactory(parallelStep, newParallelStep)
 }
 
-//  Requests steps
-//	GetRequestStep
+//GetRequestStep ...
 type GetRequestStep struct {
 	BaseTestStep
 	url string
@@ -72,7 +74,7 @@ func (step *GetRequestStep) GetSubSteps() []TestStep {
 }
 
 func (step *GetRequestStep) GetStepType() string {
-	return TYPE_REQUEST
+	return typeRequest
 }
 
 func (step *GetRequestStep) BeforeStep() {
@@ -82,14 +84,16 @@ func (step *GetRequestStep) BeforeStep() {
 func (step *GetRequestStep) Run() []Metric {
 	resp, err := http.Get(step.url)
 	if err != nil {
-		return []Metric{Metric{Key: "STATUS", Val: err.Error()}}
+		return []Metric{{Key: "STATUS", Val: err.Error()}}
 	}
-	resp.Body.Close()
-	return []Metric{Metric{Key: "STATUS", Val: resp.Status}}
+	err = resp.Body.Close()
+	if err != nil {
+		log.Fatal("Error closing", err)
+	}
+	return []Metric{{Key: "STATUS", Val: resp.Status}}
 }
 
-// Composite steps
-//	CompositeStep
+//CompositeStep ...
 type CompositeStep struct {
 	BaseTestStep
 }
@@ -114,7 +118,7 @@ func (step *CompositeStep) GetSubSteps() []TestStep {
 }
 
 func (step *CompositeStep) GetStepType() string {
-	return TYPE_COMPOSITE
+	return TypeComposite
 }
 
 func (step *CompositeStep) BeforeStep() {
@@ -128,7 +132,7 @@ func (step *CompositeStep) Run() []Metric {
 	return []Metric{}
 }
 
-//	RepeaterStep
+//RepeaterStep ...
 type RepeaterStep struct {
 	CompositeStep
 	repeats int
@@ -164,22 +168,22 @@ func (step *RepeaterStep) GetSubSteps() []TestStep {
 }
 
 func (step *RepeaterStep) GetStepType() string {
-	return TYPE_COMPOSITE
+	return TypeComposite
 }
 
 func (step *RepeaterStep) BeforeStep() {
 }
 
 func (step *RepeaterStep) Run() []Metric {
-	success_repeats := 0
+	successRepeats := 0
 	for i := 0; i < step.repeats; i++ {
 		step.CompositeStep.Run()
-		success_repeats++
+		successRepeats++
 	}
-	return []Metric{Metric{Key: "SUCCESS_REPEATS", Val: success_repeats}}
+	return []Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}}
 }
 
-//	ParallelStep
+//ParallelStep ...
 type ParallelStep struct {
 	CompositeStep
 	threads int
@@ -215,17 +219,17 @@ func (step *ParallelStep) GetSubSteps() []TestStep {
 }
 
 func (step *ParallelStep) GetStepType() string {
-	return TYPE_COMPOSITE
+	return TypeComposite
 }
 
 func (step *ParallelStep) BeforeStep() {
 }
 
 func (step *ParallelStep) Run() []Metric {
-	success_repeats := 0
+	successRepeats := 0
 	for i := 0; i < step.threads; i++ {
 		go step.CompositeStep.Run()
-		success_repeats++
+		successRepeats++
 	}
-	return []Metric{Metric{Key: "SUCCESS_REPEATS", Val: success_repeats}}
+	return []Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}}
 }

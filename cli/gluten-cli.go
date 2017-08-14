@@ -4,23 +4,13 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
+
+	"log"
 
 	obj "bitbucket.org/instinctools/gluten/cli/client"
 )
 
-// Create a new type for a list of Strings
-type stringList []string
-
-// Implement the flag.Value interface
-func (s *stringList) String() string {
-	return fmt.Sprintf("%v", *s)
-}
-
-func (s *stringList) Set(value string) error {
-	*s = strings.Split(value, ",")
-	return nil
-}
+var err error
 
 func main() {
 	//lists command
@@ -41,14 +31,16 @@ func main() {
 		fmt.Println("Command is wrong. Try again")
 		os.Exit(1)
 	}
-
 	switch os.Args[1] {
 	case "run":
-		runOwnerCommand.Parse(os.Args[2:])
+		err = runOwnerCommand.Parse(os.Args[2:])
+		NilHandler(err)
 	case "generate":
-		generateOwnerCommand.Parse(os.Args[2:])
+		err = generateOwnerCommand.Parse(os.Args[2:])
+		NilHandler(err)
 	case "help":
-		helpOwnerCommand.Parse(os.Args[2:])
+		err = helpOwnerCommand.Parse(os.Args[2:])
+		NilHandler(err)
 	default:
 		flag.PrintDefaults()
 		os.Exit(1)
@@ -59,7 +51,7 @@ func main() {
 			runOwnerCommand.PrintDefaults()
 			os.Exit(1)
 		} else {
-			json := ReadJsonFile(*pathToFileCommand)
+			json := ReadJSONFile(*pathToFileCommand)
 			obj.LaunchClient(*masterCommand, json)
 			os.Exit(1)
 		}
@@ -81,5 +73,11 @@ func main() {
 		println("For 'generate' command:")
 		generateOwnerCommand.PrintDefaults()
 		os.Exit(1)
+	}
+}
+
+func NilHandler(err error) {
+	if err != nil {
+		log.Fatal("Error", err)
 	}
 }

@@ -8,8 +8,8 @@ type Execution struct {
 	ID         uint `gorm:"primary_key"`
 	Created    int64
 	Parameters string
-	Result     ExecutionResult `gorm:"ForeignKey:ResultId"`
-	ResultId   uint
+	Result     ExecutionResult `gorm:"ForeignKey:ResultID"`
+	ResultID   uint
 }
 
 type ExecutionResult struct {

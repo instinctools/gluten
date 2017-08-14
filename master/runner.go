@@ -1,12 +1,12 @@
 package main
 
 import (
-	core "bitbucket.org/instinctools/gluten/core"
-	//	log "bitbucket.org/instinctools/gluten/shared/logging"
 	"time"
+
+	"bitbucket.org/instinctools/gluten/core"
 )
 
-func main() {
+func RunTestArchitecture() {
 	params1 := make(map[string]interface{})
 	params1["URL"] = "https://google.com"
 
@@ -19,7 +19,7 @@ func main() {
 	case1 := core.TestCase{
 		Common: core.Common{Name: "Case1"},
 		Steps: []core.TestStep{
-			core.NewStep(core.GET_REQUEST_STEP, "Step1", params1, []core.TestStep{}),
+			core.NewStep(core.GetRequestStepConstant, "Step1", params1, []core.TestStep{}),
 		}}
 
 	scenario1 := core.TestScenario{Common: core.Common{Name: "Sc1"}}
