@@ -27,24 +27,7 @@ func main() {
 	//generate command
 	autoGenerateFileCommand := generateOwnerCommand.String("o", "", "-output_file [filename]")
 
-	if len(os.Args) < 2 {
-		fmt.Println("Command is wrong. Try again")
-		os.Exit(1)
-	}
-	switch os.Args[1] {
-	case "run":
-		err = runOwnerCommand.Parse(os.Args[2:])
-		NilHandler(err)
-	case "generate":
-		err = generateOwnerCommand.Parse(os.Args[2:])
-		NilHandler(err)
-	case "help":
-		err = helpOwnerCommand.Parse(os.Args[2:])
-		NilHandler(err)
-	default:
-		flag.PrintDefaults()
-		os.Exit(1)
-	}
+	parseFlagsCommand(runOwnerCommand, generateOwnerCommand, helpOwnerCommand)
 
 	if runOwnerCommand.Parsed() {
 		if *masterCommand == "" || *pathToFileCommand == "" {
@@ -79,5 +62,26 @@ func main() {
 func NilHandler(err error) {
 	if err != nil {
 		log.Fatal("Error", err)
+	}
+}
+
+func parseFlagsCommand(runOwnerCommand *flag.FlagSet, generateOwnerCommand *flag.FlagSet, helpOwnerCommand *flag.FlagSet) {
+	if len(os.Args) < 2 {
+		fmt.Println("Command is wrong. Try again")
+		os.Exit(1)
+	}
+	switch os.Args[1] {
+	case "run":
+		err = runOwnerCommand.Parse(os.Args[2:])
+		NilHandler(err)
+	case "generate":
+		err = generateOwnerCommand.Parse(os.Args[2:])
+		NilHandler(err)
+	case "help":
+		err = helpOwnerCommand.Parse(os.Args[2:])
+		NilHandler(err)
+	default:
+		flag.PrintDefaults()
+		os.Exit(1)
 	}
 }
