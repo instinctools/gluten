@@ -67,7 +67,7 @@ func NilHandler(err error) {
 
 func parseFlagsCommand(runOwnerCommand *flag.FlagSet, generateOwnerCommand *flag.FlagSet, helpOwnerCommand *flag.FlagSet) {
 	if len(os.Args) < 2 {
-		fmt.Println("Command is wrong. Try again")
+		fmt.Println("Command is wrong. Pls try again")
 		os.Exit(1)
 	}
 	switch os.Args[1] {
