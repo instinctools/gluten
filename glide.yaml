@@ -12,3 +12,5 @@ import:
   version: v3.0.1
 - package: gopkg.in/airbrake/gobrake.v3
   version: v3.0.1
+- package: github.com/alecthomas/gometalinter
+  version: ^1.2.1
