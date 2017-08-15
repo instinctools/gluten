@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	obj "./client"
+	obj "bitbucket.org/instinctools/gluten/cli/client"
 )
 
 // Create a new type for a list of Strings

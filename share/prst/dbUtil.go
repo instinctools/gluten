@@ -2,24 +2,22 @@ package prst
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/mattes/migrate"
+	dStub "github.com/mattes/migrate/database/postgres"
+	_ "github.com/mattes/migrate/source/file"
 	"log"
+	"path/filepath"
 )
 
 func InitDb() *gorm.DB {
 	db, err := gorm.Open("postgres", "user=postgres password=1 dbname=gluten_db sslmode=disable")
 	CheckErr(err, "gorm.Open failed")
-//	db.LogMode(true)
+	//	db.LogMode(true)
+	driver, err := dStub.WithInstance(db.DB(), &dStub.Config{})
+	path, err := filepath.Abs("./share/migrations/")
+	m, err := migrate.NewWithDatabaseInstance("file://"+path, "postgres", driver)
 
-	db.DropTable(Execution{})
-	db.DropTable(Metric{})
-	db.DropTable(ExecutionResult{})
-
-	db.AutoMigrate(&ExecutionResult{}, &Execution{}, &Metric{})
-
-	db.Model(&Execution{}).AddForeignKey("result_id", "executions_results(id)", "CASCADE", "CASCADE")
-	db.Model(&Metric{}).AddForeignKey("execution_result_id", "executions_results(id)", "CASCADE", "CASCADE")
-
+	m.Steps(1)
 	return db
 }
 

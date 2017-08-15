@@ -4,7 +4,7 @@ import (
 	"log"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "../proto_service"
+	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 )
 
 func LaunchClient(address string, json string)  {

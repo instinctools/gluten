@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-    "gluten/src/bitbucket.org/instinctools/gluten/share/prst"
+    "bitbucket.org/instinctools/gluten/share/prst"
 )
 
 func main() {
@@ -11,6 +11,7 @@ func main() {
 	metric2 := prst.NewMetric("2key", "2Value")
 	metrics := []prst.Metric{metric1, metric2}
 	result := prst.NewExecutionResult(metrics)
+	
 	execution := prst.NewExecution("params", result)
 	
 	fmt.Println(metrics)
@@ -21,7 +22,7 @@ func main() {
 	executionDB := prst.GetExecution(1)
 	fmt.Println(executionDB)
 	
-	prst.DeleteExecution(executionDB)
+//	prst.DeleteExecution(executionDB)
 	
 
 }

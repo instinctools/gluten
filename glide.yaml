@@ -1,14 +1,24 @@
-package: .
+package: bitbucket.org/instinctools/gluten
 import:
 - package: github.com/golang/protobuf
   subpackages:
   - proto
-- package: google.golang.org/grpc
-  version: v1.5.1
+- package: github.com/jinzhu/gorm
+  version: ~1.0.0
 - package: github.com/julienschmidt/httprouter
+  version: ~1.1.0
+- package: github.com/mattes/migrate
+  version: ~3.0.1
+  subpackages:
+  - database/postgres
+  - source/file
 - package: github.com/sirupsen/logrus
-  version: 1.0.2
-- package: gopkg.in/gemnasium/logrus-airbrake-hook.v2
-  version: v3.0.1
-- package: gopkg.in/airbrake/gobrake.v3
-  version: v3.0.1
+  version: ~1.0.2
+- package: github.com/spf13/cobra
+- package: golang.org/x/net
+  subpackages:
+  - context
+- package: google.golang.org/grpc
+  version: ~1.5.2
+  subpackages:
+  - reflection
