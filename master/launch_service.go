@@ -1,14 +1,15 @@
 package main
 
 import (
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 	"fmt"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
 	"net/http"
+
+	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 	"github.com/julienschmidt/httprouter"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func LaunchServer(address string) {

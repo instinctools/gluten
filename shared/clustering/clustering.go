@@ -1,19 +1,21 @@
 package clustering
 
 import (
-	core "bitbucket.org/instinctools/gluten/core"
+	"bitbucket.org/instinctools/gluten/core"
 )
 
-const CLUSTER_WRAPPER_STEP = "CLUSTER_WRAPPER_STEP"
+const (
+	clusterWrapperStep = "clusterWrapperStep"
+)
 
 func init() {
-    core.RegisterStepFactory(CLUSTER_WRAPPER_STEP, newClusteringWrapperStep)
+	core.RegisterStepFactory(clusterWrapperStep, newClusteringWrapperStep)
 }
 
-//ClusteringWrapperStep
-type ClusteringWrapperStep struct {
+//ClusterWrapperStep ...
+type ClusterWrapperStep struct {
 	core.CompositeStep
-	cluster *ClusterContext
+	cluster     *ClusterContext
 	wrappedStep core.TestStep
 }
 
@@ -30,44 +32,44 @@ func newClusteringWrapperStep(name string, params map[string]interface{}, subste
 	if len(substeps) != 1 {
 		panic("Number of sub steps can't be different then 1")
 	}
-	
-	return &ClusteringWrapperStep{
+
+	return &ClusterWrapperStep{
 		core.CompositeStep{core.BaseTestStep{core.Common{name}, params, substeps}},
 		&resolvedcluster,
 		substeps[0],
 	}
 }
 
-func (step *ClusteringWrapperStep) GetCommon() core.Common {
+func (step *ClusterWrapperStep) GetCommon() core.Common {
 	return step.Common
 }
 
-func (step *ClusteringWrapperStep) GetParams() map[string]interface{} {
+func (step *ClusterWrapperStep) GetParams() map[string]interface{} {
 	return step.Parameters
 }
 
-func (step *ClusteringWrapperStep) GetSubSteps() []core.TestStep {
+func (step *ClusterWrapperStep) GetSubSteps() []core.TestStep {
 	return step.Substeps
 }
 
-func (step *ClusteringWrapperStep) GetStepType() string {
-	return core.TYPE_COMPOSITE
+func (step *ClusterWrapperStep) GetStepType() string {
+	return core.TypeComposite
 }
 
-func (step *ClusteringWrapperStep) BeforeStep() {
+func (step *ClusterWrapperStep) BeforeStep() {
 	//validate and preset parameters
 }
 
-func (step *ClusteringWrapperStep) Run() []core.Metric {
+func (step *ClusterWrapperStep) Run() []core.Metric {
 	for _, s := range step.cluster.GetNodes() {
 		s.SubmitAndExecute(step.wrappedStep)
 	}
 	return []core.Metric{}
 }
 
-//Clustering models
+//ClusterNode ...
 type ClusterNode struct {
-	url string
+	//url string
 }
 
 func (node *ClusterNode) SubmitAndExecute(step core.TestStep) {
@@ -75,13 +77,10 @@ func (node *ClusterNode) SubmitAndExecute(step core.TestStep) {
 }
 
 type ClusterContext struct {
-	
 	nodes []ClusterNode
-	
 }
 
 func (context *ClusterContext) GetNodes() []ClusterNode {
 	return context.nodes
 
 }
-

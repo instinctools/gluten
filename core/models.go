@@ -1,14 +1,11 @@
 package core
 
-import (
-)
-
-//Common
+// Common ...
 type Common struct {
 	Name string
 }
 
-// Project
+// Project ...
 type Project struct {
 	Common
 	Scenarios []TestScenario
@@ -18,29 +15,29 @@ func (p *Project) Add(ts TestScenario) {
 	p.Scenarios = append(p.Scenarios, ts)
 }
 
-func (p *Project) GetAllSteps() [] TestStep {
+func (p *Project) GetAllSteps() []TestStep {
 	steps := []TestStep{}
 	for _, scenario := range p.Scenarios {
 		for _, tcase := range scenario.Cases {
 			for _, step := range tcase.Steps {
-				steps = append (steps, step)
+				steps = append(steps, step)
 				collectSubSteps(step, steps)
 			}
-		}	
+		}
 	}
 	return steps
 }
 
 func collectSubSteps(t TestStep, accum []TestStep) {
 	for _, tstep := range t.GetSubSteps() {
-		accum = append (accum, tstep)
-		if len (tstep.GetSubSteps()) != 0 {
+		accum = append(accum, tstep)
+		if len(tstep.GetSubSteps()) != 0 {
 			collectSubSteps(tstep, accum)
 		}
 	}
 }
 
-// Scenario
+// TestScenario ...
 type TestScenario struct {
 	Common
 	Cases []TestCase
@@ -50,7 +47,7 @@ func (ts *TestScenario) Add(tc TestCase) {
 	ts.Cases = append(ts.Cases, tc)
 }
 
-// Case
+// TestCase ...
 type TestCase struct {
 	Common
 	Steps []TestStep
@@ -60,25 +57,24 @@ func (tcase *TestCase) Add(step TestStep) {
 	tcase.Steps = append(tcase.Steps, step)
 }
 
-// Step
+// TestStep ...
 type TestStep interface {
 	GetCommon() Common
 	GetParams() map[string]interface{}
 	GetSubSteps() []TestStep
-	GetStepType() string 
-	
-	BeforeStep()	
+	GetStepType() string
+
+	BeforeStep()
 	Run() []Metric
 }
 
 type BaseTestStep struct {
 	Common
 	Parameters map[string]interface{}
-	Substeps []TestStep
+	Substeps   []TestStep
 }
 
-
-// Result
+// StepResult ...
 type StepResult struct {
 	ExecutionID string
 	Status      string
@@ -86,19 +82,18 @@ type StepResult struct {
 	Metrics     []Metric
 }
 
-// Metric
+// Metric ...
 type Metric struct {
 	Key string
 	Val interface{}
 }
 
-// TestRunner
+// TestRunner ...
 type TestRunner interface {
 	Run(c interface{})
 }
 
-// ResultHandler
+// ResultHandler ...
 type ResultHandler interface {
 	Handle(result StepResult)
 }
-
