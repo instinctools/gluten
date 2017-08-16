@@ -4,67 +4,30 @@ import (
 	"bitbucket.org/instinctools/gluten/core"
 )
 
-const (
-	clusterWrapperStep = "clusterWrapperStep"
-)
-
-func init() {
-	core.RegisterStepFactory(clusterWrapperStep, newClusteringWrapperStep)
-}
-
 //ClusterWrapperStep ...
-type ClusterWrapperStep struct {
-	core.CompositeStep
-	cluster     *ClusterContext
-	wrappedStep core.TestStep
+type ClusteredStep struct {
+	core.BaseStep
+	clusterContext *ClusterContext
+	delegate       core.Step
 }
 
-func newClusteringWrapperStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
-	//validate and preset parameters
-	rawCluster := params["URL"]
-	var resolvedcluster ClusterContext
-	switch rawCluster.(type) {
-	case string:
-		resolvedcluster = rawCluster.(ClusterContext)
-	default:
-		panic("Unsupported parameter type")
-	}
-	if len(substeps) != 1 {
-		panic("Number of sub steps can't be different then 1")
-	}
-
-	return &ClusterWrapperStep{
-		core.CompositeStep{core.BaseTestStep{core.Common{name}, params, substeps}},
-		&resolvedcluster,
-		substeps[0],
+func NewClusteredStep(name string, clusterContext ClusterContext, delegate core.Step) *ClusteredStep {
+	return &ClusteredStep{
+		core.BaseStep{Name: name},
+		&clusterContext,
+		delegate,
 	}
 }
 
-func (step *ClusterWrapperStep) GetCommon() core.Common {
-	return step.Common
-}
-
-func (step *ClusterWrapperStep) GetParams() map[string]interface{} {
-	return step.Parameters
-}
-
-func (step *ClusterWrapperStep) GetSubSteps() []core.TestStep {
-	return step.Substeps
-}
-
-func (step *ClusterWrapperStep) GetStepType() string {
-	return core.TypeComposite
-}
-
-func (step *ClusterWrapperStep) BeforeStep() {
+func (step *ClusteredStep) BeforeStep() {
 	//validate and preset parameters
 }
 
-func (step *ClusterWrapperStep) Run() []core.Metric {
-	for _, s := range step.cluster.GetNodes() {
-		s.SubmitAndExecute(step.wrappedStep)
+func (step *ClusteredStep) Run() []core.StepResult {
+	for _, s := range step.clusterContext.GetNodes() {
+		s.SubmitAndExecute(step.delegate)
 	}
-	return []core.Metric{}
+	return []core.StepResult{}
 }
 
 //ClusterNode ...
@@ -72,7 +35,7 @@ type ClusterNode struct {
 	//url string
 }
 
-func (node *ClusterNode) SubmitAndExecute(step core.TestStep) {
+func (node *ClusterNode) SubmitAndExecute(step core.Step) {
 	//TODO - RPC impl here
 }
 
