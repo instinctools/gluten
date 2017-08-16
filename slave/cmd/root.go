@@ -10,8 +10,8 @@ var masterIp, slavePort string
 
 var RootCmd = &cobra.Command{
 	Use:   "gluten-slave",
-	Short: "Short description",
-	Long: `Longer description.. 
+	Short: "Same short gluten description",
+	Long: `Longer gluten description.. 
             feel free to use a few lines here.
             `,
 	Run: func(cmd *cobra.Command, args []string) {
