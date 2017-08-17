@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
+	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	"golang.org/x/net/context"
 )
 

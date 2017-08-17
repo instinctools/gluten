@@ -3,10 +3,9 @@ package client
 import (
 	"log"
 
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
+	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
 )
 
 func LaunchClient(address string, json string) {

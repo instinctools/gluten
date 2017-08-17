@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
+	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	"github.com/julienschmidt/httprouter"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

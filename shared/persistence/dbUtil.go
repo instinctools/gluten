@@ -15,7 +15,7 @@ func InitDb() *gorm.DB {
 	db.LogMode(true)
 	driver, err := dStub.WithInstance(db.DB(), &dStub.Config{})
 	CheckErr(err, "dStub.WithInstance failed")
-	path, err := filepath.Abs("./gluten/share/migrations/")
+	path, err := filepath.Abs("./gluten/shared/persistence/migrations/")
 	CheckErr(err, "filepath.Abs failed")
 	m, err := migrate.NewWithDatabaseInstance("file://"+path, "postgres", driver)
 	CheckErr(err, "migrate.NewWithDatabaseInstancefailed")
