@@ -1,5 +1,5 @@
-/.project
-/src/glide.lock
-/src/vendor/
-/bin/
-/pkg/
+glide.lock
+glide.yaml
+.project
+.idea/
+vendor/
