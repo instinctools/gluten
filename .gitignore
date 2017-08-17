@@ -1,3 +1,5 @@
 glide.lock
 glide.yaml
-/vendor/
+.project
+.idea/
+vendor/

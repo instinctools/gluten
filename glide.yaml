@@ -30,3 +30,5 @@ import:
   version: v3.0.1
 - package: github.com/alecthomas/gometalinter
   version: ^1.2.1
+- package: github.com/google/uuid
+  version: ~0.2.0
