@@ -1,0 +1,24 @@
+<div class="container">
+  <div *ngFor="let ex of executions">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Created</th>
+        <th>Parameters</th>
+        <th>ResultID</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="active">
+        <td>{{ex.ID}}</td>
+        <td>{{ex.Created}}</td>
+        <td>{{ex.Parameters}}</td>
+        <td>{{ex.ResultID}}</td>
+        <td><button class="btn btn-info" (click)="stopExecution(ex.ID)">STOP</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
