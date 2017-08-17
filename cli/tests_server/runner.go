@@ -5,7 +5,7 @@ import (
 	"net"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "bitbucket.org/instinctools/gluten/cli/proto_service"
+	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	"google.golang.org/grpc/reflection"
 )
 
