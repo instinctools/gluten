@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Execution} from "../../model/execution.model";
-import {ExecutionService} from "../../services/execution.service";
+import {ExecutionService} from "../../services/execution/execution.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
@@ -22,6 +22,10 @@ export class ExecutionComponent implements OnInit {
     this.initData();
   }
 
+  showResults(id: number) {
+    this.router.navigate(['/result', id]);
+  }
+
   initData() {
     this.executionService.getAll().subscribe(x => {
         this.executions = x
@@ -29,8 +33,14 @@ export class ExecutionComponent implements OnInit {
     )
   }
 
+  startExecution(id: number) {
+    this.executionService.startExecution(id).subscribe(x => {});
+    console.log("this ID will be start execution on slave  " + id);
+  }
+
   stopExecution(id: number) {
-    console.log("this ID will be stop execution on slave" + id);
+    this.executionService.stopExecution(id).subscribe(x => {});
+    console.log("this ID will be stop execution on slave  " + id);
   }
 
 }

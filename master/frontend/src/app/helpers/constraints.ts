@@ -1,4 +1,9 @@
 export class Constraints {
+
+  public static get separator(): string {
+    return "/";
+  }
+
   public static get baseURL(): string {
     return "http://localhost:8080/api/";
   }
@@ -18,5 +23,9 @@ export class Constraints {
   //temp
   public static get aggregateStatistic(): string {
     return "aggstatistic?type=request"
+  }
+
+  public static get resultURL(): string {
+    return "results/"
   }
 }

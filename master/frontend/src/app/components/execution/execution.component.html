@@ -1,24 +1,35 @@
 <div class="container">
-  <div *ngFor="let ex of executions">
-    <table class="table">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>Created</th>
-        <th>Parameters</th>
-        <th>ResultID</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="active">
-        <td>{{ex.ID}}</td>
-        <td>{{ex.Created}}</td>
-        <td>{{ex.Parameters}}</td>
-        <td>{{ex.ResultID}}</td>
-        <td><button class="btn btn-info" (click)="stopExecution(ex.ID)">STOP</button></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="table table-condensed">
+    <thead>
+    <tr>
+      <th></th>
+      <th>Status</th>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Parameters</th>
+      <th>ResultID</th>
+      <th></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let ex of executions">
+      <td>
+        <button class="btn btn-basic" (click)="showResults(ex.ID)">Go to</button>
+      </td>
+      <td><span class="label label-danger">OFF</span>
+      </td>
+      <td>{{ex.ID}}</td>
+      <td>{{ex.Created}}</td>
+      <td>{{ex.Parameters}}</td>
+      <td>{{ex.ResultID}}</td>
+      <td>
+        <button class="btn btn-info" (click)="startExecution(ex.ID)">Start</button>
+      </td>
+      <td>
+        <button class="btn btn-warning" (click)="stopExecution(ex.ID)">Stop</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>

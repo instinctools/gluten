@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
-	"encoding/json"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
@@ -11,50 +12,71 @@ import (
 
 const BASE_URL string = "/api/"
 
-func GetExecution(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(writer).Encode(generateExecutions())
-	writer.WriteHeader(200)
+type Message struct {
+	ID   uint   `json:"id"`
+	Text string `json:"text"`
 }
 
-func Hello(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(writer).Encode(struct {
-		ID     string
-		Status string
-	}{
-		ID:     "1",
-		Status: "GET",
-	})
-	writer.WriteHeader(200)
+var Result struct {
+	id   uint
+	text string
 }
 
 func main() {
+
 	router := httprouter.New()
 
 	//CORS filter ...
 	handler := cors.Default().Handler(router)
 
 	router.GET(BASE_URL+"executions/", GetExecution)
-	router.GET(BASE_URL, Hello)
-	router.POST(BASE_URL+"stop/", func(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-		writer.Header().Set("Content-Type", "application/json")
-		println(request.Body)
-		writer.WriteHeader(201)
+	router.GET(BASE_URL+"executions/:id/results/", GetResults)
+	router.POST(BASE_URL+"executions/:id/stop/", StopExecution)
+	router.POST(BASE_URL+"executions/", StartExecution)
+
+	router.MethodNotAllowed = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		// not implementation
+		w.WriteHeader(405)
 	})
 
-	http.ListenAndServe(":8080", handler)
+	log.Fatal(http.ListenAndServe(":8080", handler))
+}
+
+func generateResults() []ExecutionResult {
+	return []ExecutionResult{
+		{
+			ID:      12321323,
+			Created: time.Now().UnixNano(),
+			Metrics: []Metric{
+				{ExecutionResultID: 335669, Key: "PUT", Value: "https://facebook.com"},
+			},
+		},
+		{
+			ID:      989565,
+			Created: time.Now().UnixNano(),
+			Metrics: []Metric{
+				{ExecutionResultID: 4111, Key: "GET", Value: "http://google.com"},
+			},
+		},
+		{
+			ID:      113,
+			Created: time.Now().UnixNano(),
+			Metrics: []Metric{
+				{ExecutionResultID: 986, Key: "GET", Value: "http://google.com"},
+			},
+		},
+	}
 }
 
 func generateExecutions() []Execution {
 	return []Execution{
 		{
 			ID:         12312,
-			Created:    3,
+			Created:    time.Now().UnixNano(),
 			Parameters: "smth",
 			Result: ExecutionResult{
 				ID:      12321323,
-				Created: 4,
+				Created: time.Now().UnixNano(),
 				Metrics: []Metric{
 					{ExecutionResultID: 335669, Key: "PUT", Value: "https://facebook.com"},
 				},
@@ -63,16 +85,29 @@ func generateExecutions() []Execution {
 		},
 		{
 			ID:         56436546,
-			Created:    1,
+			Created:    time.Now().UnixNano(),
 			Parameters: "hello dude",
 			Result: ExecutionResult{
 				ID:      989565,
-				Created: 2,
+				Created: time.Now().UnixNano(),
 				Metrics: []Metric{
 					{ExecutionResultID: 4111, Key: "GET", Value: "http://google.com"},
 				},
 			},
 			ResultID: 745,
+		},
+		{
+			ID:         19893,
+			Created:    time.Now().UnixNano(),
+			Parameters: "bye dude",
+			Result: ExecutionResult{
+				ID:      113,
+				Created: time.Now().UnixNano(),
+				Metrics: []Metric{
+					{ExecutionResultID: 986, Key: "GET", Value: "http://google.com"},
+				},
+			},
+			ResultID: 888,
 		},
 	}
 }
