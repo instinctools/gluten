@@ -1,8 +1,8 @@
 package steps
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
 )
 
 //GetRequestStep ...
@@ -45,8 +45,8 @@ func (step *GetRequestStep) BeforeStep() {
 
 func (g *GetRequestStep) MarshalJSON() (b []byte, e error) {
 	return json.Marshal(map[string]string{
-		"type":  "GetRequest",
+		"type": "GetRequest",
 		"name": g.GetName(),
-		"url": g.Url,
+		"url":  g.Url,
 	})
 }

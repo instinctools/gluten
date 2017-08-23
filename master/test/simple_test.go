@@ -1,17 +1,16 @@
-package test
+package simple_test
 
 import (
-	"bitbucket.org/instinctools/gluten/core/steps"
 	"encoding/json"
 	"fmt"
 	"testing"
+
+	"bitbucket.org/instinctools/gluten/core/steps"
+
+	assert "github.com/stretchr/testify/require"
 )
 
-type Model struct {
-	Case steps.TestCase
-}
-
-func TestRunner(t *testing.T) {
+func TestScenarioWithGetRequests(t *testing.T) {
 	case1 := steps.TestCase{
 		Name: "Case1",
 		Steps: []steps.Step{
@@ -19,34 +18,43 @@ func TestRunner(t *testing.T) {
 			steps.NewGetRequestStep("GStep2", "http://google.com"),
 		}}
 
-	fmt.Print("Case obj - ")
-	fmt.Println(case1)
+	testScenario(case1, t)
+}
 
-	scenario1 := steps.Scenario{Name: "Sc1"}
-	scenario1.Add(case1)
+func TestScenarioWithCompositeStep(t *testing.T) {
+	testCase := steps.TestCase{
+		Name: "Case1",
+		Steps: []steps.Step{
+			steps.NewGetRequestStep("GStep1", "http://google.com"),
+			steps.NewGetRequestStep("GStep2", "http://google.com"),
+			steps.NewCompositeStep("CStep1", []steps.Step{
+				steps.NewGetRequestStep("GStep3", "http://google.com"),
+				steps.NewGetRequestStep("GStep4", "http://google.com"),
+			}),
+		}}
 
-	jsonS, err := json.Marshal(scenario1)
+	testScenario(testCase, t)
+}
+
+func testScenario(testCase steps.TestCase, t *testing.T) {
+	originalScenario := steps.Scenario{Name: "Sc1"}
+	originalScenario.Add(testCase)
+	fmt.Printf("Original scenario: %s\n", testCase)
+	originalJson, err := json.Marshal(originalScenario)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
-	str := string(jsonS)
-	fmt.Print("Scenario json - ")
-	fmt.Println(str)
-	scenario2 := steps.Scenario{}
-	err = json.Unmarshal([]byte(jsonS), &scenario2)
+	fmt.Printf("Original scenario json: %s\n", string(originalJson))
+	deserializedScenario := steps.Scenario{}
+	err = json.Unmarshal(originalJson, &deserializedScenario)
 	if err != nil {
-		fmt.Print("48 - ")
-		fmt.Println(err)
+		panic(err)
 	}
-	fmt.Print("Case after unmarsh - ")
-	fmt.Println(scenario2)
-
-	jsonS, err = json.Marshal(scenario2)
+	fmt.Printf("Deserialized scenario: %s\n", deserializedScenario)
+	deserializedScenarioJson, err := json.Marshal(deserializedScenario)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
-	str = string(jsonS)
-	fmt.Print("Case unmarshed json - ")
-	fmt.Println(str)
-
+	fmt.Printf("Deserialized scenario json: %s\n", string(deserializedScenarioJson))
+	assert.Equal(t, originalJson, deserializedScenarioJson)
 }
