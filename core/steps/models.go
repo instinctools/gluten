@@ -1,4 +1,4 @@
-package core
+package steps
 
 type Runnable interface {
 	Run() []StepResult
@@ -85,8 +85,8 @@ type Step interface {
 }
 
 type BaseStep struct {
-	Name     string
-	SubSteps []Step
+	Name     string 
+	SubSteps []Step 
 }
 
 func (step *BaseStep) GetName() string {
@@ -121,3 +121,4 @@ type Metric struct {
 type ResultHandler interface {
 	Handle(result StepResult)
 }
+

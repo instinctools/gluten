@@ -1,20 +1,19 @@
 package steps
 
-import "bitbucket.org/instinctools/gluten/core"
 
 //CompositeStep ...
 type CompositeStep struct {
-	core.BaseStep
+	BaseStep
 }
 
-func NewCompositeStep(name string, subSteps []core.Step) *CompositeStep {
+func NewCompositeStep(name string, subSteps []Step) *CompositeStep {
 	return &CompositeStep{
-		core.BaseStep{Name: name, SubSteps: subSteps},
+		BaseStep{Name: name, SubSteps: subSteps},
 	}
 }
 
-func (step *CompositeStep) Run() []core.StepResult {
-	stepResults := []core.StepResult{}
+func (step *CompositeStep) Run() []StepResult {
+	stepResults := []StepResult{}
 	for _, s := range step.GetSubSteps() {
 		stepResults = append(stepResults, s.Run()...)
 	}

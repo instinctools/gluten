@@ -1,6 +1,5 @@
 package steps
 
-import "bitbucket.org/instinctools/gluten/core"
 
 //RepeaterStep ...
 type RepeaterStep struct {
@@ -10,13 +9,13 @@ type RepeaterStep struct {
 
 func NewRepeaterStep(name string, repeatsCount int) *RepeaterStep {
 	return &RepeaterStep{
-		CompositeStep{core.BaseStep{Name: name}},
+		CompositeStep{BaseStep{Name: name}},
 		repeatsCount,
 	}
 }
 
-func (step *RepeaterStep) Run() []core.StepResult {
-	stepResults := []core.StepResult{}
+func (step *RepeaterStep) Run() []StepResult {
+	stepResults := []StepResult{}
 	for i := 0; i < step.repeats; i++ {
 		stepResults = append(stepResults, step.Run()...)
 	}
