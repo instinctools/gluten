@@ -28,10 +28,3 @@ func LaunchServer(address string) {
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprint(w, "Welcome to the GLuTEN!\n")
 }
-
-func LaunchWebServer(address string) {
-	router := httprouter.New()
-	router.GET("/", Index)
-
-	log.Fatal(http.ListenAndServe(address, router))
-}

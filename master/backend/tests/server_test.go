@@ -7,8 +7,8 @@ import (
 
 	"net/http/httptest"
 
-	controller "bitbucket.org/instinctools/gluten/master/controllers"
-	route "bitbucket.org/instinctools/gluten/master/routes"
+	controller "bitbucket.org/instinctools/gluten/master/backend/controllers"
+	route "bitbucket.org/instinctools/gluten/master/backend/routes"
 
 	"github.com/julienschmidt/httprouter"
 	assert "github.com/stretchr/testify/require"

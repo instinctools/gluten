@@ -8,6 +8,7 @@ import (
 
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	"golang.org/x/net/context"
+	"bitbucket.org/instinctools/gluten/master/backend"
 )
 
 const separator string = ":"
@@ -37,7 +38,7 @@ func RunServer() {
 	} else {
 		fmt.Println("Server is started")
 		webPort := separator + *webCommand
-		LaunchWebServer(webPort)
+		backend.StartWebServer(webPort)
 		rpcPort := separator + *rpcCommand
 		LaunchServer(rpcPort)
 

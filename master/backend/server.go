@@ -1,17 +1,17 @@
-package main
+package backend
 
 import (
 	"log"
 	"net/http"
 
-	controller "bitbucket.org/instinctools/gluten/master/controllers"
-	route "bitbucket.org/instinctools/gluten/master/routes"
+	controller "bitbucket.org/instinctools/gluten/master/backend/controllers"
+	route "bitbucket.org/instinctools/gluten/master/backend/routes"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 )
 
-func main() {
+func StartWebServer(address string) {
 
 	router := httprouter.New()
 
@@ -28,5 +28,5 @@ func main() {
 		w.WriteHeader(405)
 	})
 
-	log.Fatal(http.ListenAndServe(":8080", handler))
+	log.Fatal(http.ListenAndServe(address, handler))
 }
