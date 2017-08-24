@@ -1,21 +1,21 @@
 package steps
 
 import (
-	"net/http"
-
 	"bitbucket.org/instinctools/gluten/core"
+	"net/http"
 )
 
 //GetRequestStep ...
 type GetRequestStep struct {
-	core.BaseStep
-	Url string
+	core.BaseSingleStep
 }
 
 func NewGetRequestStep(name string, url string) *GetRequestStep {
 	return &GetRequestStep{
-		core.BaseStep{Name: name},
-		url,
+		core.BaseSingleStep{
+			core.BaseStep{name},
+			url,
+		},
 	}
 }
 

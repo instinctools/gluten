@@ -34,11 +34,11 @@ func (p *Project) GetSteps() []Step {
 }
 
 func collectSubSteps(t Step) []Step {
-	for _, step := range t.GetSubSteps() {
-		if len(step.GetSubSteps()) != 0 {
-			return append(collectSubSteps(step), step)
-		}
-	}
+//	for _, step := range t.GetSubSteps() {
+//		if len(step.GetSubSteps()) != 0 {
+//			return append(collectSubSteps(step), step)
+//		}
+//	}
 	return []Step{t}
 }
 
@@ -80,27 +80,47 @@ func (c *TestCase) Add(step Step) {
 type Step interface {
 	Runnable
 	GetName() string
-	GetSubSteps() []Step
 	BeforeStep()
 }
 
 type BaseStep struct {
 	Name     string
-	SubSteps []Step
 }
 
 func (step *BaseStep) GetName() string {
 	return step.Name
 }
 
-func (step *BaseStep) GetSubSteps() []Step {
-	return step.SubSteps
-}
-
 func (step *BaseStep) BeforeStep() {
 	//Do nothing
 }
 
+type SingleStep interface {
+	GetUrl() string
+}
+
+type MultipleStep interface {
+	GetSubSteps() []Step
+}
+
+type BaseSingleStep struct {
+	BaseStep
+	Url string
+}
+
+func (st *BaseSingleStep) GetUrl() string {
+	return st.Name
+}
+
+type BaseMultipleStep struct {
+	BaseStep
+	SubSteps []Step
+}
+
+func (st *BaseMultipleStep) GetSubSteps() []Step {
+	return st.SubSteps
+}
+ 
 // StepResult ...
 type StepResult struct {
 	ExecutionID string

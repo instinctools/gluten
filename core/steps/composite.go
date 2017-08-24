@@ -4,12 +4,15 @@ import "bitbucket.org/instinctools/gluten/core"
 
 //CompositeStep ...
 type CompositeStep struct {
-	core.BaseStep
+	core.BaseMultipleStep
 }
 
 func NewCompositeStep(name string, subSteps []core.Step) *CompositeStep {
 	return &CompositeStep{
-		core.BaseStep{Name: name, SubSteps: subSteps},
+		core.BaseMultipleStep{
+			core.BaseStep{name},
+			subSteps,
+		},
 	}
 }
 
