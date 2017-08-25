@@ -12,9 +12,9 @@ type Execution struct {
 }
 
 type ExecutionResult struct {
-	ID      uint `gorm:"primary_key"`
-	Created int64
-	Metrics []Metric
+	ID          uint `gorm:"primary_key"`
+	Created     int64
+	Metrics     []Metric
 	ExecutionID uint
 }
 
