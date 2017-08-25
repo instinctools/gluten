@@ -25,16 +25,27 @@ func CreateExecution(execution Execution) Execution {
 	return execution
 }
 
+func GetExecutions() []Execution {
+	var executions []Execution
+	db.Preload("Result.Metrics").Find(&executions)
+	return executions
+
+}
+
+func GetResults(id uint) []ExecutionResult {
+	var results []ExecutionResult
+	GetExecution(id)
+	db.Preload("Metrics").Find(&results)
+	return results
+
+}
+
 func GetExecution(id uint) Execution {
 	var execution Execution
 	db.Preload("Result.Metrics").First(&execution, id)
 	return execution
 }
 
-// DeleteExecution ...
 func DeleteExecution(execution Execution) {
-	//TODO: Only one delete operation is needed
-	db.Delete(&execution.Result.Metrics)
-	db.Delete(&execution.Result)
 	db.Delete(&execution)
 }

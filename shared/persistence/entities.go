@@ -8,14 +8,14 @@ type Execution struct {
 	ID         uint `gorm:"primary_key"`
 	Created    int64
 	Parameters string
-	Result     ExecutionResult `gorm:"ForeignKey:ResultID"`
-	ResultID   uint
+	Result     []ExecutionResult
 }
 
 type ExecutionResult struct {
 	ID      uint `gorm:"primary_key"`
 	Created int64
 	Metrics []Metric
+	ExecutionID uint
 }
 
 type Metric struct {
@@ -25,22 +25,22 @@ type Metric struct {
 }
 
 func (Execution) TableName() string {
-	return "executions"
+	return "execution"
 }
 
 func (ExecutionResult) TableName() string {
-	return "executions_results"
+	return "execution_result"
 }
 
 func (Metric) TableName() string {
-	return "metrics"
+	return "metric"
 }
 
-func NewExecution(parameters string, result ExecutionResult) Execution {
+func NewExecution(parameters string, results []ExecutionResult) Execution {
 	return Execution{
 		Created:    time.Now().UnixNano(),
 		Parameters: parameters,
-		Result:     result,
+		Result:     results,
 	}
 }
 
