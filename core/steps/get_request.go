@@ -1,25 +1,24 @@
 package steps
 
 import (
+	"encoding/json"
 	"net/http"
-
-	"bitbucket.org/instinctools/gluten/core"
 )
 
 //GetRequestStep ...
 type GetRequestStep struct {
-	core.BaseStep
+	BaseStep
 	Url string
 }
 
 func NewGetRequestStep(name string, url string) *GetRequestStep {
 	return &GetRequestStep{
-		core.BaseStep{Name: name},
+		BaseStep{Name: name},
 		url,
 	}
 }
 
-func (step *GetRequestStep) Run() []core.StepResult {
+func (step *GetRequestStep) Run() []StepResult {
 	//TODO measure time
 	time := 100
 	resp, err := http.Get(step.Url)
@@ -28,11 +27,26 @@ func (step *GetRequestStep) Run() []core.StepResult {
 
 	}
 	if err != nil {
-		return []core.StepResult{{Status: "NOT_OK", Step: step, Error: err}}
+		return []StepResult{{Status: "NOT_OK", Step: step, Error: err}}
 	}
-	return []core.StepResult{{
+	return []StepResult{{
 		Status:  "OK",
 		Step:    step,
-		Metrics: []core.Metric{{Key: "TIME", Val: time}},
+		Metrics: []Metric{{Key: "TIME", Val: time}},
 	}}
+}
+
+func (step *GetRequestStep) GetName() string {
+	return step.Name
+}
+
+func (step *GetRequestStep) BeforeStep() {
+}
+
+func (g *GetRequestStep) MarshalJSON() (b []byte, e error) {
+	return json.Marshal(map[string]string{
+		"type": "GetRequest",
+		"name": g.GetName(),
+		"url":  g.Url,
+	})
 }

@@ -2,8 +2,6 @@ package steps
 
 import (
 	"sync"
-
-	"bitbucket.org/instinctools/gluten/core"
 )
 
 //ParallelStep ...
@@ -12,19 +10,19 @@ type ParallelStep struct {
 	threads int
 }
 
-func NewParallelStep(name string, threadsCount int, subSteps []core.Step) *ParallelStep {
+func NewParallelStep(name string, threadsCount int, subSteps []Step) *ParallelStep {
 	return &ParallelStep{
-		CompositeStep{core.BaseStep{Name: name, SubSteps: subSteps}},
+		CompositeStep{BaseStep{Name: name, SubSteps: subSteps}},
 		threadsCount,
 	}
 }
 
-func (step *ParallelStep) Run() []core.StepResult {
+func (step *ParallelStep) Run() []StepResult {
 	//TODO check the correctness and make improvements
-	stepResults := []core.StepResult{}
+	stepResults := []StepResult{}
 	subStepsCount := len(step.GetSubSteps())
 	if subStepsCount > 0 {
-		asyncResults := make(chan []core.StepResult, subStepsCount)
+		asyncResults := make(chan []StepResult, subStepsCount)
 		var wg sync.WaitGroup
 		wg.Add(subStepsCount)
 
