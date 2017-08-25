@@ -1,8 +1,9 @@
 package steps
 
 import (
-	"encoding/json"
 	"net/http"
+	"encoding/json"
+
 )
 
 //GetRequestStep ...
@@ -13,9 +14,13 @@ type GetRequestStep struct {
 
 func NewGetRequestStep(name string, url string) *GetRequestStep {
 	return &GetRequestStep{
-		BaseStep{Name: name},
+		BaseStep{name},
 		url,
 	}
+}
+
+func (step *GetRequestStep) GetUrl() string {
+	return step.Url
 }
 
 func (step *GetRequestStep) Run() []StepResult {

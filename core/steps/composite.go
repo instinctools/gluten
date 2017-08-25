@@ -7,11 +7,13 @@ import (
 //CompositeStep ...
 type CompositeStep struct {
 	BaseStep
+	SubSteps []Step
 }
 
 func NewCompositeStep(name string, subSteps []Step) *CompositeStep {
 	return &CompositeStep{
-		BaseStep{Name: name, SubSteps: subSteps},
+		BaseStep{name},
+		subSteps,
 	}
 }
 
@@ -25,6 +27,10 @@ func (step *CompositeStep) Run() []StepResult {
 
 func (step *CompositeStep) BeforeStep() {
 	//validate and preset parameters
+}
+
+func (step *CompositeStep) GetSubSteps() []Step {
+	return step.SubSteps
 }
 
 func (step *CompositeStep) MarshalJSON() (b []byte, e error) {

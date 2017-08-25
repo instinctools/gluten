@@ -12,7 +12,10 @@ type ParallelStep struct {
 
 func NewParallelStep(name string, threadsCount int, subSteps []Step) *ParallelStep {
 	return &ParallelStep{
-		CompositeStep{BaseStep{Name: name, SubSteps: subSteps}},
+		CompositeStep{
+			BaseStep{name},
+			subSteps,
+		},
 		threadsCount,
 	}
 }

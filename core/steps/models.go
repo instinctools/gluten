@@ -1,5 +1,9 @@
 package steps
 
+import (
+	"reflect"
+)
+
 type Runnable interface {
 	Run() []StepResult
 }
@@ -34,9 +38,15 @@ func (p *Project) GetSteps() []Step {
 }
 
 func collectSubSteps(t Step) []Step {
-	for _, step := range t.GetSubSteps() {
-		if len(step.GetSubSteps()) != 0 {
-			return append(collectSubSteps(step), step)
+	_, ok := reflect.TypeOf(t).MethodByName("GetSubSteps")
+	if ok {
+		for _, stepValue := range reflect.ValueOf(t).MethodByName("GetSubSteps").Call([]reflect.Value{}) {
+			steps := stepValue.Interface().([]Step)
+			for _, step := range steps {
+				if len(reflect.ValueOf(step).MethodByName("GetSubSteps").Call([]reflect.Value{})) != 0 {
+					return append(collectSubSteps(step), step)
+				}
+			}
 		}
 	}
 	return []Step{t}
@@ -80,27 +90,21 @@ func (c *TestCase) Add(step Step) {
 type Step interface {
 	Runnable
 	GetName() string
-	GetSubSteps() []Step
 	BeforeStep()
 }
 
 type BaseStep struct {
-	Name     string 
-	SubSteps []Step 
+	Name     string
 }
 
 func (step *BaseStep) GetName() string {
 	return step.Name
 }
 
-func (step *BaseStep) GetSubSteps() []Step {
-	return step.SubSteps
-}
-
 func (step *BaseStep) BeforeStep() {
 	//Do nothing
 }
-
+ 
 // StepResult ...
 type StepResult struct {
 	ExecutionID string
@@ -121,4 +125,3 @@ type Metric struct {
 type ResultHandler interface {
 	Handle(result StepResult)
 }
-
