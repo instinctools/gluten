@@ -7,16 +7,19 @@ import (
 
 //GetRequestStep ...
 type GetRequestStep struct {
-	core.BaseSingleStep
+	core.BaseStep
+	Url string
 }
 
 func NewGetRequestStep(name string, url string) *GetRequestStep {
 	return &GetRequestStep{
-		core.BaseSingleStep{
-			core.BaseStep{name},
-			url,
-		},
+		core.BaseStep{name},
+		url,
 	}
+}
+
+func (step *GetRequestStep) GetUrl() string {
+	return step.Url
 }
 
 func (step *GetRequestStep) Run() []core.StepResult {

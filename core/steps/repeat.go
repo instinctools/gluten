@@ -1,7 +1,8 @@
 package steps
 
-import "bitbucket.org/instinctools/gluten/core"
-
+import (
+	"bitbucket.org/instinctools/gluten/core"
+)
 //RepeaterStep ...
 type RepeaterStep struct {
 	CompositeStep
@@ -11,16 +12,14 @@ type RepeaterStep struct {
 func NewRepeaterStep(name string, repeatsCount int, subSteps []core.Step) *RepeaterStep {
 	return &RepeaterStep{
 		CompositeStep{
-			core.BaseMultipleStep{
-				core.BaseStep{name},
-				subSteps,
-			},
+			core.BaseStep{name},
+			subSteps,
 		},
 		repeatsCount,
 	}
 }
 
-// TODO fix. added []Step 
+// TODO fix. infinite loop
 func (step *RepeaterStep) Run() []core.StepResult {
 	stepResults := []core.StepResult{}
 	for i := 0; i < step.repeats; i++ {

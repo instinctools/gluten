@@ -1,5 +1,9 @@
 package core
 
+import (
+	"reflect"
+)
+
 type Runnable interface {
 	Run() []StepResult
 }
@@ -34,11 +38,17 @@ func (p *Project) GetSteps() []Step {
 }
 
 func collectSubSteps(t Step) []Step {
-//	for _, step := range t.GetSubSteps() {
-//		if len(step.GetSubSteps()) != 0 {
-//			return append(collectSubSteps(step), step)
-//		}
-//	}
+	_, ok := reflect.TypeOf(t).MethodByName("GetSubSteps")
+	if ok {
+		for _, stepValue := range reflect.ValueOf(t).MethodByName("GetSubSteps").Call([]reflect.Value{}) {
+			steps := stepValue.Interface().([]Step)
+			for _, step := range steps {
+				if len(reflect.ValueOf(step).MethodByName("GetSubSteps").Call([]reflect.Value{})) != 0 {
+					return append(collectSubSteps(step), step)
+				}
+			}
+		}
+	}
 	return []Step{t}
 }
 
@@ -93,32 +103,6 @@ func (step *BaseStep) GetName() string {
 
 func (step *BaseStep) BeforeStep() {
 	//Do nothing
-}
-
-type SingleStep interface {
-	GetUrl() string
-}
-
-type MultipleStep interface {
-	GetSubSteps() []Step
-}
-
-type BaseSingleStep struct {
-	BaseStep
-	Url string
-}
-
-func (st *BaseSingleStep) GetUrl() string {
-	return st.Name
-}
-
-type BaseMultipleStep struct {
-	BaseStep
-	SubSteps []Step
-}
-
-func (st *BaseMultipleStep) GetSubSteps() []Step {
-	return st.SubSteps
 }
  
 // StepResult ...
