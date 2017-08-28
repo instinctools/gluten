@@ -37,3 +37,8 @@ func CreateResult(result persistence.ExecutionResult) persistence.ExecutionResul
 func DeleteResult(result persistence.ExecutionResult) {
 	DB.Delete(&result)
 }
+
+func AddResultToExecution(execution persistence.Execution, result persistence.ExecutionResult) {
+	result.ExecutionID = execution.ID
+	DB.Update(result)
+}

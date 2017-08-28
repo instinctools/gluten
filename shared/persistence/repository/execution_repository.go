@@ -42,3 +42,7 @@ func DeleteExecution(execution persistence.Execution) {
 func CloseConnection() {
 	DB.Close()
 }
+
+func UpdateExecution(execution persistence.Execution) {
+	DB.Update(execution)
+}
