@@ -6,33 +6,30 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"time"
-
 	"github.com/julienschmidt/httprouter"
+
+	"strconv"
+
+	log "bitbucket.org/instinctools/gluten/shared/logging"
+	repo "bitbucket.org/instinctools/gluten/shared/persistence/repository"
 )
 
 func GetExecution(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(writer).Encode(generateExecutions())
+	json.NewEncoder(writer).Encode(repo.GetExecutions())
 	writer.WriteHeader(http.StatusOK)
 }
 
 func GetResults(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(writer).Encode(generateResults())
+	id, err := strconv.ParseInt(p.ByName("id"), 10, 64)
+	if err != nil && uint(id) != 0 {
+		log.WithFields(log.Fields{
+			"id": id,
+		}).Fatal("Error convert")
+	}
+	json.NewEncoder(writer).Encode(repo.GetResults(uint(id)))
 	writer.WriteHeader(200)
-}
-
-func Hello(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(w).Encode(struct {
-		ID     string
-		Status string
-	}{
-		ID:     "1",
-		Status: "GET",
-	})
-	w.WriteHeader(200)
 }
 
 func StopExecution(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
@@ -40,6 +37,7 @@ func StopExecution(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	id := p.ByName("id")
 	fmt.Fprint(w, "POST done")
 
+	// no implementation
 	fmt.Println("Stop this execution: " + id)
 	w.WriteHeader(201)
 }
@@ -54,98 +52,9 @@ func StartExecution(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 
 	fmt.Fprint(w, "POST done")
 
+	// no implementation
 	//submit current execution and start him
 
 	fmt.Println(string(body))
 	w.WriteHeader(201)
-}
-
-func generateResults() []ExecutionResult {
-	return []ExecutionResult{
-		{
-			ID:      12321323,
-			Created: time.Now().UnixNano(),
-			Metrics: []Metric{
-				{ExecutionResultID: 335669, Key: "PUT", Value: "https://facebook.com"},
-			},
-		},
-		{
-			ID:      989565,
-			Created: time.Now().UnixNano(),
-			Metrics: []Metric{
-				{ExecutionResultID: 4111, Key: "GET", Value: "http://google.com"},
-			},
-		},
-		{
-			ID:      113,
-			Created: time.Now().UnixNano(),
-			Metrics: []Metric{
-				{ExecutionResultID: 986, Key: "GET", Value: "http://google.com"},
-			},
-		},
-	}
-}
-
-func generateExecutions() []Execution {
-	return []Execution{
-		{
-			ID:         12312,
-			Created:    time.Now().UnixNano(),
-			Parameters: "smth",
-			Result: ExecutionResult{
-				ID:      12321323,
-				Created: time.Now().UnixNano(),
-				Metrics: []Metric{
-					{ExecutionResultID: 335669, Key: "PUT", Value: "https://facebook.com"},
-				},
-			},
-			ResultID: 007,
-		},
-		{
-			ID:         56436546,
-			Created:    time.Now().UnixNano(),
-			Parameters: "hello dude",
-			Result: ExecutionResult{
-				ID:      989565,
-				Created: time.Now().UnixNano(),
-				Metrics: []Metric{
-					{ExecutionResultID: 4111, Key: "GET", Value: "http://google.com"},
-				},
-			},
-			ResultID: 745,
-		},
-		{
-			ID:         19893,
-			Created:    time.Now().UnixNano(),
-			Parameters: "bye dude",
-			Result: ExecutionResult{
-				ID:      113,
-				Created: time.Now().UnixNano(),
-				Metrics: []Metric{
-					{ExecutionResultID: 986, Key: "GET", Value: "http://google.com"},
-				},
-			},
-			ResultID: 888,
-		},
-	}
-}
-
-type Execution struct {
-	ID         uint `gorm:"primary_key"`
-	Created    int64
-	Parameters string
-	Result     ExecutionResult `gorm:"ForeignKey:ResultID"`
-	ResultID   uint
-}
-
-type ExecutionResult struct {
-	ID      uint `gorm:"primary_key"`
-	Created int64
-	Metrics []Metric
-}
-
-type Metric struct {
-	ExecutionResultID uint
-	Key               string
-	Value             string
 }
