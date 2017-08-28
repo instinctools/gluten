@@ -6,9 +6,9 @@ import (
 	"log"
 	"os"
 
+	"bitbucket.org/instinctools/gluten/master/backend"
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	"golang.org/x/net/context"
-	"bitbucket.org/instinctools/gluten/master/backend"
 )
 
 const separator string = ":"
