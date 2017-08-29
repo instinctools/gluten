@@ -1,16 +1,32 @@
-syntax = "proto3";
-
-package proto_service;
+syntax = "proto3"; 
+ 
+package rpc; 
 
 service ProtoService {
-  rpc SendConfig (ParamsRequest) returns (ReplyMessage) {}
-}
+  rpc SendConfig (Project) returns (ResponseMessage) {}
+} 
 
-message ParamsRequest {
-  string url = 1;
-  string body = 2;
-}
-
-message ReplyMessage {
-  string message = 1;
-}
+message ResponseMessage { 
+  string message = 1; 
+}  
+ 
+message Project { 
+  string Name = 1; 
+  repeated Scenario Scenarios = 2; 
+} 
+ 
+message Scenario { 
+  string Name = 1; 
+  repeated TestCase Cases = 2; 
+} 
+ 
+message TestCase { 
+  string Name = 1; 
+  repeated Step Steps = 2; 
+} 
+ 
+message Step { 
+  string type = 1; 
+  map<string, string> parameters = 2; 
+  repeated Step subSteps = 3; 
+} 

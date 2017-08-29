@@ -2,8 +2,8 @@ package client
 
 import (
 	"log"
-
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
+	des "bitbucket.org/instinctools/gluten/shared/deserializers"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -17,8 +17,8 @@ func LaunchClient(address string, json string) {
 	}
 	defer conn.Close()
 	c := pb.NewProtoServiceClient(conn)
-
-	r, err := c.SendConfig(context.Background(), &pb.ParamsRequest{Url: address, Body: json})
+	message := des.DeserializeJsonToProto(json)
+	r, err := c.SendConfig(context.Background(), message)
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}

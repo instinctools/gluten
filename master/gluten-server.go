@@ -14,9 +14,11 @@ const separator string = ":"
 
 type server struct{}
 
-func (s *server) SendConfig(ctx context.Context, in *pb.ParamsRequest) (*pb.ReplyMessage, error) {
-	log.Println("Request body: ", in.Body)
-	return &pb.ReplyMessage{Message: "Good day " + "sir."}, nil
+func (s *server) SendConfig(ctx context.Context, in *pb.Project) (*pb.ResponseMessage, error) {
+	fmt.Println(in)
+	log.Println("Request : ", in)
+
+	return &pb.ResponseMessage{Message: "Done"}, nil
 }
 
 func RunServer() {
@@ -35,11 +37,11 @@ func RunServer() {
 		println(webCommand, rpcCommand)
 		os.Exit(1)
 	} else {
-		fmt.Println("Server is started")
-		webPort := separator + *webCommand
-		LaunchWebServer(webPort)
+		// TODO fix ports listeners 
 		rpcPort := separator + *rpcCommand
 		LaunchServer(rpcPort)
-
+		webPort := separator + *webCommand
+		LaunchWebServer(webPort)
+		fmt.Println("Server is started")
 	}
 }

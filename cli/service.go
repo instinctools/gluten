@@ -8,7 +8,7 @@ import (
 
 func ReadJSONFile(pathToFile string) string {
 	plan, _ := ioutil.ReadFile(pathToFile)
-	data := JSONModel{}
+	data := Project{}
 	err := json.Unmarshal(plan, &data)
 	if err != nil {
 		log.Println("File not found", err)
@@ -21,26 +21,23 @@ func ReadJSONFile(pathToFile string) string {
 }
 
 func AutoGenerateConfig(filename string) {
-	generateJSON := JSONModel{
-		Project{
-			Name: "1",
-			TestSuits: []TestSuite{
-				{Name: "2", TestCases: []TestCase{
-					{Name: "3", TestSteps: []TestStep{
-						{
-							Name: "4",
-							Type: "GETRequest",
-							Params: []Params{
-								{
-									Key:   "URL",
-									Value: "https://google.com",
-								},
-							},
-						},
-					}},
-				}},
-			},
-		},
+	generateJSON := Project{
+//			Name: "1",
+//			Scenarios: []TestScenario{
+//				{Name: "2", Cases: []TestCase{
+//					{Name: "3", Steps: []TestStep{
+//						{
+//							Type: "GETRequest",
+//							Params: []Params{
+//								{
+//									Key:   "URL",
+//									Value: "https://google.com",
+//								},
+//							},
+//						},
+//					}},
+//				}},
+//			},
 	}
 	response, err := json.Marshal(generateJSON)
 	if err != nil {
