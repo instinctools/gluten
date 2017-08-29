@@ -1,120 +1,96 @@
 package core
 
-type Runnable interface {
-	Run() []StepResult
+// Common ...
+type Common struct {
+	Name string
 }
 
 // Project ...
 type Project struct {
-	Name      string
-	Scenarios []Scenario
+	Common
+	Scenarios []TestScenario
 }
 
-func (p *Project) Run() (stepResults []StepResult) {
-	for _, scenario := range p.Scenarios {
-		stepResults = append(stepResults, scenario.Run()...)
-	}
-	return
-}
-
-func (p *Project) Add(ts Scenario) {
+func (p *Project) Add(ts TestScenario) {
 	p.Scenarios = append(p.Scenarios, ts)
 }
 
-func (p *Project) GetSteps() []Step {
-	steps := []Step{}
+func (p *Project) GetAllSteps() []TestStep {
+	steps := []TestStep{}
 	for _, scenario := range p.Scenarios {
-		for _, testCase := range scenario.Cases {
-			for _, step := range testCase.Steps {
-				steps = append(steps, collectSubSteps(step)...)
+		for _, tcase := range scenario.Cases {
+			for _, step := range tcase.Steps {
+				steps = append(steps, step)
+				collectSubSteps(step, steps)
 			}
 		}
 	}
 	return steps
 }
 
-func collectSubSteps(t Step) []Step {
-	for _, step := range t.GetSubSteps() {
-		if len(step.GetSubSteps()) != 0 {
-			return append(collectSubSteps(step), step)
+func collectSubSteps(t TestStep, accum []TestStep) {
+	for _, tstep := range t.GetSubSteps() {
+		accum = append(accum, tstep)
+		if len(tstep.GetSubSteps()) != 0 {
+			collectSubSteps(tstep, accum)
 		}
 	}
-	return []Step{t}
 }
 
-// Scenario ...
-type Scenario struct {
-	Name  string
+// TestScenario ...
+type TestScenario struct {
+	Common
 	Cases []TestCase
 }
 
-func (s *Scenario) Run() (stepResults []StepResult) {
-	for _, testCase := range s.Cases {
-		stepResults = append(stepResults, testCase.Run()...)
-	}
-	return
-}
-
-func (s *Scenario) Add(tc TestCase) {
-	s.Cases = append(s.Cases, tc)
+func (ts *TestScenario) Add(tc TestCase) {
+	ts.Cases = append(ts.Cases, tc)
 }
 
 // TestCase ...
 type TestCase struct {
-	Name  string
-	Steps []Step
+	Common
+	Steps []TestStep
 }
 
-func (c *TestCase) Run() (stepResults []StepResult) {
-	for _, step := range c.Steps {
-		stepResults = append(stepResults, step.Run()...)
-	}
-	return
+func (tcase *TestCase) Add(step TestStep) {
+	tcase.Steps = append(tcase.Steps, step)
 }
 
-func (c *TestCase) Add(step Step) {
-	c.Steps = append(c.Steps, step)
-}
+// TestStep ...
+type TestStep interface {
+	GetCommon() Common
+	GetParams() map[string]interface{}
+	GetSubSteps() []TestStep
+	GetStepType() string
 
-// Step ...
-type Step interface {
-	Runnable
-	GetName() string
-	GetSubSteps() []Step
 	BeforeStep()
+	Run() []Metric
 }
 
-type BaseStep struct {
-	Name     string
-	SubSteps []Step
-}
-
-func (step *BaseStep) GetName() string {
-	return step.Name
-}
-
-func (step *BaseStep) GetSubSteps() []Step {
-	return step.SubSteps
-}
-
-func (step *BaseStep) BeforeStep() {
-	//Do nothing
+type BaseTestStep struct {
+	Common
+	Parameters map[string]interface{}
+	Substeps   []TestStep
 }
 
 // StepResult ...
 type StepResult struct {
 	ExecutionID string
-	//TODO make me as enum
-	Status  string
-	Error   error
-	Step    Step
-	Metrics []Metric
+	Status      string
+	StepType    string
+	Metrics     []Metric
 }
 
 // Metric ...
 type Metric struct {
 	Key string
 	Val interface{}
+}
+
+// TestRunner ...
+type TestRunner interface {
+	Run(c interface{})
 }
 
 // ResultHandler ...
