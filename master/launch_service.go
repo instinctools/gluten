@@ -1,15 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
-	"net/http"
 	"bitbucket.org/instinctools/gluten/master/service"
 	pb_cli "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	pb_slave "bitbucket.org/instinctools/gluten/shared/rpc/slave"
 
-	"github.com/julienschmidt/httprouter"
 	"google.golang.org/grpc"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/reflection"
@@ -63,15 +60,4 @@ func CheckRequest(in string) {
 			service.RemoveNode(client_address)
 		}
 	}
-}
-
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "Welcome to the GLuTEN!\n")
-}
-
-func LaunchWebServer(address string) {
-	router := httprouter.New()
-	router.GET("/", Index)
-
-	log.Fatal(http.ListenAndServe(address, router))
 }
