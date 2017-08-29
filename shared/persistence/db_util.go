@@ -1,12 +1,13 @@
 package persistence
 
 import (
+	"log"
+	"path/filepath"
+
 	"github.com/jinzhu/gorm"
 	"github.com/mattes/migrate"
 	dStub "github.com/mattes/migrate/database/postgres"
-	_"github.com/mattes/migrate/source/file"
-	"log"
-	"path/filepath"
+	_ "github.com/mattes/migrate/source/file"
 )
 
 func InitDb() *gorm.DB {
