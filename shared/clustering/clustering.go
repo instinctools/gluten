@@ -6,14 +6,14 @@ import (
 
 //ClusterWrapperStep ...
 type ClusteredStep struct {
-	core.BaseStep
+	core.BaseTestStep
 	clusterContext *ClusterContext
-	delegate       core.Step
+	delegate       core.TestStep
 }
 
-func NewClusteredStep(name string, clusterContext ClusterContext, delegate core.Step) *ClusteredStep {
+func NewClusteredStep(name string, clusterContext ClusterContext, delegate core.TestStep) *ClusteredStep {
 	return &ClusteredStep{
-		core.BaseStep{Name: name},
+		core.BaseTestStep{core.Common{name}, nil, nil},
 		&clusterContext,
 		delegate,
 	}
@@ -35,7 +35,7 @@ type ClusterNode struct {
 	//url string
 }
 
-func (node *ClusterNode) SubmitAndExecute(step core.Step) {
+func (node *ClusterNode) SubmitAndExecute(step core.TestStep) {
 	//TODO - RPC impl here
 }
 
