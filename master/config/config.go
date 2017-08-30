@@ -1,14 +1,19 @@
 package config
 
 import (
-	"github.com/spf13/viper"
 	"os"
+	"time"
+
+	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Message      string
-	ResponseTime int
-	ExitTime     int
+	Node Nodes `yaml:"nodes"`
+}
+
+type Nodes struct {
+	RetrieveTimeout time.Duration
+	ExitTimeout     time.Duration
 }
 
 func init() {
@@ -22,11 +27,11 @@ func readConfig() {
 	viper.ReadInConfig()
 }
 
-
 func GetConfig() *Config {
 	return &Config{
-		Message:      viper.GetString("message"),
-		ResponseTime: viper.GetInt("response-time"),
-		ExitTime:     viper.GetInt("exit-time"),
+		Node: Nodes{
+			RetrieveTimeout: viper.GetDuration("nodes.retrieve-timeout"),
+			ExitTimeout:     viper.GetDuration("nodes.exit-timeout"),
+		},
 	}
 }

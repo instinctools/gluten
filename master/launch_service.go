@@ -12,7 +12,6 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"time"
 )
 
 var client_address string
@@ -25,7 +24,7 @@ func (s *server) SendConfig(ctx context.Context, in *pb_cli.ParamsRequest) (*pb_
 }
 
 func (s *server) SayHello(ctx context.Context, in *pb_slave.Request) (*pb_slave.Response, error) {
-	CheckRequest(in.Message)
+	service.RegisterNode(in.Message, client_address)
 	return &pb_slave.Response{Message: in.Message}, nil
 }
 
@@ -65,31 +64,4 @@ func DefineSlaveAddress(lis net.Listener) {
 	}
 	client_address = conn.RemoteAddr().String()
 	conn.Close()
-}
-
-func CheckSlaveStatus(in string) bool {
-	answer := true
-	if in != service.MESSAGE {
-		answer = false
-	}
-	return answer
-}
-
-func CheckRequest(in string) {
-	status := CheckSlaveStatus(in)
-	if status {
-		service.AddNode(client_address)
-	} else {
-		service.AddResponseTimeForNode(client_address)
-		if service.Exist(client_address) && service.GetByKey(client_address) >= service.EXIT_TIME {
-			service.RemoveNode(client_address)
-		}
-	}
-}
-
-func main() {
-	nanos := time.Now().UnixNano()
-	ti := nanos - time.Hour.Nanoseconds()
-	println(time.Unix(0, nanos).String())
-	print(time.Unix(0, ti).String())
 }

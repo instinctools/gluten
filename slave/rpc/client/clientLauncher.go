@@ -7,10 +7,16 @@ import (
 	"time"
 
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/slave"
-	"bitbucket.org/instinctools/gluten/master/service"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	conf "bitbucket.org/instinctools/gluten/slave/config"
 )
+
+var config *conf.Config
+
+func init() {
+	config = conf.GetConfig()
+}
 
 func LaunchClient(address string) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -24,12 +30,9 @@ func LaunchClient(address string) {
 
 	// Every response for server
 	for {
-		message := service.MESSAGE
-		if !service.STATUS {
-			message = "405"
-		}
+		message := config.Message
 		r, err = c.SayHello(context.Background(), &pb.Request{Message: message})
-		time.Sleep(service.RESPONSE_TIME)
+		time.Sleep(config.RetrieveTimeout)
 	}
 
 	if err != nil {

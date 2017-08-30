@@ -1,3 +1,2 @@
-message: "200"
-response-time: 10
-exit-time: 30
+message: "SUCCESS"
+retrieve-timeout: 5
