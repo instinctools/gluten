@@ -3,22 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 
 	"bitbucket.org/instinctools/gluten/master/backend"
-	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
-	"golang.org/x/net/context"
 )
 
 const separator string = ":"
-
-type server struct{}
-
-func (s *server) SendConfig(ctx context.Context, in *pb.ParamsRequest) (*pb.ReplyMessage, error) {
-	log.Println("Request body: ", in.Body)
-	return &pb.ReplyMessage{Message: "Good day " + "sir."}, nil
-}
 
 func RunServer() {
 

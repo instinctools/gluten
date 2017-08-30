@@ -2,24 +2,41 @@ package service
 
 import (
 	"time"
+	conf "bitbucket.org/instinctools/gluten/master/config"
 )
 
-var STATUS bool
-var nodes map[string]time.Duration
+var (
+	STATUS bool
+	MESSAGE       string
+	RESPONSE_TIME time.Duration
+	EXIT_TIME     time.Duration
 
-const (
-	MESSAGE       string        = "200"
-	RESPONSE_TIME time.Duration = time.Second * 5
-	EXIT_TIME     time.Duration = time.Second * 30
+	nodes map[string]time.Duration
+	config *conf.Config
 )
+
+type NodeStore interface {
+	CheckNodes()
+}
+
+func (node *Node) CheckNodes() {
+
+}
+
+type Node struct {
+	IP string
+	Time time.Duration
+}
 
 func init() {
 	STATUS = true
 	nodes = make(map[string]time.Duration)
-}
 
-func ChangeStatus() {
-	STATUS = false
+	//load variables from config
+	config = conf.GetConfig()
+	MESSAGE = config.Message
+	RESPONSE_TIME = time.Second * time.Duration(config.ResponseTime)
+	EXIT_TIME = time.Second * time.Duration(config.ExitTime)
 }
 
 func AddNode(address string) {

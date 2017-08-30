@@ -12,8 +12,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-func main() {
-	conn, err := grpc.Dial(":8080", grpc.WithInsecure())
+func LaunchClient(address string) {
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Error while trying to connect: %v", err)
 	}
@@ -21,14 +21,9 @@ func main() {
 	c := pb.NewProtoServiceClient(conn)
 
 	var r *pb.Response
-	var i int
 
 	// Every response for server
 	for {
-		if i > 3 {
-			service.ChangeStatus()
-		}
-		i++
 		message := service.MESSAGE
 		if !service.STATUS {
 			message = "405"

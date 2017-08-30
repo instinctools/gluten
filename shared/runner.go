@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	defer persistence.CloseConnection()
+	//defer persistence.CloseConnection()
 //	metric1 := persistence.NewMetric("1key", "1value")
 //	metric2 := persistence.NewMetric("2key", "2Value")
 //	metrics := []persistence.Metric{metric1, metric2}

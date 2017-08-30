@@ -1,0 +1,4 @@
+nodes:
+  message: "200"
+  retrieve-timeout: 10
+  exit-timeout: 30
