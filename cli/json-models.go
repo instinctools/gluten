@@ -16,7 +16,8 @@ type TestCase struct {
 }
 
 type TestStep struct {
-	Type       string            `json:"type"`
+	Name       string            `json:"Name"`
+	Type       string            `json:"Type"`
 	Parameters map[string]string `json:"Parameters"`
 	SubSteps   []TestStep        `json:"SubSteps"`
 }

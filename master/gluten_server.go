@@ -7,6 +7,7 @@ import (
 	"os"
 
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
+	pu "bitbucket.org/instinctools/gluten/shared/utils"
 	"golang.org/x/net/context"
 )
 
@@ -15,8 +16,9 @@ const separator string = ":"
 type server struct{}
 
 func (s *server) SendConfig(ctx context.Context, in *pb.Project) (*pb.ResponseMessage, error) {
-	fmt.Println(in)
 	log.Println("Request : ", in)
+	project := pu.ParseProto2Project(in)
+	log.Println("Model : ", project.GetAllSteps()[1].GetParams())
 
 	return &pb.ResponseMessage{Message: "Done"}, nil
 }

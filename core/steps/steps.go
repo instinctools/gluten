@@ -1,9 +1,10 @@
 //TODO this file requere refactoring - split into few small parts (one step - one file)
-package core
+package steps
 
 import (
 	"log"
 	"net/http"
+	"bitbucket.org/instinctools/gluten/core"
 )
 
 // TypeComposite & GetRequestStepConstant for global export
@@ -17,7 +18,7 @@ const (
 )
 
 // Step registry & Step factory
-type newStepF func(name string, params map[string]interface{}, substeps []TestStep) TestStep
+type newStepF func(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep
 
 var stepFactories = make(map[string]newStepF)
 
@@ -28,7 +29,7 @@ func RegisterStepFactory(name string, factory newStepF) {
 	stepFactories[name] = factory
 }
 
-func NewStep(step string, name string, params map[string]interface{}, substeps []TestStep) TestStep {
+func NewStep(step string, name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
 	return stepFactories[step](name, params, substeps)
 }
 
@@ -41,11 +42,11 @@ func init() {
 
 //GetRequestStep ...
 type GetRequestStep struct {
-	BaseTestStep
+	core.BaseTestStep
 	url string
 }
 
-func newGetRequestStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
+func newGetRequestStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
 	//validate and preset parameters
 	url := params["URL"]
 	resolvedurl := ""
@@ -57,12 +58,12 @@ func newGetRequestStep(name string, params map[string]interface{}, substeps []Te
 	}
 
 	return &GetRequestStep{
-		BaseTestStep{Common{name}, params, substeps},
+		core.BaseTestStep{core.Common{name}, params, substeps},
 		resolvedurl,
 	}
 }
 
-func (step *GetRequestStep) GetCommon() Common {
+func (step *GetRequestStep) GetCommon() core.Common {
 	return step.Common
 }
 
@@ -70,7 +71,7 @@ func (step *GetRequestStep) GetParams() map[string]interface{} {
 	return step.Parameters
 }
 
-func (step *GetRequestStep) GetSubSteps() []TestStep {
+func (step *GetRequestStep) GetSubSteps() []core.TestStep {
 	return step.Substeps
 }
 
@@ -82,31 +83,31 @@ func (step *GetRequestStep) BeforeStep() {
 	//Do nothing
 }
 
-func (step *GetRequestStep) Run() []Metric {
+func (step *GetRequestStep) Run() []core.Metric {
 	resp, err := http.Get(step.url)
 	if err != nil {
-		return []Metric{{Key: "STATUS", Val: err.Error()}}
+		return []core.Metric{{Key: "STATUS", Val: err.Error()}}
 	}
 	err = resp.Body.Close()
 	if err != nil {
 		log.Fatal("Error closing", err)
 	}
-	return []Metric{{Key: "STATUS", Val: resp.Status}}
+	return []core.Metric{{Key: "STATUS", Val: resp.Status}}
 }
 
 //CompositeStep ...
 type CompositeStep struct {
-	BaseTestStep
+	core.BaseTestStep
 }
 
-func newCompositeStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
+func newCompositeStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
 	//validate and preset parameters
 	return &CompositeStep{
-		BaseTestStep{Common{name}, params, substeps},
+		core.BaseTestStep{core.Common{name}, params, substeps},
 	}
 }
 
-func (step *CompositeStep) GetCommon() Common {
+func (step *CompositeStep) GetCommon() core.Common {
 	return step.Common
 }
 
@@ -114,7 +115,7 @@ func (step *CompositeStep) GetParams() map[string]interface{} {
 	return step.Parameters
 }
 
-func (step *CompositeStep) GetSubSteps() []TestStep {
+func (step *CompositeStep) GetSubSteps() []core.TestStep {
 	return step.Substeps
 }
 
@@ -126,11 +127,11 @@ func (step *CompositeStep) BeforeStep() {
 	//validate and preset parameters
 }
 
-func (step *CompositeStep) Run() []Metric {
+func (step *CompositeStep) Run() []core.Metric {
 	for _, s := range step.Substeps {
 		s.Run()
 	}
-	return []Metric{}
+	return []core.Metric{}
 }
 
 //RepeaterStep ...
@@ -139,7 +140,7 @@ type RepeaterStep struct {
 	repeats int
 }
 
-func newRepeaterStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
+func newRepeaterStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
 	//validate and preset parameters
 	rawRepeats := params["REPEATS"]
 	var resolvedRepeats int
@@ -151,12 +152,12 @@ func newRepeaterStep(name string, params map[string]interface{}, substeps []Test
 	}
 
 	return &RepeaterStep{
-		CompositeStep{BaseTestStep{Common{name}, params, substeps}},
+		CompositeStep{core.BaseTestStep{core.Common{name}, params, substeps}},
 		resolvedRepeats,
 	}
 }
 
-func (step *RepeaterStep) GetCommon() Common {
+func (step *RepeaterStep) GetCommon() core.Common {
 	return step.Common
 }
 
@@ -164,7 +165,7 @@ func (step *RepeaterStep) GetParams() map[string]interface{} {
 	return step.Parameters
 }
 
-func (step *RepeaterStep) GetSubSteps() []TestStep {
+func (step *RepeaterStep) GetSubSteps() []core.TestStep {
 	return step.Substeps
 }
 
@@ -175,13 +176,13 @@ func (step *RepeaterStep) GetStepType() string {
 func (step *RepeaterStep) BeforeStep() {
 }
 
-func (step *RepeaterStep) Run() []Metric {
+func (step *RepeaterStep) Run() []core.Metric {
 	successRepeats := 0
 	for i := 0; i < step.repeats; i++ {
 		step.CompositeStep.Run()
 		successRepeats++
 	}
-	return []Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}}
+	return []core.Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}}
 }
 
 //ParallelStep ...
@@ -190,7 +191,7 @@ type ParallelStep struct {
 	threads int
 }
 
-func newParallelStep(name string, params map[string]interface{}, substeps []TestStep) TestStep {
+func newParallelStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
 	//validate and preset parameters
 	rawThreads := params["THREADS"]
 	var resolvedThreads int
@@ -202,12 +203,12 @@ func newParallelStep(name string, params map[string]interface{}, substeps []Test
 	}
 
 	return &ParallelStep{
-		CompositeStep{BaseTestStep{Common{name}, params, substeps}},
+		CompositeStep{core.BaseTestStep{core.Common{name}, params, substeps}},
 		resolvedThreads,
 	}
 }
 
-func (step *ParallelStep) GetCommon() Common {
+func (step *ParallelStep) GetCommon() core.Common {
 	return step.Common
 }
 
@@ -215,7 +216,7 @@ func (step *ParallelStep) GetParams() map[string]interface{} {
 	return step.Parameters
 }
 
-func (step *ParallelStep) GetSubSteps() []TestStep {
+func (step *ParallelStep) GetSubSteps() []core.TestStep {
 	return step.Substeps
 }
 
@@ -226,11 +227,11 @@ func (step *ParallelStep) GetStepType() string {
 func (step *ParallelStep) BeforeStep() {
 }
 
-func (step *ParallelStep) Run() []Metric {
+func (step *ParallelStep) Run() []core.Metric {
 	successRepeats := 0
 	for i := 0; i < step.threads; i++ {
 		go step.CompositeStep.Run()
 		successRepeats++
 	}
-	return []Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}}
+	return []core.Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}}
 }
