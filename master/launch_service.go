@@ -65,3 +65,8 @@ func DefineSlaveAddress(lis net.Listener) {
 	client_address = conn.RemoteAddr().String()
 	conn.Close()
 }
+
+func main() {
+
+	LaunchServer(":8080")
+}

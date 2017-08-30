@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	conf "bitbucket.org/instinctools/gluten/master/config"
+	log "bitbucket.org/instinctools/gluten/shared/logging"
 )
 
 var (
@@ -64,6 +65,9 @@ func CheckExitTimeoutNodes() {
 		for key, value := range nodes {
 			diff := time.Now().Sub(value)
 			if diff.Nanoseconds() > EXIT_TIMEOUT.Nanoseconds() {
+				log.WithFields(log.Fields{
+					"IP: ": key,
+				}).Info("The node has been removed")
 				RemoveNode(key)
 			}
 		}
@@ -73,5 +77,14 @@ func CheckExitTimeoutNodes() {
 }
 
 func RegisterNode(in string, address string) {
-	AddNode(address)
+	if Exist(address) {
+		log.WithFields(log.Fields{
+			"IP: ": address,
+		}).Info("Available node")
+	} else {
+		AddNode(address)
+		log.WithFields(log.Fields{
+			"IP: ": address,
+		}).Info("The node was registered")
+	}
 }

@@ -1,9 +1,16 @@
 package main
 
 import (
-	"bitbucket.org/instinctools/gluten/slave/rpc/client"
+	"bitbucket.org/instinctools/gluten/slave/cmd"
+	"os"
+	log "bitbucket.org/instinctools/gluten/shared/logging"
 )
 
 func main() {
-	client.LaunchClient(":8080")
+	if err := cmd.RootCmd.Execute(); err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Info("Error at slave startup")
+		os.Exit(1)
+	}
 }

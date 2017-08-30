@@ -30,9 +30,9 @@ func LaunchClient(address string) {
 
 	// Every response for server
 	for {
-		message := config.Message
+		message := "asdasdasd"
 		r, err = c.SayHello(context.Background(), &pb.Request{Message: message})
-		time.Sleep(config.RetrieveTimeout)
+		time.Sleep(time.Second * 5)
 	}
 
 	if err != nil {
