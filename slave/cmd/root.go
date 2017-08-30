@@ -8,6 +8,11 @@ import (
 
 var masterIp, slavePort string
 
+func init() {
+    RootCmd.Flags().StringVarP(&masterIp, "master", "m", "", "Master IP")
+    RootCmd.Flags().StringVarP(&slavePort, "rpc-port", "rp", "", "Slave port")
+}
+
 var RootCmd = &cobra.Command{
 	Use:   "gluten-slave",
 	Short: "Same short gluten description",
@@ -16,11 +21,5 @@ var RootCmd = &cobra.Command{
             `,
 	Run: func(cmd *cobra.Command, args []string) {
 		response := client.LaunchClient(masterIp, slavePort)
-		fmt.Println(response)
 	},
-}
-
-func init() {
-    RootCmd.PersistentFlags().StringVar(&masterIp, "master", "", "Master IP")
-    RootCmd.PersistentFlags().StringVar(&slavePort, "rpc-port", "", "Slave port")
 }

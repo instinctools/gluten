@@ -2,7 +2,6 @@ package steps
 
 import (
 	"bitbucket.org/instinctools/gluten/core"
-	"bitbucket.org/instinctools/gluten/shared/logging"
 )
 
 var (

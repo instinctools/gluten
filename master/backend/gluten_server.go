@@ -1,13 +1,11 @@
-package master
+package backend
 
 import (
 	"flag"
-	"fmt"
-	"log"
 	"os"
 
-	"bitbucket.org/instinctools/gluten/master/backend"
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
+	pu "bitbucket.org/instinctools/gluten/shared/utils"
 	"golang.org/x/net/context"
 )
 
@@ -15,9 +13,12 @@ const separator string = ":"
 
 type server struct{}
 
-func (s *server) SendConfig(ctx context.Context, in *pb.ParamsRequest) (*pb.ReplyMessage, error) {
-	log.Println("Request body: ", in.Body)
-	return &pb.ReplyMessage{Message: "Good day " + "sir."}, nil
+func (s *server) SendConfig(ctx context.Context, in *pb.Project) (*pb.ResponseMessage, error) {
+	log.Println("Request : ", in)
+	project := pu.ParseProto2Project(in)
+	log.Println("Model : ", project.GetAllSteps()[1].GetParams())
+
+	return &pb.ResponseMessage{Message: "Done"}, nil
 }
 
 func RunServer() {
@@ -36,11 +37,11 @@ func RunServer() {
 		println(webCommand, rpcCommand)
 		os.Exit(1)
 	} else {
-		fmt.Println("Server is started")
-		webPort := separator + *webCommand
-		backend.StartWebServer(webPort)
+		// TODO fix ports listeners
 		rpcPort := separator + *rpcCommand
 		LaunchServer(rpcPort)
-
+		webPort := separator + *webCommand
+		LaunchWebServer(webPort)
+		fmt.Println("Server is started")
 	}
 }
