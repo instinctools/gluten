@@ -1,16 +1,11 @@
 package main
 
 import (
+	"bitbucket.org/instinctools/gluten/cli/client"
+	"bitbucket.org/instinctools/gluten/shared/logging"
 	"flag"
-	"fmt"
 	"os"
-
-	"log"
-
-	obj "bitbucket.org/instinctools/gluten/cli/client"
 )
-
-var err error
 
 func main() {
 	//lists command
@@ -61,6 +56,10 @@ func main() {
 
 func NilHandler(err error) {
 	if err != nil {
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Error("Can't connect to master")
+
 		log.Fatal("Error", err)
 	}
 }

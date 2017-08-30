@@ -1,9 +1,7 @@
-package main
+package backend
 
 import (
 	"flag"
-	"fmt"
-	"log"
 	"os"
 
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
@@ -39,7 +37,7 @@ func RunServer() {
 		println(webCommand, rpcCommand)
 		os.Exit(1)
 	} else {
-		// TODO fix ports listeners 
+		// TODO fix ports listeners
 		rpcPort := separator + *rpcCommand
 		LaunchServer(rpcPort)
 		webPort := separator + *webCommand

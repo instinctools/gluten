@@ -1,4 +1,4 @@
-package main
+package client
 
 type Project struct {
 	Name      string         `json:"Name"`

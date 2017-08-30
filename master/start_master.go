@@ -1,5 +1,9 @@
-package main 
+package main
+
+import (
+	"bitbucket.org/instinctools/gluten/master/backend"
+)
 
 func main() {
-	RunServer()
+	backend.RunServer()
 }

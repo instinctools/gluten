@@ -1,26 +1,32 @@
 package client
 
 import (
-	"log"
+	"bitbucket.org/instinctools/gluten/shared/logging"
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	pu "bitbucket.org/instinctools/gluten/shared/utils"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
-func LaunchClient(address string, json string) {
+func SendJsonToMaster(address string, json string) {
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Error("Can't connect to master")
 	}
 	defer conn.Close()
 	c := pb.NewProtoServiceClient(conn)
 	message := pu.DeserializeJsonToProto(json)
 	r, err := c.SendConfig(context.Background(), message)
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Error("Master throws error")
 	}
-	log.Printf("Configurate: %s", r.Message)
+	logging.WithFields(logging.Fields{
+		"message": r.Message,
+	}).Info("Master accept configuration")
 }

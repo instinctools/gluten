@@ -1,4 +1,4 @@
-package main
+package client
 
 import (
 	"encoding/json"
@@ -21,23 +21,24 @@ func ReadJSONFile(pathToFile string) string {
 }
 
 func AutoGenerateConfig(filename string) {
+	//TODO - generateJSON should be a string, don't need to marshal it to string
 	generateJSON := Project{
-//			Name: "1",
-//			Scenarios: []TestScenario{
-//				{Name: "2", Cases: []TestCase{
-//					{Name: "3", Steps: []TestStep{
-//						{
-//							Type: "GETRequest",
-//							Params: []Params{
-//								{
-//									Key:   "URL",
-//									Value: "https://google.com",
-//								},
-//							},
-//						},
-//					}},
-//				}},
-//			},
+	//			Name: "1",
+	//			Scenarios: []TestScenario{
+	//				{Name: "2", Cases: []TestCase{
+	//					{Name: "3", Steps: []TestStep{
+	//						{
+	//							Type: "GETRequest",
+	//							Params: []Params{
+	//								{
+	//									Key:   "URL",
+	//									Value: "https://google.com",
+	//								},
+	//							},
+	//						},
+	//					}},
+	//				}},
+	//			},
 	}
 	response, err := json.Marshal(generateJSON)
 	if err != nil {
