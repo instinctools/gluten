@@ -14,7 +14,7 @@ import (
 
 type server struct{}
 
-func LaunchServer(port int) {
+func LaunchRpcServer(port int) {
 	lis, err := net.Listen("tcp", ":"+strconv.Itoa(port))
 	if err != nil {
 		logging.WithFields(logging.Fields{

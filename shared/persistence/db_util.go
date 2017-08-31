@@ -1,31 +1,43 @@
 package persistence
 
 import (
-	"log"
-	"path/filepath"
-
+	"bitbucket.org/instinctools/gluten/shared/logging"
 	"github.com/jinzhu/gorm"
 	"github.com/mattes/migrate"
 	dStub "github.com/mattes/migrate/database/postgres"
 	_ "github.com/mattes/migrate/source/file"
+	"path/filepath"
+	"os"
 )
 
 func InitDb() *gorm.DB {
 	db, err := gorm.Open("postgres", "user=postgres password=1 dbname=gluten_db sslmode=disable")
-	CheckErr(err, "gorm.Open failed")
+	if err != nil {
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Error("gorm.Open error")
+	}
 	db.LogMode(true)
 	driver, err := dStub.WithInstance(db.DB(), &dStub.Config{})
-	CheckErr(err, "dStub.WithInstance failed")
-	path, err := filepath.Abs("./gluten/shared/persistence/migrations/")
-	CheckErr(err, "filepath.Abs failed")
+	if err != nil {
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Error("WithInstance error")
+	}
+	project_path, _ := os.Getwd()
+
+	path, err := filepath.Abs(project_path+"/gluten/migrations/")
+	if err != nil {
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Error("Abs error")
+	}
 	m, err := migrate.NewWithDatabaseInstance("file://"+path, "postgres", driver)
-	CheckErr(err, "migrate.NewWithDatabaseInstancefailed")
+	if err != nil {
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Error("NewWithDatabaseInstance error")
+	}
 	m.Steps(1)
 	return db
-}
-
-func CheckErr(err error, msg string) {
-	if err != nil {
-		log.Fatalln(msg, err)
-	}
 }
