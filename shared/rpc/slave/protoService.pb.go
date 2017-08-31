@@ -29,7 +29,7 @@ var _ grpc.ClientConn
 var _ = proto.Marshal
 
 type Request struct {
-	Message string `protobuf:"bytes,1,opt,name=message" json:"message,omitempty"`
+	RemoteAddress string `protobuf:"bytes,1,opt,name=remote_address" json:"remote_address,omitempty"`
 }
 
 func (m *Request) Reset()         { *m = Request{} }
@@ -45,8 +45,8 @@ func (m *Response) String() string { return proto.CompactTextString(m) }
 func (*Response) ProtoMessage()    {}
 
 func init() {
-		proto.RegisterType((*Request)(nil), "proto_service.Request")
-		proto.RegisterType((*Response)(nil), "proto_service.Response")
+	proto.RegisterType((*Request)(nil), "proto_service.Request")
+	proto.RegisterType((*Response)(nil), "proto_service.Response")
 }
 
 // Client API for ProtoService service

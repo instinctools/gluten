@@ -7,7 +7,7 @@ service ProtoService {
 }
 
 message Request {
-  string message = 1;
+  string remote_address = 1;
 }
 
 message Response {

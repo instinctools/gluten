@@ -68,7 +68,7 @@ func CheckExitTimeoutNodes() {
 	}
 }
 
-func RegisterNode(in string, address string) {
+func RegisterNode(address string) {
 	if Exist(address) {
 		log.WithFields(log.Fields{
 			"IP: ": address,
