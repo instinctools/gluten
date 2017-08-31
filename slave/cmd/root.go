@@ -1,16 +1,15 @@
 package cmd
 
 import (
-	"fmt"
+	//	"bitbucket.org/instinctools/gluten/slave/rpc/client"
 	"github.com/spf13/cobra"
-	"bitbucket.org/instinctools/gluten/slave/rpc/client"
 )
 
 var masterIp, slavePort string
 
 func init() {
-    RootCmd.Flags().StringVarP(&masterIp, "master", "m", "", "Master IP")
-    RootCmd.Flags().StringVarP(&slavePort, "rpc-port", "rp", "", "Slave port")
+	RootCmd.Flags().StringVarP(&masterIp, "master", "m", "", "Master IP")
+	RootCmd.Flags().StringVarP(&slavePort, "rpc-port", "rp", "", "Slave port")
 }
 
 var RootCmd = &cobra.Command{
@@ -20,6 +19,8 @@ var RootCmd = &cobra.Command{
             feel free to use a few lines here.
             `,
 	Run: func(cmd *cobra.Command, args []string) {
-		response := client.LaunchClient(masterIp, slavePort)
+
+		//TODO - what is it?
+		//		client.LaunchClient(masterIp, slavePort)
 	},
 }

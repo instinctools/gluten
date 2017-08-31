@@ -1,4 +1,4 @@
-package routes
+package rest
 
 const base_url string = "/api/"
 
