@@ -1,13 +1,24 @@
 package client
 
 import (
+	"log"
+
+	"fmt"
+	"time"
+
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/slave"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"log"
+	conf "bitbucket.org/instinctools/gluten/slave/config"
 )
 
-func LaunchClient(address string, message string) string {
+var config *conf.Config
+
+func init() {
+	config = conf.GetConfig()
+}
+
+func LaunchClient(address string) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Error while trying to connect: %v", err)
@@ -15,10 +26,17 @@ func LaunchClient(address string, message string) string {
 	defer conn.Close()
 	c := pb.NewProtoServiceClient(conn)
 
-	r, err := c.SayHello(context.Background(), &pb.Request{message})
-	if err != nil {
-		log.Fatalf("Error while sending hello: %v", err)
+	var r *pb.Response
+
+	// Every response for server
+	for {
+		message := "asdasdasd"
+		r, err = c.SayHello(context.Background(), &pb.Request{Message: message})
+		time.Sleep(time.Second * 5)
 	}
-	log.Printf("Hello sended: %s", r.Message)
-	return r.Message
+
+	if err != nil {
+		log.Fatalf("Error sending: %v", err)
+	}
+	fmt.Printf("Hello sended: %s", r.Message)
 }

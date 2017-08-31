@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/instinctools/gluten/shared/logging"
 	"bitbucket.org/instinctools/gluten/slave/cmd"
 	"os"
+	log "bitbucket.org/instinctools/gluten/shared/logging"
 )
 
 func main() {

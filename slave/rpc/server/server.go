@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "bitbucket.org/instinctools/gluten/shared/rpc/slave"
+	pb "bitbucket.org/instinctools/gluten/shared/rpc/master"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -13,9 +13,9 @@ var address string = ":3000"
 
 type server struct{}
 
-func (s *server) SayHello(ctx context.Context, in *pb.Request) (*pb.Response, error) {
+func (s *server) SendMessage(ctx context.Context, in *pb.RequestMessage) (*pb.ResponseMessage, error) {
 	log.Printf("Request message: %v", in.Message)
-	return &pb.Response{in.Message}, nil
+	return &pb.ResponseMessage{Message: in.Message}, nil
 }
 
 func main() {

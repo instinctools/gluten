@@ -1,0 +1,3 @@
+nodes:
+  retrieve-timeout: 5
+  exit-timeout: 30
