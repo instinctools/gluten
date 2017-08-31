@@ -33,23 +33,10 @@ func LaunchServer(port int) {
 }
 
 func (s *server) SayHello(ctx context.Context, in *pb_slave.Request) (*pb_slave.Response, error) {
-	store.RegisterNode(in.Message, ResolveSlaveAddress())
-	return &pb_slave.Response{Message: in.Message}, nil
+	store.RegisterNode(in.RemoteAddress)
+	return &pb_slave.Response{Message: "OK"}, nil
 }
 
 func (s *server) SendConfig(ctx context.Context, in *pb_cli.Project) (*pb_cli.ResponseMessage, error) {
 	return &pb_cli.ResponseMessage{Message: "Good day " + "sir."}, nil
-}
-
-func ResolveSlaveAddress() string {
-	/*	conn, err := lis.Accept()
-		defer conn.Close()
-		if err != nil {
-			logging.WithFields(logging.Fields{
-				"error": err,
-			}).Error("Slave address can't be resolved")
-		}
-		return conn.RemoteAddr().String()
-	*/
-	return "127.0.0.1"
 }

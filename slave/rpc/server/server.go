@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/master"
@@ -7,9 +7,8 @@ import (
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+	"strconv"
 )
-
-var address string = ":3000"
 
 type server struct{}
 
@@ -18,8 +17,8 @@ func (s *server) SendMessage(ctx context.Context, in *pb.RequestMessage) (*pb.Re
 	return &pb.ResponseMessage{Message: in.Message}, nil
 }
 
-func main() {
-	lis, err := net.Listen("tcp", address)
+func LaunchServer(port int) {
+	lis, err := net.Listen("tcp", ":"+strconv.Itoa(port))
 	if err != nil {
 		log.Fatalf("Listen error: %v", err)
 	}
