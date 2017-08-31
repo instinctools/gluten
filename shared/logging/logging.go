@@ -1,9 +1,8 @@
 package logging
 
 import (
-	"os"
-
 	log "github.com/sirupsen/logrus"
+	"os"
 )
 
 var logger = log.New()
