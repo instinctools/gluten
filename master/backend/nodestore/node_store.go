@@ -1,27 +1,19 @@
 package service
 
 import (
-	"time"
-
-	"sync"
-
-	conf "bitbucket.org/instinctools/gluten/master/config"
+	conf "bitbucket.org/instinctools/gluten/master/backend/config"
 	log "bitbucket.org/instinctools/gluten/shared/logging"
+	"sync"
+	"time"
 )
 
 var (
-	MESSAGE          string
 	RETRIEVE_TIMEOUT time.Duration
 	EXIT_TIMEOUT     time.Duration
 
 	nodes map[string]time.Time
 	mutex sync.Mutex
 )
-
-type Node struct {
-	IP   string
-	Time time.Duration
-}
 
 func init() {
 	nodes = make(map[string]time.Time)
