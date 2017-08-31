@@ -1,18 +1,18 @@
 package rest
 
 import (
-	"log"
-	"net/http"
-
+	"bitbucket.org/instinctools/gluten/shared/logging"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
+	"net/http"
+	"strconv"
 )
 
-func StartWebServer(address string) {
+func LaunchWebServer(port int) {
 
 	router := httprouter.New()
 
-	//CORS filter ...
+	//TODO - remove CORS filter ...
 	handler := cors.Default().Handler(router)
 
 	router.GET(EXECUTIONS_URL, GetExecution)
@@ -25,5 +25,8 @@ func StartWebServer(address string) {
 		w.WriteHeader(405)
 	})
 
-	log.Fatal(http.ListenAndServe(address, handler))
+	logging.WithFields(logging.Fields{
+		"error": http.ListenAndServe(":"+strconv.Itoa(port), handler),
+	}).Error("Error during starting rpc server")
+
 }
