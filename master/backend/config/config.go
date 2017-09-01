@@ -30,8 +30,8 @@ func readConfig() {
 func GetConfig() *Config {
 	return &Config{
 		Node: Nodes{
-			RetrieveTimeout: viper.GetDuration("nodes.retrieve-timeout"),
-			ExitTimeout:     viper.GetDuration("nodes.exit-timeout"),
+			RetrieveTimeout: viper.GetDuration("nodes.retrieve-timeout") * time.Second,
+			ExitTimeout:     viper.GetDuration("nodes.exit-timeout") * time.Second,
 		},
 	}
 }

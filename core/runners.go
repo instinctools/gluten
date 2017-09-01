@@ -1,13 +1,23 @@
 package core
 
-import "github.com/google/uuid"
+import (
+	"bitbucket.org/instinctools/gluten/shared/logging"
+	"github.com/google/uuid"
+)
 
 type DefaultRunner struct {
-	Handler ResultHandler
+	hander ResultHandler
+}
+
+func NewDefaultRunner(handler ResultHandler) TestRunner {
+	return &DefaultRunner{handler}
 }
 
 func (runner *DefaultRunner) Run(c interface{}) {
 	executionID := uuid.New().String()
+	logging.WithFields(logging.Fields{
+		"struct_to_run": c,
+	}).Info("Trying to run tests")
 	runner.run1(c, executionID)
 }
 
@@ -15,6 +25,10 @@ func (runner *DefaultRunner) run1(c interface{}, execID string) {
 	//TODO - fix code dup in switch
 	switch c.(type) {
 	case Project:
+		p := c.(Project)
+		logging.WithFields(logging.Fields{
+			"project": p,
+		}).Info("Trying to run tests")
 		for _, element := range c.(Project).Scenarios {
 			runner.run1(element, execID)
 		}
@@ -29,12 +43,14 @@ func (runner *DefaultRunner) run1(c interface{}, execID string) {
 	case TestStep:
 		step := c.(TestStep)
 		metrics := step.Run()
-		runner.Handler.Handle(StepResult{
-			Metrics:     metrics,
+
+		runner.hander.Handle(StepResult{
 			ExecutionID: execID,
+			Metrics:     metrics,
 			Status:      "Completed",
 			StepType:    step.GetStepType(),
 		})
+
 	default:
 		panic("Unknow type for running")
 	}

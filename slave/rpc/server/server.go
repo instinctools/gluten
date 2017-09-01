@@ -1,31 +1,41 @@
 package server
 
 import (
+	"bitbucket.org/instinctools/gluten/core"
+	"bitbucket.org/instinctools/gluten/shared/logging"
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/master"
+	"bitbucket.org/instinctools/gluten/shared/utils"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"log"
 	"net"
 	"strconv"
 )
 
 type server struct{}
 
-func (s *server) SendMessage(ctx context.Context, in *pb.RequestMessage) (*pb.ResponseMessage, error) {
-	log.Printf("Request message: %v", in.Message)
-	return &pb.ResponseMessage{Message: in.Message}, nil
+var (
+	runner = core.NewDefaultRunner(&core.LoggableResultHandler{})
+)
+
+func (s *server) SendMessage(ctx context.Context, in *pb.Step) (*pb.ResponseMessage, error) {
+	runner.Run(utils.ParseMasterProto2Step(in))
+	return &pb.ResponseMessage{Message: "OK"}, nil
 }
 
 func LaunchServer(port int) {
 	lis, err := net.Listen("tcp", ":"+strconv.Itoa(port))
 	if err != nil {
-		log.Fatalf("Listen error: %v", err)
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Info("Error during establishing connection")
 	}
 	s := grpc.NewServer()
 	pb.RegisterProtoServiceServer(s, &server{})
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("Serve error: %v", err)
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Info("Error during serving incomming request")
 	}
 }

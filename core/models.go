@@ -97,3 +97,7 @@ type TestRunner interface {
 type ResultHandler interface {
 	Handle(result StepResult)
 }
+
+type Execution struct {
+	ID string
+}

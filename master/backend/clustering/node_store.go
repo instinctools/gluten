@@ -1,4 +1,4 @@
-package service
+package clustering
 
 import (
 	conf "bitbucket.org/instinctools/gluten/master/backend/config"
@@ -31,6 +31,14 @@ func AddNode(address string) {
 	mutex.Lock()
 	defer mutex.Unlock()
 	nodes[address] = time.Now()
+}
+
+func GetNodes() []string {
+	keys := make([]string, 0, len(nodes))
+	for k := range nodes {
+		keys = append(keys, k)
+	}
+	return keys
 }
 
 func RemoveNode(address string) {
