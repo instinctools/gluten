@@ -77,7 +77,8 @@ func getAddress() (string, error) {
 			if ip == nil {
 				continue // not an ipv4 address
 			}
-			return ip.String(), nil
+			//TODO - get port from config
+			return ip.String() + ":7777", nil
 		}
 	}
 	return "", errors.New("are you connected to the network?")

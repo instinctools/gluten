@@ -10,7 +10,7 @@ func main() {
 	if err := cmd.RootCmd.Execute(); err != nil {
 		logging.WithFields(logging.Fields{
 			"error": err,
-		}).Info("Error at slave startup")
+		}).Info("Error at master startup")
 		os.Exit(1)
 	}
 }

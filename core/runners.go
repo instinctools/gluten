@@ -1,6 +1,9 @@
 package core
 
-import "github.com/google/uuid"
+import (
+	"bitbucket.org/instinctools/gluten/shared/logging"
+	"github.com/google/uuid"
+)
 
 type DefaultRunner struct {
 	hander ResultHandler
@@ -12,6 +15,9 @@ func NewDefaultRunner(handler ResultHandler) TestRunner {
 
 func (runner *DefaultRunner) Run(c interface{}) {
 	executionID := uuid.New().String()
+	logging.WithFields(logging.Fields{
+		"struct_to_run": c,
+	}).Info("Trying to run tests")
 	runner.run1(c, executionID)
 }
 
@@ -19,6 +25,10 @@ func (runner *DefaultRunner) run1(c interface{}, execID string) {
 	//TODO - fix code dup in switch
 	switch c.(type) {
 	case Project:
+		p := c.(Project)
+		logging.WithFields(logging.Fields{
+			"project": p,
+		}).Info("Trying to run tests")
 		for _, element := range c.(Project).Scenarios {
 			runner.run1(element, execID)
 		}

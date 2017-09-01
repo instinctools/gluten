@@ -24,7 +24,7 @@ var RootCmd = &cobra.Command{
 		if rpcPort == 0 || webPort == 0 {
 			os.Exit(1)
 		} else {
-			rpc.LaunchRpcServer(rpcPort)
+			go rpc.LaunchRpcServer(rpcPort)
 			rest.LaunchWebServer(webPort)
 		}
 	},

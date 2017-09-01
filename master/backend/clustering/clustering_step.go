@@ -2,11 +2,16 @@ package clustering
 
 import (
 	"bitbucket.org/instinctools/gluten/core"
+	"bitbucket.org/instinctools/gluten/core/steps"
 )
 
 var (
 	clusteredStepAlias = "CLUSTERED_STEP"
 )
+
+func init() {
+	steps.RegisterStepFactory(clusteredStepAlias, newClusteredStep)
+}
 
 type ClusteredStep struct {
 	core.BaseTestStep
@@ -41,8 +46,8 @@ func (step *ClusteredStep) BeforeStep() {
 }
 
 func (step *ClusteredStep) Run() []core.Metric {
-	for node := range GetNodes() {
-
+	for _, node := range GetNodes() {
+		SubmitOverRPC(node, &steps.CompositeStep{step.BaseTestStep})
 	}
 	return []core.Metric{}
 }

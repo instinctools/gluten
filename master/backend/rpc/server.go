@@ -2,9 +2,11 @@ package rpc
 
 import (
 	store "bitbucket.org/instinctools/gluten/master/backend/clustering"
+	"bitbucket.org/instinctools/gluten/master/backend/service"
 	"bitbucket.org/instinctools/gluten/shared/logging"
 	pb_cli "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	pb_slave "bitbucket.org/instinctools/gluten/shared/rpc/slave"
+	"bitbucket.org/instinctools/gluten/shared/utils"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -38,5 +40,6 @@ func (s *server) SayHello(ctx context.Context, in *pb_slave.Request) (*pb_slave.
 }
 
 func (s *server) SendConfig(ctx context.Context, in *pb_cli.Project) (*pb_cli.ResponseMessage, error) {
+	service.ExecuteProject(utils.ParseProto2Project(in))
 	return &pb_cli.ResponseMessage{Message: "Good day " + "sir."}, nil
 }
