@@ -26,7 +26,7 @@ func ParseProto2Project(pProject *pb.Project) *core.Project {
 		for _, pCase := range pScenario.GetCases() {
 			testCase := core.TestCase{Common: core.Common{pCase.Name}}
 			for _, pStep := range pCase.GetSteps() {
-				step := ParseProto2Step(pStep)
+				step := ParseCliProto2Step(pStep)
 				testCase.Add(step)
 			}
 			testScenario.Add(testCase)
@@ -47,10 +47,10 @@ func ParseStep2Proto(step *core.TestStep) *pm.Step {
 	return pStep
 }
 
-func ParseProto2Step(pStep *pb.Step) core.TestStep {
+func ParseCliProto2Step(pStep *pb.Step) core.TestStep {
 	var subSteps []core.TestStep
 	for _, pSubStep := range pStep.GetSubSteps() {
-		subStep := parseProtoStep(pSubStep)
+		subStep := ParseCliProto2Step(pSubStep)
 		subSteps = append(subSteps, subStep)
 	}
 	iMap := parsPMap(pStep.Parameters)
@@ -58,15 +58,9 @@ func ParseProto2Step(pStep *pb.Step) core.TestStep {
 	return step
 }
 
-func ParseProto2Step(pStep *pm.Step) core.TestStep {
-	var subSteps []core.TestStep
-	for _, pSubStep := range pStep.GetSubSteps() {
-		subStep := parseProtoStep(pSubStep)
-		subSteps = append(subSteps, subStep)
-	}
-	iMap := parsPMap(pStep.Parameters)
-	step := steps.NewStep(pStep.Type, pStep.Name, iMap, subSteps)
-	return step
+func ParseMasterProto2Step(pStep *pm.Step) core.TestStep {
+	pStep = pb.Step(pStep)
+	return ParseProto2Step(pStep)
 }
 
 func parsIMap(iMap map[string]interface) map[string]string {
