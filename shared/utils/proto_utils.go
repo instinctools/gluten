@@ -4,8 +4,10 @@ import (
 	"bitbucket.org/instinctools/gluten/core"
 	"bitbucket.org/instinctools/gluten/core/steps"
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
+	pm "bitbucket.org/instinctools/gluten/shared/rpc/master"
 	"encoding/json"
 	"strconv"
+	"fmt"
 )
 
 func DeserializeJsonToProto(jsonProject string) *pb.Project {
@@ -24,7 +26,7 @@ func ParseProto2Project(pProject *pb.Project) *core.Project {
 		for _, pCase := range pScenario.GetCases() {
 			testCase := core.TestCase{Common: core.Common{pCase.Name}}
 			for _, pStep := range pCase.GetSteps() {
-				step := parseProtoStep(pStep)
+				step := ParseCliProto2Step(pStep)
 				testCase.Add(step)
 			}
 			testScenario.Add(testCase)
@@ -34,20 +36,44 @@ func ParseProto2Project(pProject *pb.Project) *core.Project {
 	return &testProject
 }
 
-func parseProtoStep(pStep *pb.Step) core.TestStep {
+func ParseStep2Proto(step *core.TestStep) *pm.Step {
+	var pSubSteps []pm.TestStep
+	for _, subStep := range step.GetSubSteps() {
+		pSubStep := parseProtoStep(subStep)
+		pSubSteps = append(pSubSteps, pSubStep)
+	}
+	sMap := parsIMap(step.GetParams())
+	pStep := pm.Step{Name:step.GetCommon().Name, Type:step.GetStepType(), Parameters:sMap, pSubSteps}
+	return pStep
+}
+
+func ParseCliProto2Step(pStep *pb.Step) core.TestStep {
 	var subSteps []core.TestStep
 	for _, pSubStep := range pStep.GetSubSteps() {
-		subStep := parseProtoStep(pSubStep)
+		subStep := ParseCliProto2Step(pSubStep)
 		subSteps = append(subSteps, subStep)
 	}
-	iMap := parsMap(pStep.Parameters)
+	iMap := parsPMap(pStep.Parameters)
 	step := steps.NewStep(pStep.Type, pStep.Name, iMap, subSteps)
 	return step
 }
 
-func parsMap(oMap map[string]string) map[string]interface{} {
+func ParseMasterProto2Step(pStep *pm.Step) core.TestStep {
+	pStep = pb.Step(pStep)
+	return ParseProto2Step(pStep)
+}
+
+func parsIMap(iMap map[string]interface) map[string]string {
+	sMap := make(map[string]string)
+	for k, v := range iMap {
+		sMap[k] = string(v)
+	}
+	return sMap
+}
+
+func parsPMap(sMap map[string]string) map[string]interface{} {
 	iMap := make(map[string]interface{})
-	for k, v := range oMap {
+	for k, v := range sMap {
 		iMap[k] = parsString(v)
 	}
 	return iMap
