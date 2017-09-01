@@ -3,7 +3,11 @@ package core
 import "github.com/google/uuid"
 
 type DefaultRunner struct {
-	Handler ResultHandler
+	hander ResultHandler
+}
+
+func NewDefaultRunner(handler ResultHandler) TestRunner {
+	return &DefaultRunner{handler}
 }
 
 func (runner *DefaultRunner) Run(c interface{}) {
@@ -29,12 +33,14 @@ func (runner *DefaultRunner) run1(c interface{}, execID string) {
 	case TestStep:
 		step := c.(TestStep)
 		metrics := step.Run()
-		runner.Handler.Handle(StepResult{
-			Metrics:     metrics,
+
+		runner.hander.Handle(StepResult{
 			ExecutionID: execID,
+			Metrics:     metrics,
 			Status:      "Completed",
 			StepType:    step.GetStepType(),
 		})
+
 	default:
 		panic("Unknow type for running")
 	}

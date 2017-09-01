@@ -25,6 +25,6 @@ func readConfig() {
 func GetConfig() *Config {
 	return &Config{
 		Message:         viper.GetString("message"),
-		RetrieveTimeout: viper.GetDuration("retrieve-timeout"),
+		RetrieveTimeout: viper.GetDuration("retrieve-timeout") * time.Second,
 	}
 }

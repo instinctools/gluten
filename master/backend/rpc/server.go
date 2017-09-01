@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	store "bitbucket.org/instinctools/gluten/master/backend/nodestore"
+	store "bitbucket.org/instinctools/gluten/master/backend/clustering"
 	"bitbucket.org/instinctools/gluten/shared/logging"
 	pb_cli "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	pb_slave "bitbucket.org/instinctools/gluten/shared/rpc/slave"

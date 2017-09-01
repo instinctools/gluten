@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -11,12 +10,11 @@ import (
 	"strconv"
 
 	log "bitbucket.org/instinctools/gluten/shared/logging"
-	repo "bitbucket.org/instinctools/gluten/shared/persistence/repository"
 )
 
 func GetExecution(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(writer).Encode(repo.GetExecutions())
+	//	json.NewEncoder(writer).Encode(repo.ExecutionRepo.Get(10, 0))
 	writer.WriteHeader(http.StatusOK)
 }
 
@@ -28,7 +26,7 @@ func GetResults(writer http.ResponseWriter, r *http.Request, p httprouter.Params
 			"id": id,
 		}).Fatal("Error convert")
 	}
-	json.NewEncoder(writer).Encode(repo.GetResults(uint(id)))
+	//	json.NewEncoder(writer).Encode(repo.GetResults(uint(id)))
 	writer.WriteHeader(200)
 }
 

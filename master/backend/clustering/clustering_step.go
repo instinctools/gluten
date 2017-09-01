@@ -10,23 +10,13 @@ var (
 
 type ClusteredStep struct {
 	core.BaseTestStep
-	clusterContext *ClusterContext
 }
 
-func newRepeatStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
+func newClusteredStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
 	//validate and preset parameters
-	rawContext := params["CLUSTERCONTEXT"]
-	var resolvedContext ClusterContext
-	switch rawContext.(type) {
-	case ClusterContext:
-		resolvedContext = rawContext.(ClusterContext)
-	default:
-		panic("Unsupported parameter type")
-	}
 
 	return &ClusteredStep{
 		core.BaseTestStep{core.Common{name}, params, substeps},
-		&resolvedContext,
 	}
 }
 
@@ -51,8 +41,8 @@ func (step *ClusteredStep) BeforeStep() {
 }
 
 func (step *ClusteredStep) Run() []core.Metric {
-	//	for _, s := range step.clusterContext.GetNodes() {
-	//		s.SubmitAndExecute()
-	//	}
+	for node := range GetNodes() {
+
+	}
 	return []core.Metric{}
 }

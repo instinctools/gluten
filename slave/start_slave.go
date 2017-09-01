@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bitbucket.org/instinctools/gluten/master/backend/cmd"
 	"bitbucket.org/instinctools/gluten/shared/logging"
+	"bitbucket.org/instinctools/gluten/slave/cmd"
 	"os"
 )
 
