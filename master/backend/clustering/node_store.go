@@ -20,7 +20,7 @@ func init() {
 	nodes = make(map[string]time.Time)
 
 	//load variables from nodesConfig
-	nodesConfig := conf.GetNodesConfig()
+	nodesConfig := conf.GlobalConfig.Node
 	RETRIEVE_TIMEOUT = time.Second * time.Duration(nodesConfig.RetrieveTimeout)
 	EXIT_TIMEOUT = time.Second * time.Duration(nodesConfig.ExitTimeout)
 

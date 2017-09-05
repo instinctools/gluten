@@ -45,7 +45,7 @@ func (repo *GormExecutionsRepo) Get(limit int, offset int) []core.Execution {
 func (repo *GormExecutionsRepo) GetById(id string) core.Execution {
 	var dto Execution
 	repo.connection.First(&dto, id)
-	return *DtoToExecution(&dto)
+	return *dto.toExecution()
 }
 
 func (repo *GormExecutionsRepo) Update(execution core.Execution) {

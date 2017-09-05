@@ -1,4 +1,4 @@
-package shared
+package persistence
 
 import (
 	"testing"
@@ -11,13 +11,13 @@ import (
 )
 
 func TestInitDb(t *testing.T) {
-	conf := config.GetConnectionConfig()
+	conf := config.GlobalConfig.DB.Connection
 	_, err := gorm.Open("postgres", conf.URL)
 	assert.NoError(t, err)
 }
 
 func TestGormExecutionsRepo(t *testing.T) {
-	connectionConfig := config.GetConnectionConfig()
+	connectionConfig := config.GlobalConfig.DB.Connection
 	exec_repo := repo_gorm.NewGormExecutionsRepo(connectionConfig.URL)
 
 	//1. test create object

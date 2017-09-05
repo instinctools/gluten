@@ -52,13 +52,6 @@ func (dto *Execution) toExecution() *core.Execution {
 	}
 }
 
-func DtoToExecution(dto *Execution) *core.Execution {
-	return &core.Execution{
-		ID:     dto.Id,
-		Status: dto.Status,
-	}
-}
-
 func (dto *Result) toStepResult() *core.StepResult {
 	metrics := []core.Metric{}
 	for _, element := range dto.Metrics {

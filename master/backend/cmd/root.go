@@ -20,7 +20,7 @@ var rpcPort, webPort int
 func init() {
 	RootCmd.Flags().IntVarP(&rpcPort, "rpc-port", "r", 0, "Master rpc port")
 	RootCmd.Flags().IntVarP(&webPort, "web-port", "w", 0, "Master web port")
-	migrationsConfig := config.GetMigrationsConfig()
+	migrationsConfig := config.GlobalConfig.DB.Migrations
 	if migrationsConfig.Enable {
 		migration.ApplyMigrations(migrationsConfig.Folder, migrationsConfig.ConnectionString)
 	}
@@ -36,7 +36,7 @@ var RootCmd = &cobra.Command{
 		if rpcPort == 0 || webPort == 0 {
 			os.Exit(1)
 		} else {
-			connectionConfig := config.GetConnectionConfig()
+			connectionConfig := config.GlobalConfig.DB.Connection
 			runner := core.NewDefaultRunner(&result_handlers.LoggableResultHandler{})
 			exec_repo := gorm.NewGormExecutionsRepo(connectionConfig.URL)
 			exec_service := service.NewExecutionService(runner, exec_repo)

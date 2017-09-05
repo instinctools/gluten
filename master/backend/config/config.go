@@ -12,6 +12,10 @@ type Config struct {
 	DB   DB    `yaml:"db"`
 }
 
+var (
+	GlobalConfig *Config
+)
+
 type DB struct {
 	Migrations Migrations
 	Connection Connection
@@ -41,25 +45,21 @@ func readConfig() {
 	viper.SetConfigName("master-config")
 	viper.AddConfigPath(project_path)
 	viper.ReadInConfig()
-}
 
-func GetNodesConfig() *Nodes {
-	return &Nodes{
-		RetrieveTimeout: viper.GetDuration("nodes.retrieve-timeout") * time.Second,
-		ExitTimeout:     viper.GetDuration("nodes.exit-timeout") * time.Second,
-	}
-}
-
-func GetMigrationsConfig() *Migrations {
-	return &Migrations{
-		Folder:           viper.GetString("db.migrations.folder"),
-		ConnectionString: viper.GetString("db.migrations.connectionString"),
-		Enable:           viper.GetBool("db.migrations.enable"),
-	}
-}
-
-func GetConnectionConfig() *Connection {
-	return &Connection{
-		URL: viper.GetString("db.connection.url"),
+	GlobalConfig = &Config{
+		Node: Nodes{
+			RetrieveTimeout: viper.GetDuration("nodes.retrieve-timeout") * time.Second,
+			ExitTimeout:     viper.GetDuration("nodes.exit-timeout") * time.Second,
+		},
+		DB: DB{
+			Migrations: Migrations{
+				Folder:           viper.GetString("db.migrations.folder"),
+				ConnectionString: viper.GetString("db.migrations.connectionString"),
+				Enable:           viper.GetBool("db.migrations.enable"),
+			},
+			Connection: Connection{
+				URL: viper.GetString("db.connection.url"),
+			},
+		},
 	}
 }
