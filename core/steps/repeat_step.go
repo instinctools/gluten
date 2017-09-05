@@ -18,19 +18,9 @@ type RepeatStep struct {
 }
 
 func newRepeatStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
-	//validate and preset parameters
-	rawRepeats := params["REPEATS"]
-	var resolvedRepeats int
-	switch rawRepeats.(type) {
-	case int:
-		resolvedRepeats = rawRepeats.(int)
-	default:
-		panic("Unsupported parameter type")
-	}
-
 	return &RepeatStep{
 		CompositeStep{core.BaseTestStep{core.Common{name}, params, substeps}},
-		resolvedRepeats,
+		params["REPEATS"].(int),
 	}
 }
 
@@ -53,11 +43,16 @@ func (step *RepeatStep) GetStepType() string {
 func (step *RepeatStep) BeforeStep() {
 }
 
-func (step *RepeatStep) Run(context *core.Execution) []core.Metric {
+func (step *RepeatStep) Run(context *core.Execution, handler core.ResultHandler) {
 	successRepeats := 0
 	for i := 0; i < step.repeats; i++ {
-		step.CompositeStep.Run(context)
+		step.CompositeStep.Run(context, handler)
 		successRepeats++
 	}
-	return []core.Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}}
+	handler.Handle(core.StepResult{
+		ExecutionID: context.ID,
+		Status:      "COMPLETED",
+		StepType:    step.GetStepType(),
+		Metrics:     []core.Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}},
+	})
 }

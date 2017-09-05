@@ -47,13 +47,7 @@ func (runner *DefaultRunner) run1(context *Execution, c interface{}) error {
 		}
 	case TestStep:
 		step := c.(TestStep)
-		metrics := step.Run(context)
-		runner.hander.Handle(StepResult{
-			ExecutionID: context.ID,
-			Metrics:     metrics,
-			Status:      "Completed",
-			StepType:    step.GetStepType(),
-		})
+		step.Run(context, runner.hander)
 	default:
 		logging.WithFields(logging.Fields{
 			"to_run": c,

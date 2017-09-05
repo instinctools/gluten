@@ -18,8 +18,6 @@ type ClusteredStep struct {
 }
 
 func newClusteredStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
-	//validate and preset parameters
-
 	return &ClusteredStep{
 		core.BaseTestStep{core.Common{name}, params, substeps},
 	}
@@ -45,9 +43,14 @@ func (step *ClusteredStep) BeforeStep() {
 	//validate and preset parameters
 }
 
-func (step *ClusteredStep) Run(context *core.Execution) []core.Metric {
+func (step *ClusteredStep) Run(context *core.Execution, handler core.ResultHandler) {
 	for _, node := range GetNodes() {
 		SubmitOverRPC(node, context, &steps.CompositeStep{step.BaseTestStep})
+		handler.Handle(core.StepResult{
+			ExecutionID: context.ID,
+			Status:      "COMPLETED",
+			StepType:    step.GetStepType(),
+			Metrics:     []core.Metric{{Key: "NODE", Val: node}},
+		})
 	}
-	return nil
 }

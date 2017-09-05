@@ -10,6 +10,12 @@ type GormResultsRepo struct {
 	connection *gorm.DB
 }
 
+func NewGormResultsRepo() *GormResultsRepo {
+	return &GormResultsRepo{
+		InitDb(),
+	}
+}
+
 func (repo *GormResultsRepo) Create(result core.StepResult) {
 	tx := repo.connection.Begin()
 	err := tx.Create(NewExecutionResult(result)).Error

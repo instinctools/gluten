@@ -7,6 +7,7 @@ CREATE TABLE execution(
 CREATE TABLE execution_result(
   id VARCHAR(255) PRIMARY KEY NOT NULL,
   created BIGINT NOT NULL,
+  step_type VARCHAR(255) NOT null,
   execution_id VARCHAR(255) NOT NULL REFERENCES execution(id)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -14,6 +15,6 @@ CREATE TABLE execution_result(
 CREATE TABLE metric(
   key VARCHAR(100) NOT NULL,
   value VARCHAR(100) NOT NULL,
-  execution_result_id VARCHAR(255) NOT NULL REFERENCES execution_result(id)
+  result_id VARCHAR(255) NOT NULL REFERENCES execution_result(id)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
