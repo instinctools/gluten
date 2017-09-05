@@ -1,5 +1,7 @@
 package core
 
+//TODO - split file
+
 // Common ...
 type Common struct {
 	Name string
@@ -65,7 +67,7 @@ type TestStep interface {
 	GetStepType() string
 
 	BeforeStep()
-	Run() []Metric
+	Run(context *Execution) []Metric
 }
 
 type BaseTestStep struct {
@@ -90,7 +92,7 @@ type Metric struct {
 
 // TestRunner ...
 type TestRunner interface {
-	Run(c interface{})
+	Run(context *Execution, c interface{}) error
 }
 
 // ResultHandler ...
@@ -98,6 +100,11 @@ type ResultHandler interface {
 	Handle(result StepResult)
 }
 
+const (
+	STATUS_CREATED = "CREATED"
+)
+
 type Execution struct {
-	ID string
+	ID     string
+	Status string
 }

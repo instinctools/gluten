@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func SubmitOverRPC(node_address string, step core.TestStep) {
+func SubmitOverRPC(node_address string, execution *core.Execution, step core.TestStep) {
 	conn, err := grpc.Dial(node_address, grpc.WithInsecure())
 	if err != nil {
 		logging.WithFields(logging.Fields{
@@ -19,7 +19,7 @@ func SubmitOverRPC(node_address string, step core.TestStep) {
 	defer conn.Close()
 	c := service.NewProtoServiceClient(conn)
 
-	_, err = c.SendMessage(context.Background(), utils.ParseStep2Proto(step))
+	_, err = c.SendMessage(context.Background(), utils.ParseStep2Proto(execution, step))
 	if err != nil {
 		logging.WithFields(logging.Fields{
 			"error": err,

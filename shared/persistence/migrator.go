@@ -1,4 +1,4 @@
-package migrations
+package persistence
 
 import (
 	"bitbucket.org/instinctools/gluten/shared/logging"

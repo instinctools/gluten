@@ -53,10 +53,10 @@ func (step *ParallelStep) GetStepType() string {
 func (step *ParallelStep) BeforeStep() {
 }
 
-func (step *ParallelStep) Run() []core.Metric {
+func (step *ParallelStep) Run(context *core.Execution) []core.Metric {
 	successRepeats := 0
 	for i := 0; i < step.threads; i++ {
-		go step.CompositeStep.Run()
+		go step.CompositeStep.Run(context)
 		successRepeats++
 	}
 	return []core.Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}}

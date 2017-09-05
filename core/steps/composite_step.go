@@ -43,9 +43,9 @@ func (step *CompositeStep) BeforeStep() {
 	//validate and preset parameters
 }
 
-func (step *CompositeStep) Run() []core.Metric {
+func (step *CompositeStep) Run(context *core.Execution) []core.Metric {
 	for _, s := range step.Substeps {
-		s.Run()
+		s.Run(context)
 	}
 	return []core.Metric{}
 }

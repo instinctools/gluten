@@ -18,8 +18,8 @@ func DeserializeJsonToProto(jsonProject string) *pb.Project {
 	return &deserializedProject
 }
 
-func ParseProto2Project(pProject *pb.Project) core.Project {
-	testProject := core.Project{Common: core.Common{pProject.Name}}
+func ParseProto2Project(pProject *pb.Project) *core.Project {
+	testProject := &core.Project{Common: core.Common{pProject.Name}}
 	for _, pScenario := range pProject.GetScenarios() {
 		testScenario := core.TestScenario{Common: core.Common{pScenario.Name}}
 		for _, pCase := range pScenario.GetCases() {
@@ -35,14 +35,19 @@ func ParseProto2Project(pProject *pb.Project) core.Project {
 	return testProject
 }
 
-func ParseStep2Proto(step core.TestStep) *pm.Step {
+func ParseStep2Proto(context *core.Execution, step core.TestStep) *pm.Step {
 	var pSubSteps []*pm.Step
 	for _, subStep := range step.GetSubSteps() {
-		pSubStep := ParseStep2Proto(subStep)
+		pSubStep := ParseStep2Proto(context, subStep)
 		pSubSteps = append(pSubSteps, pSubStep)
 	}
 	sMap := parsIMap(step.GetParams())
-	return &pm.Step{Name: step.GetCommon().Name, Type: step.GetStepType(), Parameters: sMap, SubSteps: pSubSteps}
+	return &pm.Step{
+		Name:       step.GetCommon().Name,
+		Type:       step.GetStepType(),
+		Parameters: sMap,
+		SubSteps:   pSubSteps,
+		Exec:       &pm.Execution{ID: context.ID, Status: context.Status}}
 }
 
 func ParseCliProto2Step(pStep *pb.Step) core.TestStep {
@@ -56,15 +61,15 @@ func ParseCliProto2Step(pStep *pb.Step) core.TestStep {
 	return step
 }
 
-func ParseMasterProto2Step(pStep *pm.Step) core.TestStep {
+func ParseMasterProto2Step(pStep *pm.Step) (*core.Execution, core.TestStep) {
 	var subSteps []core.TestStep
 	for _, pSubStep := range pStep.GetSubSteps() {
-		subStep := ParseMasterProto2Step(pSubStep)
+		_, subStep := ParseMasterProto2Step(pSubStep)
 		subSteps = append(subSteps, subStep)
 	}
 	iMap := parsPMap(pStep.Parameters)
 	step := steps.NewStep(pStep.Type, pStep.Name, iMap, subSteps)
-	return step
+	return &core.Execution{ID: pStep.Exec.ID, Status: pStep.Exec.Status}, step
 }
 
 func parsIMap(iMap map[string]interface{}) map[string]string {

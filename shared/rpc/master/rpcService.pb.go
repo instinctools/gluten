@@ -10,6 +10,7 @@ It is generated from these files:
 
 It has these top-level messages:
 	Step
+	Execution
 	ResponseMessage
 */
 package slave
@@ -33,6 +34,7 @@ type Step struct {
 	Type       string            `protobuf:"bytes,2,opt" json:"Type,omitempty"`
 	Parameters map[string]string `protobuf:"bytes,3,rep" json:"Parameters,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	SubSteps   []*Step           `protobuf:"bytes,4,rep" json:"SubSteps,omitempty"`
+	Exec       *Execution        `protobuf:"bytes,5,opt" json:"Exec,omitempty"`
 }
 
 func (m *Step) Reset()         { *m = Step{} }
@@ -53,6 +55,22 @@ func (m *Step) GetSubSteps() []*Step {
 	return nil
 }
 
+func (m *Step) GetExec() *Execution {
+	if m != nil {
+		return m.Exec
+	}
+	return nil
+}
+
+type Execution struct {
+	ID     string `protobuf:"bytes,1,opt" json:"ID,omitempty"`
+	Status string `protobuf:"bytes,2,opt" json:"Status,omitempty"`
+}
+
+func (m *Execution) Reset()         { *m = Execution{} }
+func (m *Execution) String() string { return proto.CompactTextString(m) }
+func (*Execution) ProtoMessage()    {}
+
 type ResponseMessage struct {
 	Message string `protobuf:"bytes,1,opt,name=message" json:"message,omitempty"`
 }
@@ -64,6 +82,7 @@ func (*ResponseMessage) ProtoMessage()    {}
 func init() {
 	proto.RegisterType((*Step)(nil), "proto_service.Step")
 	proto.RegisterType((*ResponseMessage)(nil), "proto_service.ResponseMessage")
+	proto.RegisterType((*Execution)(nil), "proto_service.Execution")
 }
 
 // Client API for ProtoService service

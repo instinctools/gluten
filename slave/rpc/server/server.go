@@ -2,6 +2,7 @@ package server
 
 import (
 	"bitbucket.org/instinctools/gluten/core"
+	"bitbucket.org/instinctools/gluten/core/result_handlers"
 	"bitbucket.org/instinctools/gluten/shared/logging"
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/master"
 	"bitbucket.org/instinctools/gluten/shared/utils"
@@ -12,13 +13,13 @@ import (
 	"strconv"
 )
 
-type server struct{}
+type RpcServer struct{}
 
 var (
-	runner = core.NewDefaultRunner(&core.LoggableResultHandler{})
+	runner = core.NewDefaultRunner(&result_handlers.LoggableResultHandler{})
 )
 
-func (s *server) SendMessage(ctx context.Context, in *pb.Step) (*pb.ResponseMessage, error) {
+func (s *RpcServer) SendMessage(ctx context.Context, in *pb.Step) (*pb.ResponseMessage, error) {
 	runner.Run(utils.ParseMasterProto2Step(in))
 	return &pb.ResponseMessage{Message: "OK"}, nil
 }
@@ -31,7 +32,7 @@ func LaunchServer(port int) {
 		}).Info("Error during establishing connection")
 	}
 	s := grpc.NewServer()
-	pb.RegisterProtoServiceServer(s, &server{})
+	pb.RegisterProtoServiceServer(s, &RpcServer{})
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		logging.WithFields(logging.Fields{

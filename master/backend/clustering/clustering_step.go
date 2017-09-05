@@ -45,9 +45,9 @@ func (step *ClusteredStep) BeforeStep() {
 	//validate and preset parameters
 }
 
-func (step *ClusteredStep) Run() []core.Metric {
+func (step *ClusteredStep) Run(context *core.Execution) []core.Metric {
 	for _, node := range GetNodes() {
-		SubmitOverRPC(node, &steps.CompositeStep{step.BaseTestStep})
+		SubmitOverRPC(node, context, &steps.CompositeStep{step.BaseTestStep})
 	}
-	return []core.Metric{}
+	return nil
 }

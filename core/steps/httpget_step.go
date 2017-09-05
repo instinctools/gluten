@@ -56,7 +56,7 @@ func (step *GetRequestStep) BeforeStep() {
 	//Do nothing
 }
 
-func (step *GetRequestStep) Run() []core.Metric {
+func (step *GetRequestStep) Run(context *core.Execution) []core.Metric {
 	resp, err := http.Get(step.url)
 	if err != nil {
 		return []core.Metric{{Key: "STATUS", Val: err.Error()}}
