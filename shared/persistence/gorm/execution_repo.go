@@ -37,7 +37,7 @@ func (repo *GormExecutionsRepo) Get(limit int, offset int) []core.Execution {
 		Find(&dto)
 	executions := []core.Execution{}
 	for _, elem := range dto {
-		executions = append(executions, *DtoToExecution(&elem))
+		executions = append(executions, *elem.toExecution())
 	}
 	return executions
 }
@@ -50,4 +50,8 @@ func (repo *GormExecutionsRepo) GetById(id string) core.Execution {
 
 func (repo *GormExecutionsRepo) Update(execution core.Execution) {
 	repo.connection.Find(&Execution{}).Update(execution)
+}
+
+func (repo *GormExecutionsRepo) Delete(execution core.Execution) {
+	repo.connection.Find(&Execution{}).Delete(execution)
 }

@@ -2,8 +2,9 @@ package gorm
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 
 	"bitbucket.org/instinctools/gluten/core"
 )
@@ -58,10 +59,10 @@ func DtoToExecution(dto *Execution) *core.Execution {
 	}
 }
 
-func DtoToStepResult(dto *Result) *core.StepResult {
+func (dto *Result) toStepResult() *core.StepResult {
 	metrics := []core.Metric{}
 	for _, element := range dto.Metrics {
-		metrics = append(metrics, DtoToMetric(element))
+		metrics = append(metrics, element.toMetric())
 	}
 	return &core.StepResult{
 		ExecutionID: dto.ExecutionID,
@@ -70,7 +71,7 @@ func DtoToStepResult(dto *Result) *core.StepResult {
 	}
 }
 
-func DtoToMetric(dto Metric) core.Metric {
+func (dto Metric) toMetric() core.Metric {
 	return core.Metric{
 		Key: dto.Key,
 		Val: dto.Value,

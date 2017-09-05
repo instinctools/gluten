@@ -10,9 +10,9 @@ type GormResultsRepo struct {
 	connection *gorm.DB
 }
 
-func NewGormResultsRepo() *GormResultsRepo {
+func NewGormResultsRepo(URL string) *GormResultsRepo {
 	return &GormResultsRepo{
-		InitDb(),
+		InitDb(URL),
 	}
 }
 
@@ -33,7 +33,7 @@ func (repo *GormResultsRepo) Get(limit int, offset int) []core.StepResult {
 		Find(&dto)
 	results := []core.StepResult{}
 	for _, elem := range dto {
-		results = append(results, *DtoToStepResult(&elem))
+		results = append(results, *elem.toStepResult())
 	}
 	return results
 }
@@ -41,7 +41,7 @@ func (repo *GormResultsRepo) Get(limit int, offset int) []core.StepResult {
 func (repo *GormResultsRepo) GetById(id string) core.StepResult {
 	var dto Result
 	repo.connection.First(&dto, id)
-	return *DtoToStepResult(&dto)
+	return *dto.toStepResult()
 }
 
 func (repo *GormResultsRepo) Update(result core.StepResult) {
