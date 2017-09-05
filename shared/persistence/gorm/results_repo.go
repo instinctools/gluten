@@ -6,8 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//TODO - fulfill all methods
-
 type GormResultsRepo struct {
 	connection *gorm.DB
 }
@@ -22,13 +20,24 @@ func (repo *GormResultsRepo) Create(result core.StepResult) {
 }
 
 func (repo *GormResultsRepo) Get(limit int, offset int) []core.StepResult {
-	return nil
+	var dto []Result
+	repo.connection.
+		Limit(limit).
+		Offset(offset).
+		Find(&dto)
+	results := []core.StepResult{}
+	for _, elem := range dto {
+		results = append(results, *DtoToStepResult(&elem))
+	}
+	return results
 }
 
 func (repo *GormResultsRepo) GetById(id string) core.StepResult {
-	return core.StepResult{}
+	var dto Result
+	repo.connection.First(&dto, id)
+	return *DtoToStepResult(&dto)
 }
 
 func (repo *GormResultsRepo) Update(result core.StepResult) {
-
+	repo.connection.Find(&Result{}).Update(result)
 }

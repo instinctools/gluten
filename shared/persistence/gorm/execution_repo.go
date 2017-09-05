@@ -6,7 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//TODO - fulfill all methods
 type GormExecutionsRepo struct {
 	connection *gorm.DB
 }
@@ -31,13 +30,24 @@ func (repo *GormExecutionsRepo) Create(execution *core.Execution) {
 }
 
 func (repo *GormExecutionsRepo) Get(limit int, offset int) []core.Execution {
-	return nil
+	var dto []Execution
+	repo.connection.
+		Limit(limit).
+		Offset(offset).
+		Find(&dto)
+	executions := []core.Execution{}
+	for _, elem := range dto {
+		executions = append(executions, *DtoToExecution(&elem))
+	}
+	return executions
 }
 
 func (repo *GormExecutionsRepo) GetById(id string) core.Execution {
-	return core.Execution{}
+	var dto Execution
+	repo.connection.First(&dto, id)
+	return *DtoToExecution(&dto)
 }
 
-func (repo *GormExecutionsRepo) Update(result core.Execution) {
-
+func (repo *GormExecutionsRepo) Update(execution core.Execution) {
+	repo.connection.Find(&Execution{}).Update(execution)
 }
