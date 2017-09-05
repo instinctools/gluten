@@ -11,9 +11,9 @@ type GormExecutionsRepo struct {
 	connection *gorm.DB
 }
 
-func NewGormExecutionsRepo() *GormExecutionsRepo {
+func NewGormExecutionsRepo(URL string) *GormExecutionsRepo {
 	return &GormExecutionsRepo{
-		InitDb(),
+		InitDb(URL),
 	}
 }
 

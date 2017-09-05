@@ -6,8 +6,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-func InitDb() *gorm.DB {
-	db, err := gorm.Open("postgres", "host=localhost user=postgres dbname=gluten sslmode=disable password=1")
+func InitDb(URL string) *gorm.DB {
+	db, err := gorm.Open("postgres", URL)
 	if err != nil {
 		logging.WithFields(logging.Fields{
 			"error": err,
