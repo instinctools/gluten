@@ -10,7 +10,7 @@ var (
 )
 
 type DefaultRunner struct {
-	hander ResultHandler
+	handler ResultHandler
 }
 
 func NewDefaultRunner(handler ResultHandler) TestRunner {
@@ -48,7 +48,7 @@ func (runner *DefaultRunner) run1(context *Execution, c interface{}) error {
 	case TestStep:
 		step := c.(TestStep)
 		metrics := step.Run(context)
-		runner.hander.Handle(StepResult{
+		runner.handler.Handle(StepResult{
 			ExecutionID: context.ID,
 			Metrics:     metrics,
 			Status:      "Completed",

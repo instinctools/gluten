@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package slave;
+package master;
 
 service ProtoService {
   rpc SendMessage (Step) returns (ResponseMessage) {}

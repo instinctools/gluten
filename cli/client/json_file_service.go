@@ -30,28 +30,33 @@ func ReadJSONFile(pathToFile string) string {
 }
 
 func AutoGenerateConfig(filename string) {
-	//TODO - generateJSON should be a string, don't need to marshal it to string
-	json := "{\"Name\": \"Project1\","
-//				+ "\"Scenarios\": [{"
-//					+"\"Name\": \"Scenario1\","
-//						+"\"Cases\": [{"
-//							+"\"Name\": \"Case1\","
-//								+"\"Steps\": [{"
-//									+"\"Name\": \"G1\","
-//									+"\"Type\": \"GetRequestStep\","
-//									+"\"Parameters\": {\"URL\": \"https://google.com\"},"
-//									+"\"SubSteps\" : [{"
-//										+"\"Name\": \"P1\","
-//										+"\"Type\": \"GetRequestStep\","
-//										+"\"Parameters\": {\"URL\": \"https://google.com\"}"
-//									+"}]},"
-//									+"{\"Name\": \"G2\","
-//									+"\"Type\": \"GetRequestStep\","
-//									+"\"Parameters\": {\"URL\": \"https://google.com\"}"
-//								+"}]"
-//							+"}]"
-//						+"}]"
-//					+"}"
+	json := `{
+				"Name": "Project1",
+				"Scenarios": [{
+					"Name": "Scenario1",
+					"Cases": [{
+						"Name": "Case1",
+						"Steps": [{
+								"Name": "G1",
+								"Type": "GET_REQUEST_STEP",
+								"Parameters": {"URL": "https://google.com"},
+								"SubSteps" : [
+									{
+										"Name": "P1",
+										"Type": "GET_REQUEST_STEP",
+										"Parameters": {"URL": "https://google.com"}
+									}
+								]
+							},
+							{
+								"Name": "G2",
+								"Type": "GET_REQUEST_STEP",
+								"Parameters": {"URL": "https://google.com"}
+							}
+						]
+					}]
+				}]
+			}`
 	err := ioutil.WriteFile(filename, []byte(json), 0644)
 	if err != nil {
 		logging.WithFields(logging.Fields{

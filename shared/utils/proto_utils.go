@@ -3,14 +3,14 @@ package utils
 import (
 	"bitbucket.org/instinctools/gluten/core"
 	"bitbucket.org/instinctools/gluten/core/steps"
-	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
-	pm "bitbucket.org/instinctools/gluten/shared/rpc/master"
+	rpcCli "bitbucket.org/instinctools/gluten/shared/rpc/cli"
+	rpcMaster "bitbucket.org/instinctools/gluten/shared/rpc/master"
 	"encoding/json"
 	"strconv"
 )
 
-func DeserializeJsonToProto(jsonProject string) *pb.Project {
-	deserializedProject := pb.Project{}
+func DeserializeJsonToProto(jsonProject string) *rpcCli.Project {
+	deserializedProject := rpcCli.Project{}
 	err := json.Unmarshal([]byte(jsonProject), &deserializedProject)
 	if err != nil {
 		panic(err)
@@ -18,7 +18,7 @@ func DeserializeJsonToProto(jsonProject string) *pb.Project {
 	return &deserializedProject
 }
 
-func ParseProto2Project(pProject *pb.Project) *core.Project {
+func ParseProto2Project(pProject *rpcCli.Project) *core.Project {
 	testProject := &core.Project{Common: core.Common{pProject.Name}}
 	for _, pScenario := range pProject.GetScenarios() {
 		testScenario := core.TestScenario{Common: core.Common{pScenario.Name}}
@@ -35,22 +35,22 @@ func ParseProto2Project(pProject *pb.Project) *core.Project {
 	return testProject
 }
 
-func ParseStep2Proto(context *core.Execution, step core.TestStep) *pm.Step {
-	var pSubSteps []*pm.Step
+func ParseStep2Proto(context *core.Execution, step core.TestStep) *rpcMaster.Step {
+	var pSubSteps []*rpcMaster.Step
 	for _, subStep := range step.GetSubSteps() {
 		pSubStep := ParseStep2Proto(context, subStep)
 		pSubSteps = append(pSubSteps, pSubStep)
 	}
 	sMap := parsIMap(step.GetParams())
-	return &pm.Step{
+	return &rpcMaster.Step{
 		Name:       step.GetCommon().Name,
 		Type:       step.GetStepType(),
 		Parameters: sMap,
 		SubSteps:   pSubSteps,
-		Exec:       &pm.Execution{ID: context.ID, Status: context.Status}}
+		Exec:       &rpcMaster.Execution{ID: context.ID, Status: context.Status}}
 }
 
-func ParseCliProto2Step(pStep *pb.Step) core.TestStep {
+func ParseCliProto2Step(pStep *rpcCli.Step) core.TestStep {
 	var subSteps []core.TestStep
 	for _, pSubStep := range pStep.GetSubSteps() {
 		subStep := ParseCliProto2Step(pSubStep)
@@ -61,7 +61,7 @@ func ParseCliProto2Step(pStep *pb.Step) core.TestStep {
 	return step
 }
 
-func ParseMasterProto2Step(pStep *pm.Step) (*core.Execution, core.TestStep) {
+func ParseMasterProto2Step(pStep *rpcMaster.Step) (*core.Execution, core.TestStep) {
 	var subSteps []core.TestStep
 	for _, pSubStep := range pStep.GetSubSteps() {
 		_, subStep := ParseMasterProto2Step(pSubStep)

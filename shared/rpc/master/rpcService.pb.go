@@ -13,7 +13,7 @@ It has these top-level messages:
 	Execution
 	ResponseMessage
 */
-package slave
+package master
 
 import proto "github.com/golang/protobuf/proto"
 

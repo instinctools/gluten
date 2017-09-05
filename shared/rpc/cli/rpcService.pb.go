@@ -15,7 +15,7 @@ It has these top-level messages:
 	TestCase
 	Step
 */
-package rpc
+package cli
 
 import proto "github.com/golang/protobuf/proto"
 

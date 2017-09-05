@@ -1,6 +1,6 @@
 syntax = "proto3"; 
  
-package rpc; 
+package cli; 
 
 service ProtoService {
   rpc SendConfig (Project) returns (ResponseMessage) {}
