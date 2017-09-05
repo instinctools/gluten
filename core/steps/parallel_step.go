@@ -18,19 +18,9 @@ type ParallelStep struct {
 }
 
 func newParallelStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
-	//validate and preset parameters
-	rawThreads := params["THREADS"]
-	var resolvedThreads int
-	switch rawThreads.(type) {
-	case int:
-		resolvedThreads = rawThreads.(int)
-	default:
-		panic("Unsupported parameter type")
-	}
-
 	return &ParallelStep{
 		CompositeStep{core.BaseTestStep{core.Common{name}, params, substeps}},
-		resolvedThreads,
+		params["THREADS"].(int),
 	}
 }
 

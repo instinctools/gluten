@@ -18,19 +18,9 @@ type RepeatStep struct {
 }
 
 func newRepeatStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
-	//validate and preset parameters
-	rawRepeats := params["REPEATS"]
-	var resolvedRepeats int
-	switch rawRepeats.(type) {
-	case int:
-		resolvedRepeats = rawRepeats.(int)
-	default:
-		panic("Unsupported parameter type")
-	}
-
 	return &RepeatStep{
 		CompositeStep{core.BaseTestStep{core.Common{name}, params, substeps}},
-		resolvedRepeats,
+		params["REPEATS"].(int),
 	}
 }
 

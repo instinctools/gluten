@@ -18,8 +18,6 @@ type ClusteredStep struct {
 }
 
 func newClusteredStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
-	//validate and preset parameters
-
 	return &ClusteredStep{
 		core.BaseTestStep{core.Common{name}, params, substeps},
 	}

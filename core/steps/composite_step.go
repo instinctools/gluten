@@ -17,7 +17,6 @@ type CompositeStep struct {
 }
 
 func newCompositeStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
-	//validate and preset parameters
 	return &CompositeStep{
 		core.BaseTestStep{core.Common{name}, params, substeps},
 	}
