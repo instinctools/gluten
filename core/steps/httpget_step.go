@@ -20,19 +20,9 @@ type GetRequestStep struct {
 }
 
 func newGetRequestStep(name string, params map[string]interface{}, substeps []core.TestStep) core.TestStep {
-	//validate and preset parameters
-	url := params["URL"]
-	resolvedurl := ""
-	switch url.(type) {
-	case string:
-		resolvedurl = url.(string)
-	default:
-		panic("Unsupported parameter type")
-	}
-
 	return &GetRequestStep{
 		core.BaseTestStep{core.Common{name}, params, substeps},
-		resolvedurl,
+		params["URL"].(string),
 	}
 }
 
@@ -56,10 +46,12 @@ func (step *GetRequestStep) BeforeStep() {
 	//Do nothing
 }
 
-func (step *GetRequestStep) Run(context *core.Execution) []core.Metric {
+func (step *GetRequestStep) Run(context *core.Execution, handler core.ResultHandler) {
 	resp, err := http.Get(step.url)
 	if err != nil {
-		return []core.Metric{{Key: "STATUS", Val: err.Error()}}
+		logging.WithFields(logging.Fields{
+			"error": err,
+		}).Error("Error during sending request")
 	}
 	err = resp.Body.Close()
 	if err != nil {
@@ -67,5 +59,10 @@ func (step *GetRequestStep) Run(context *core.Execution) []core.Metric {
 			"error": err,
 		}).Error("Error during closing connection")
 	}
-	return []core.Metric{{Key: "STATUS", Val: resp.Status}}
+	handler.Handle(core.StepResult{
+		ExecutionID: context.ID,
+		Status:      "COMPLETED",
+		StepType:    step.GetStepType(),
+		Metrics:     []core.Metric{{Key: "RESPONSE_STATUS", Val: resp.Status}},
+	})
 }

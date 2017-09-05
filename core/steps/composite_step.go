@@ -43,9 +43,14 @@ func (step *CompositeStep) BeforeStep() {
 	//validate and preset parameters
 }
 
-func (step *CompositeStep) Run(context *core.Execution) []core.Metric {
+func (step *CompositeStep) Run(context *core.Execution, handler core.ResultHandler) {
 	for _, s := range step.Substeps {
-		s.Run(context)
+		s.Run(context, handler)
 	}
-	return []core.Metric{}
+	handler.Handle(core.StepResult{
+		ExecutionID: context.ID,
+		Status:      "COMPLETED",
+		StepType:    step.GetStepType(),
+		Metrics:     nil,
+	})
 }

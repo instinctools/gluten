@@ -67,7 +67,7 @@ type TestStep interface {
 	GetStepType() string
 
 	BeforeStep()
-	Run(context *Execution) []Metric
+	Run(context *Execution, handler ResultHandler)
 }
 
 type BaseTestStep struct {

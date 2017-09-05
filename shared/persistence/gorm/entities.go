@@ -3,6 +3,7 @@ package gorm
 import (
 	"bitbucket.org/instinctools/gluten/core"
 	"fmt"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -38,6 +39,14 @@ func NewExecutionResult(result core.StepResult) *Result {
 		Metrics:     metrics,
 		ExecutionID: result.ExecutionID,
 		StepType:    result.StepType,
+		Id:          uuid.New().String(),
+	}
+}
+
+func (dto *Execution) toExecution() *core.Execution {
+	return &core.Execution{
+		ID:     dto.Id,
+		Status: dto.Status,
 	}
 }
 
@@ -61,7 +70,8 @@ func (Metric) TableName() string {
 
 func newMetric(resultId string, metric core.Metric) Metric {
 	return Metric{
-		Key:   metric.Key,
-		Value: fmt.Sprint(metric.Val),
+		Key:      metric.Key,
+		Value:    fmt.Sprint(metric.Val),
+		ResultID: resultId,
 	}
 }
