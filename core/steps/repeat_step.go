@@ -51,7 +51,6 @@ func (step *RepeatStep) Run(context *core.Execution, handler core.ResultHandler)
 	}
 	handler.Handle(core.StepResult{
 		ExecutionID: context.ID,
-		Status:      "COMPLETED",
 		StepType:    step.GetStepType(),
 		Metrics:     []core.Metric{{Key: "SUCCESS_REPEATS", Val: successRepeats}},
 	})

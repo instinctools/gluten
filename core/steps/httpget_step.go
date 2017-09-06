@@ -61,7 +61,6 @@ func (step *GetRequestStep) Run(context *core.Execution, handler core.ResultHand
 	}
 	handler.Handle(core.StepResult{
 		ExecutionID: context.ID,
-		Status:      "COMPLETED",
 		StepType:    step.GetStepType(),
 		Metrics:     []core.Metric{{Key: "RESPONSE_STATUS", Val: resp.Status}},
 	})
