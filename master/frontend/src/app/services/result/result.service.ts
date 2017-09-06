@@ -5,7 +5,7 @@ import {Http} from '@angular/http';
 import "rxjs/Rx";
 import {Constraints} from "../../helpers/constraints";
 import {HeadersService} from "../headers.service";
-import {ExecutionResult} from "../../model/execution-result.model";
+import {Result} from "../../model/result.model";
 
 
 @Injectable()
@@ -17,7 +17,7 @@ export class ResultService {
     this.executionURL = Constraints.baseURL + Constraints.executions;
   }
 
-  getAll(id: number): Observable<ExecutionResult[]> {
+  getAll(id: number): Observable<Result[]> {
     return this.http
       .get(this.executionURL + id + Constraints.separator + Constraints.results, {headers: HeadersService.prepareHeaders()})
       .map(ResultService.extractData)

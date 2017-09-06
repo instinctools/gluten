@@ -17,8 +17,7 @@ func TestInitDb(t *testing.T) {
 }
 
 func TestGormExecutionsRepo(t *testing.T) {
-	connectionConfig := config.GlobalConfig.DB.Connection
-	exec_repo := repo_gorm.NewGormExecutionsRepo(connectionConfig.URL)
+	exec_repo := repo_gorm.GetExecutionsRepo
 
 	//1. test create object
 	execution := core.Execution{

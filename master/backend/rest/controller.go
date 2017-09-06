@@ -9,31 +9,20 @@ import (
 
 	"encoding/json"
 
-	repo "bitbucket.org/instinctools/gluten/shared/persistence/gorm"
+	"bitbucket.org/instinctools/gluten/shared/persistence/gorm"
 	node "bitbucket.org/instinctools/gluten/master/backend/clustering"
 )
 
-var (
-	executionRepo *repo.GormExecutionsRepo
-	resultRepo    *repo.GormResultsRepo
-)
-
-func init() {
-	executionRepo = repo.NewGormExecutionsRepo()
-	resultRepo = repo.NewGormResultsRepo()
-}
-
 func GetExecution(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(writer).Encode(executionRepo.Get(10, 0))
+	json.NewEncoder(writer).Encode(gorm.GetExecutionsRepo.Get(10, 0))
 	writer.WriteHeader(http.StatusOK)
 }
 
 func GetResults(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//TODO: need merge another branch for complete implementation
-	//id := p.ByName("id")
-	//json.NewEncoder(writer).Encode(resultRepo.GetByExecutionId(id, 10, 0))
+	id := p.ByName("id")
+	json.NewEncoder(writer).Encode(gorm.GetResultsRepo.GetByExecutionId(id, 10, 0))
 	writer.WriteHeader(200)
 }
 

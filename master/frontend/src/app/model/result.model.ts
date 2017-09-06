@@ -1,8 +1,7 @@
 import {Metric} from "./metric.model";
-export class ExecutionResult {
+export class Result {
 
-  public ID: number;
-  public Created: number;
+  public Status: string;
   public Metrics: Metric[];
   public ExecutionID: string;
   public StepType: string;

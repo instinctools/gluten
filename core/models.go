@@ -79,7 +79,6 @@ type BaseTestStep struct {
 // StepResult ...
 type StepResult struct {
 	ExecutionID string
-	Status      string
 	StepType    string
 	Metrics     []Metric
 }

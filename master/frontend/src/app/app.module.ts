@@ -7,6 +7,7 @@ import {AppRouting, appRoutingProviders} from "./app.routing";
 import {HttpModule} from "@angular/http";
 import {FormsModule} from "@angular/forms";
 import { ResultComponent } from './components/result/result.component';
+import { NodeComponent } from './components/node/node.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ResultComponent } from './components/result/result.component';
   declarations: [
     AppComponent,
     ExecutionComponent,
-    ResultComponent
+    ResultComponent,
+    NodeComponent
   ],
   providers: [
     appRoutingProviders,

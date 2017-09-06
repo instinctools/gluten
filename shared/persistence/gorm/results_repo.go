@@ -2,21 +2,24 @@ package gorm
 
 import (
 	"bitbucket.org/instinctools/gluten/core"
-	//	"bitbucket.org/instinctools/gluten/shared/logging"
+	"bitbucket.org/instinctools/gluten/master/backend/config"
 	"github.com/jinzhu/gorm"
 )
 
-type GormResultsRepo struct {
+type ResultsRepo struct {
 	connection *gorm.DB
 }
 
-func NewGormResultsRepo(URL string) *GormResultsRepo {
-	return &GormResultsRepo{
-		InitDb(URL),
+var (
+	GetResultsRepo *ResultsRepo
+)
+
+func init() {
+	GetResultsRepo = &ResultsRepo{
+		InitDb(config.GlobalConfig.DB.Connection.URL),
 	}
 }
-
-func (repo *GormResultsRepo) Create(result core.StepResult) {
+func (repo *ResultsRepo) Create(result core.StepResult) {
 	tx := repo.connection.Begin()
 	err := tx.Create(NewExecutionResult(result)).Error
 	if err != nil {
@@ -25,7 +28,7 @@ func (repo *GormResultsRepo) Create(result core.StepResult) {
 	tx.Commit()
 }
 
-func (repo *GormResultsRepo) Get(limit int, offset int) []core.StepResult {
+func (repo *ResultsRepo) Get(limit int, offset int) []core.StepResult {
 	var dto []Result
 	repo.connection.
 		Limit(limit).
@@ -38,7 +41,7 @@ func (repo *GormResultsRepo) Get(limit int, offset int) []core.StepResult {
 	return results
 }
 
-func (repo *GormResultsRepo) GetByExecutionId(id string, limit int, offset int) []core.StepResult {
+func (repo *ResultsRepo) GetByExecutionId(id string, limit int, offset int) []core.StepResult {
 	var dto []Result
 	repo.connection.
 		Preload("Metrics").
@@ -53,12 +56,12 @@ func (repo *GormResultsRepo) GetByExecutionId(id string, limit int, offset int) 
 	return results
 }
 
-func (repo *GormResultsRepo) GetById(id string) core.StepResult {
+func (repo *ResultsRepo) GetById(id string) core.StepResult {
 	var dto Result
 	repo.connection.First(&dto, id)
 	return *dto.toStepResult()
 }
 
-func (repo *GormResultsRepo) Update(result core.StepResult) {
+func (repo *ResultsRepo) Update(result core.StepResult) {
 	repo.connection.Find(&Result{}).Update(result)
 }

@@ -1,6 +1,6 @@
 export class Execution {
 
-  public ID: number;
+  public Id: string;
   public Status: string;
   public Created: number;
 }

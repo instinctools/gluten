@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ResultService} from "../../services/result/result.service";
-import {ExecutionResult} from "../../model/execution-result.model";
+import {Result} from "../../model/result.model";
 import {ExecutionService} from "../../services/execution/execution.service";
 
 @Component({
@@ -12,7 +12,7 @@ import {ExecutionService} from "../../services/execution/execution.service";
 })
 export class ResultComponent implements OnInit {
 
-  public results: ExecutionResult[];
+  public results: Result[];
 
   constructor(private resultService: ResultService, public route: ActivatedRoute) { }
 
@@ -22,13 +22,10 @@ export class ResultComponent implements OnInit {
   }
 
   init() {
-    this.results = [];
-
     this.route.params.subscribe(params => {
         this.resultService.getAll(+params['id']).subscribe(x => {
           this.results = x;
         });
       });
   }
-
 }
