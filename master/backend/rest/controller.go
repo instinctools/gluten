@@ -7,16 +7,15 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"strconv"
-
-	log "bitbucket.org/instinctools/gluten/shared/logging"
 	"encoding/json"
+
 	repo "bitbucket.org/instinctools/gluten/shared/persistence/gorm"
+	node "bitbucket.org/instinctools/gluten/master/backend/clustering"
 )
 
 var (
 	executionRepo *repo.GormExecutionsRepo
-	resultRepo *repo.GormResultsRepo
+	resultRepo    *repo.GormResultsRepo
 )
 
 func init() {
@@ -32,13 +31,9 @@ func GetExecution(writer http.ResponseWriter, r *http.Request, p httprouter.Para
 
 func GetResults(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	id, err := strconv.ParseInt(p.ByName("id"), 10, 64)
-	if err != nil && uint(id) != 0 {
-		log.WithFields(log.Fields{
-			"id": id,
-		}).Fatal("Error convert")
-	}
-	//json.NewEncoder(writer).Encode(repo.GetResults(uint(id)))
+	//TODO: need merge another branch for complete implementation
+	//id := p.ByName("id")
+	//json.NewEncoder(writer).Encode(resultRepo.GetByExecutionId(id, 10, 0))
 	writer.WriteHeader(200)
 }
 
@@ -67,4 +62,10 @@ func StartExecution(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 
 	fmt.Println(string(body))
 	w.WriteHeader(201)
+}
+
+func GetNodes(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(writer).Encode(node.GetNodes())
+	writer.WriteHeader(http.StatusOK)
 }

@@ -8,7 +8,7 @@ export class Constraints {
     return "http://localhost:8080/api/";
   }
 
-  public static get executionURL(): string {
+  public static get executions(): string {
     return "executions/"
   }
 
@@ -25,7 +25,7 @@ export class Constraints {
     return "aggstatistic?type=request"
   }
 
-  public static get resultURL(): string {
+  public static get results(): string {
     return "results/"
   }
 }

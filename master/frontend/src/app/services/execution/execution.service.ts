@@ -14,7 +14,7 @@ export class ExecutionService {
   private executionURL: string;
 
   constructor(private http: Http) {
-    this.executionURL = Constraints.baseURL + Constraints.executionURL;
+    this.executionURL = Constraints.baseURL + Constraints.executions;
   }
 
   getAll(): Observable<Execution[]> {

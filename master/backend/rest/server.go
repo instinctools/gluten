@@ -1,11 +1,12 @@
 package rest
 
 import (
+	"net/http"
+	"strconv"
+
 	"bitbucket.org/instinctools/gluten/shared/logging"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
-	"net/http"
-	"strconv"
 )
 
 func LaunchWebServer(port int) {
@@ -19,9 +20,10 @@ func LaunchWebServer(port int) {
 	router.GET(RESULTS_URL, GetResults)
 	router.POST(STOP_EXECUTION_URL, StopExecution)
 	router.POST(EXECUTIONS_URL, StartExecution)
+	router.GET(NODES_URL, GetNodes)
 
 	router.MethodNotAllowed = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		// not implementation
+		// no implementation
 		w.WriteHeader(405)
 	})
 

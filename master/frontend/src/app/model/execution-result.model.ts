@@ -4,4 +4,6 @@ export class ExecutionResult {
   public ID: number;
   public Created: number;
   public Metrics: Metric[];
+  public ExecutionID: string;
+  public StepType: string;
 }
