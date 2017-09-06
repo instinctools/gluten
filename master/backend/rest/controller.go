@@ -10,11 +10,23 @@ import (
 	"strconv"
 
 	log "bitbucket.org/instinctools/gluten/shared/logging"
+	"encoding/json"
+	repo "bitbucket.org/instinctools/gluten/shared/persistence/gorm"
 )
+
+var (
+	executionRepo *repo.GormExecutionsRepo
+	resultRepo *repo.GormResultsRepo
+)
+
+func init() {
+	executionRepo = repo.NewGormExecutionsRepo()
+	resultRepo = repo.NewGormResultsRepo()
+}
 
 func GetExecution(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//	json.NewEncoder(writer).Encode(repo.ExecutionRepo.Get(10, 0))
+	json.NewEncoder(writer).Encode(executionRepo.Get(10, 0))
 	writer.WriteHeader(http.StatusOK)
 }
 
@@ -26,7 +38,7 @@ func GetResults(writer http.ResponseWriter, r *http.Request, p httprouter.Params
 			"id": id,
 		}).Fatal("Error convert")
 	}
-	//	json.NewEncoder(writer).Encode(repo.GetResults(uint(id)))
+	//json.NewEncoder(writer).Encode(repo.GetResults(uint(id)))
 	writer.WriteHeader(200)
 }
 
