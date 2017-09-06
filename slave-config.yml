@@ -1,2 +1,4 @@
-message: "SUCCESS"
-retrieve-timeout: 5
+master.url: "localhost"
+db.url: "host=localhost user=postgres dbname=gluten sslmode=disable password=1"
+rpc.port: 7000
+jobs.sayhello.timeout: 5

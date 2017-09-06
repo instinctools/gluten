@@ -46,10 +46,4 @@ func (step *CompositeStep) Run(context *core.Execution, handler core.ResultHandl
 	for _, s := range step.Substeps {
 		s.Run(context, handler)
 	}
-	handler.Handle(core.StepResult{
-		ExecutionID: context.ID,
-		Status:      "COMPLETED",
-		StepType:    step.GetStepType(),
-		Metrics:     nil,
-	})
 }

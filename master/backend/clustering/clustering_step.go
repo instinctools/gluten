@@ -45,10 +45,14 @@ func (step *ClusteredStep) BeforeStep() {
 
 func (step *ClusteredStep) Run(context *core.Execution, handler core.ResultHandler) {
 	for _, node := range GetNodes() {
-		SubmitOverRPC(node, context, &steps.CompositeStep{step.BaseTestStep})
+		SubmitOverRPC(node, context, &steps.CompositeStep{
+			core.BaseTestStep{
+				step.GetCommon(),
+				nil,
+				step.GetSubSteps(),
+			}})
 		handler.Handle(core.StepResult{
 			ExecutionID: context.ID,
-			Status:      "COMPLETED",
 			StepType:    step.GetStepType(),
 			Metrics:     []core.Metric{{Key: "NODE", Val: node}},
 		})

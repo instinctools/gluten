@@ -3,21 +3,15 @@ package client
 import (
 	"bitbucket.org/instinctools/gluten/shared/logging"
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/slave"
-	conf "bitbucket.org/instinctools/gluten/slave/config"
 	"errors"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"net"
+	"strconv"
 	"time"
 )
 
-var config *conf.Config
-
-func init() {
-	config = conf.GetConfig()
-}
-
-func StartHelloJob(address string) {
+func StartHelloJob(address string, timeout time.Duration, listeningPort int) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		logging.WithFields(logging.Fields{
@@ -28,7 +22,7 @@ func StartHelloJob(address string) {
 	c := pb.NewProtoServiceClient(conn)
 
 	// Every response for server
-	address, err = getAddress()
+	address, err = getAddress(listeningPort)
 	if err != nil {
 		logging.WithFields(logging.Fields{
 			"error": err,
@@ -41,12 +35,12 @@ func StartHelloJob(address string) {
 				"error": err,
 			}).Error("Error during sending hello message")
 		}
-		time.Sleep(config.RetrieveTimeout)
+		time.Sleep(timeout)
 	}
 
 }
 
-func getAddress() (string, error) {
+func getAddress(port int) (string, error) {
 	ifaces, err := net.Interfaces()
 	if err != nil {
 		return "", err
@@ -77,8 +71,7 @@ func getAddress() (string, error) {
 			if ip == nil {
 				continue // not an ipv4 address
 			}
-			//TODO - get port from config
-			return ip.String() + ":7777", nil
+			return ip.String() + ":" + strconv.Itoa(port), nil
 		}
 	}
 	return "", errors.New("are you connected to the network?")

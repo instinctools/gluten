@@ -6,6 +6,7 @@ import (
 	pb "bitbucket.org/instinctools/gluten/shared/rpc/cli"
 	pm "bitbucket.org/instinctools/gluten/shared/rpc/master"
 	"encoding/json"
+	"fmt"
 	"strconv"
 )
 
@@ -75,7 +76,7 @@ func ParseMasterProto2Step(pStep *pm.Step) (*core.Execution, core.TestStep) {
 func parsIMap(iMap map[string]interface{}) map[string]string {
 	sMap := make(map[string]string)
 	for k, v := range iMap {
-		sMap[k] = v.(string)
+		sMap[k] = fmt.Sprint(v)
 	}
 	return sMap
 }
@@ -89,21 +90,17 @@ func parsPMap(sMap map[string]string) map[string]interface{} {
 }
 
 func parsString(str string) interface{} {
-	b, err := strconv.ParseBool(str)
+	i, err := strconv.ParseInt(str, 10, 64)
 	if err == nil {
-		return b
+		return int(i)
 	}
 	f, err := strconv.ParseFloat(str, 64)
 	if err == nil {
 		return f
 	}
-	i, err := strconv.ParseInt(str, 10, 64)
+	b, err := strconv.ParseBool(str)
 	if err == nil {
-		return i
-	}
-	u, err := strconv.ParseUint(str, 10, 64)
-	if err == nil {
-		return u
+		return b
 	}
 	return str
 }
