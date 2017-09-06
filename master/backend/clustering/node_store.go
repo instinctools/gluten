@@ -1,10 +1,11 @@
 package clustering
 
 import (
-	conf "bitbucket.org/instinctools/gluten/master/backend/config"
-	log "bitbucket.org/instinctools/gluten/shared/logging"
 	"sync"
 	"time"
+
+	conf "bitbucket.org/instinctools/gluten/master/backend/config"
+	log "bitbucket.org/instinctools/gluten/shared/logging"
 )
 
 var (
@@ -18,10 +19,10 @@ var (
 func init() {
 	nodes = make(map[string]time.Time)
 
-	//load variables from config
-	config := conf.GetConfig().Node
-	RETRIEVE_TIMEOUT = time.Second * time.Duration(config.RetrieveTimeout)
-	EXIT_TIMEOUT = time.Second * time.Duration(config.ExitTimeout)
+	//load variables from nodesConfig
+	nodesConfig := conf.GlobalConfig.Node
+	RETRIEVE_TIMEOUT = time.Second * time.Duration(nodesConfig.RetrieveTimeout)
+	EXIT_TIMEOUT = time.Second * time.Duration(nodesConfig.ExitTimeout)
 
 	//call checking nodes
 	go CheckExitTimeoutNodes()

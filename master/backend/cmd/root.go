@@ -1,16 +1,18 @@
 package cmd
 
 import (
+	"os"
+
 	"bitbucket.org/instinctools/gluten/core"
 	"bitbucket.org/instinctools/gluten/core/result_handlers"
+	"bitbucket.org/instinctools/gluten/master/backend/config"
+	"bitbucket.org/instinctools/gluten/master/backend/migration"
 	"bitbucket.org/instinctools/gluten/master/backend/rest"
 	"bitbucket.org/instinctools/gluten/master/backend/rpc"
 	"bitbucket.org/instinctools/gluten/master/backend/service"
 	"bitbucket.org/instinctools/gluten/shared/logging"
-	"bitbucket.org/instinctools/gluten/shared/persistence"
 	"bitbucket.org/instinctools/gluten/shared/persistence/gorm"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 var rpcPort, webPort int
@@ -18,7 +20,10 @@ var rpcPort, webPort int
 func init() {
 	RootCmd.Flags().IntVarP(&rpcPort, "rpc-port", "r", 0, "Master rpc port")
 	RootCmd.Flags().IntVarP(&webPort, "web-port", "w", 0, "Master web port")
-	persistence.ApplyMigrations()
+	migrationsConfig := config.GlobalConfig.DB.Migrations
+	if migrationsConfig.Enable {
+		migration.ApplyMigrations(migrationsConfig.Folder, migrationsConfig.ConnectionString)
+	}
 }
 
 var RootCmd = &cobra.Command{
@@ -31,8 +36,9 @@ var RootCmd = &cobra.Command{
 		if rpcPort == 0 || webPort == 0 {
 			os.Exit(1)
 		} else {
+			connectionConfig := config.GlobalConfig.DB.Connection
 			runner := core.NewDefaultRunner(&result_handlers.LoggableResultHandler{})
-			exec_repo := gorm.NewGormExecutionsRepo()
+			exec_repo := gorm.NewGormExecutionsRepo(connectionConfig.URL)
 			exec_service := service.NewExecutionService(runner, exec_repo)
 			go rpc.LaunchRpcServer(exec_service, rpcPort)
 			logging.WithFields(logging.Fields{"port": rpcPort}).Error("Rpc server has been successfully started on port")

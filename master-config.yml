@@ -1,3 +1,10 @@
 nodes:
   retrieve-timeout: 5
   exit-timeout: 30
+db:
+  migrations:
+    folder: "file://migrations"
+    connectionString: "postgresql://postgres:1@localhost:5432/gluten?sslmode=disable"
+    enable: true
+  connection:
+    url: "host=localhost user=postgres dbname=gluten sslmode=disable password=1"
