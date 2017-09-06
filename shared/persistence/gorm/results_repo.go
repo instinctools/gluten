@@ -38,6 +38,21 @@ func (repo *GormResultsRepo) Get(limit int, offset int) []core.StepResult {
 	return results
 }
 
+func (repo *GormResultsRepo) GetByExecutionId(id string, limit int, offset int) []core.StepResult {
+	var dto []Result
+	repo.connection.
+		Preload("Metrics").
+		Limit(limit).
+		Offset(offset).
+		Where("execution_id = ?", id).
+		Find(&dto)
+	results := []core.StepResult{}
+	for _, elem := range dto {
+		results = append(results, *elem.toStepResult())
+	}
+	return results
+}
+
 func (repo *GormResultsRepo) GetById(id string) core.StepResult {
 	var dto Result
 	repo.connection.First(&dto, id)
