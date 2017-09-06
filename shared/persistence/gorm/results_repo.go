@@ -6,15 +6,13 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//TODO - fulfill all methods
-
 type GormResultsRepo struct {
 	connection *gorm.DB
 }
 
-func NewGormResultsRepo() *GormResultsRepo {
+func NewGormResultsRepo(URL string) *GormResultsRepo {
 	return &GormResultsRepo{
-		InitDb(),
+		InitDb(URL),
 	}
 }
 
@@ -28,13 +26,39 @@ func (repo *GormResultsRepo) Create(result core.StepResult) {
 }
 
 func (repo *GormResultsRepo) Get(limit int, offset int) []core.StepResult {
-	return nil
+	var dto []Result
+	repo.connection.
+		Limit(limit).
+		Offset(offset).
+		Find(&dto)
+	results := []core.StepResult{}
+	for _, elem := range dto {
+		results = append(results, *elem.toStepResult())
+	}
+	return results
+}
+
+func (repo *GormResultsRepo) GetByExecutionId(id string, limit int, offset int) []core.StepResult {
+	var dto []Result
+	repo.connection.
+		Preload("Metrics").
+		Limit(limit).
+		Offset(offset).
+		Where("execution_id = ?", id).
+		Find(&dto)
+	results := []core.StepResult{}
+	for _, elem := range dto {
+		results = append(results, *elem.toStepResult())
+	}
+	return results
 }
 
 func (repo *GormResultsRepo) GetById(id string) core.StepResult {
-	return core.StepResult{}
+	var dto Result
+	repo.connection.First(&dto, id)
+	return *dto.toStepResult()
 }
 
 func (repo *GormResultsRepo) Update(result core.StepResult) {
-
+	repo.connection.Find(&Result{}).Update(result)
 }
