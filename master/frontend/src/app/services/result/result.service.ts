@@ -17,7 +17,7 @@ export class ResultService {
     this.executionURL = Constraints.baseURL + Constraints.executions;
   }
 
-  getAll(id: number): Observable<Result[]> {
+  getAll(id: string): Observable<Result[]> {
     return this.http
       .get(this.executionURL + id + Constraints.separator + Constraints.results, {headers: HeadersService.prepareHeaders()})
       .map(ResultService.extractData)

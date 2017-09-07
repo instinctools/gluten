@@ -23,14 +23,14 @@ export class ExecutionService {
       .catch(ExecutionService.handleError)
   }
 
-  startExecution(id: number): Observable<any> {
+  startExecution(id: string): Observable<any> {
     return this.http
       .post(this.executionURL, id, {headers: HeadersService.prepareHeaders()})
       .map(ExecutionService.extractData)
       .catch(ExecutionService.handleError);
   }
 
-  stopExecution(id: number): Observable<any> {
+  stopExecution(id: string): Observable<any> {
     return this.http
       .post(this.executionURL + id + Constraints.separator + Constraints.stopExecution, {headers: HeadersService.prepareHeaders()})
       .map(ExecutionService.extractData)

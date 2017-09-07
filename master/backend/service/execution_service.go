@@ -19,11 +19,12 @@ func NewExecutionService(runner core.TestRunner, executionRepo persistence.Execu
 	}
 }
 
-func (service *ExecutionService) ExecuteProject(project *core.Project) {
+func (service *ExecutionService) ExecuteProject(project *core.Project) *core.Execution{
 	execution := &core.Execution{
 		ID:     uuid.New().String(),
 		Status: core.STATUS_CREATED,
 	}
 	service.executionRepo.Create(execution)
 	service.runner.Run(execution, project)
+	return execution
 }

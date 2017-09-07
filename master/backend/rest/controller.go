@@ -9,20 +9,20 @@ import (
 
 	"encoding/json"
 
-	"bitbucket.org/instinctools/gluten/shared/persistence/gorm"
 	node "bitbucket.org/instinctools/gluten/master/backend/clustering"
+	"bitbucket.org/instinctools/gluten/shared/persistence/gorm"
 )
 
 func GetExecution(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(writer).Encode(gorm.GetExecutionsRepo.Get(10, 0))
+	json.NewEncoder(writer).Encode(gorm.RawExecutionsRepoInstance.Get(10, 0))
 	writer.WriteHeader(http.StatusOK)
 }
 
 func GetResults(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 	id := p.ByName("id")
-	json.NewEncoder(writer).Encode(gorm.GetResultsRepo.GetByExecutionId(id, 10, 0))
+	json.NewEncoder(writer).Encode(gorm.RawResultsRepoInstance.GetByExecutionId(id, 10, 0))
 	writer.WriteHeader(200)
 }
 

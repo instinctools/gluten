@@ -23,9 +23,14 @@ export class ResultComponent implements OnInit {
 
   init() {
     this.route.params.subscribe(params => {
-        this.resultService.getAll(+params['id']).subscribe(x => {
+        this.resultService.getAll(params['id']).subscribe(x => {
           this.results = x;
         });
       });
+  }
+
+  convertToDate(count: number): string {
+    let unixNano = new Date(count);
+    return unixNano.toTimeString();
   }
 }

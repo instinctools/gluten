@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Execution} from "../../model/execution.model";
 import {ExecutionService} from "../../services/execution/execution.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -15,8 +15,7 @@ export class ExecutionComponent implements OnInit {
     public statusUI: string;
 
     //for UI
-    public dangerLabel: string;
-    public successLabel: string;
+    public statuses: Map<string, string>;
 
     constructor(private executionService: ExecutionService, public route: ActivatedRoute,
                 private router: Router) {
@@ -26,12 +25,19 @@ export class ExecutionComponent implements OnInit {
         this.statusUI = "";
         this.executions = [];
         this.initData();
-
-        this.dangerLabel = "label label-danger";
-        this.successLabel = "label label-success";
+        this.initStatusMap();
     }
 
-    showResults(id: number) {
+    initStatusMap() {
+        this.statuses = new Map<string, string>();
+        this.statuses.set("CREATED", "label label-warning");
+        this.statuses.set("RUNNING", "label label-primary");
+        this.statuses.set("FAILED", "label label-danger");
+        this.statuses.set("COMPLETED", "label label-success");
+    }
+
+    showResults(id: string) {
+        console.log(id);
         this.router.navigate(['/result', id]);
     }
 
@@ -46,30 +52,20 @@ export class ExecutionComponent implements OnInit {
         )
     }
 
-    startExecution(id: number) {
+    startExecution(id: string) {
         this.executionService.startExecution(id).subscribe(x => {
         });
         console.log("this ID will be start execution on slave  " + id);
     }
 
-    stopExecution(id: number) {
+    stopExecution(id: string) {
         this.executionService.stopExecution(id).subscribe(x => {
         });
         console.log("this ID will be stop execution on slave  " + id);
     }
 
-    convertToDate(id: number): string {
-        let unixNano = new Date(id);
-        console.log(id);
-        return "DATE";
+    convertToDate(count: number): string {
+        let unixNano = new Date(count);
+        return unixNano.toTimeString();
     }
-
-    changeStatusOnClick(status: boolean): string {
-        if (status) {
-            return this.successLabel;
-        }else {
-            return this.dangerLabel;
-        }
-    }
-
 }

@@ -5,7 +5,6 @@ import (
 
 	"bitbucket.org/instinctools/gluten/core"
 	"bitbucket.org/instinctools/gluten/master/backend/config"
-	repo_gorm "bitbucket.org/instinctools/gluten/shared/persistence/gorm"
 	"github.com/jinzhu/gorm"
 	assert "github.com/stretchr/testify/require"
 )
@@ -17,7 +16,7 @@ func TestInitDb(t *testing.T) {
 }
 
 func TestGormExecutionsRepo(t *testing.T) {
-	exec_repo := repo_gorm.GetExecutionsRepo
+	exec_repo := ExecutionsRepoInstance
 
 	//1. test create object
 	execution := core.Execution{

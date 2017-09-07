@@ -2,21 +2,31 @@ package gorm
 
 import (
 	"bitbucket.org/instinctools/gluten/core"
-	"bitbucket.org/instinctools/gluten/master/backend/config"
 	"github.com/jinzhu/gorm"
 )
 
 type ResultsRepo struct {
 	connection *gorm.DB
+	rawRepo    *RawResultsRepo
+}
+
+type RawResultsRepo struct {
+	connection *gorm.DB
 }
 
 var (
-	GetResultsRepo *ResultsRepo
+	ResultsRepoInstance *ResultsRepo
+	RawResultsRepoInstance *RawResultsRepo
 )
 
 func init() {
-	GetResultsRepo = &ResultsRepo{
-		InitDb(config.GlobalConfig.DB.Connection.URL),
+	RawResultsRepoInstance = &RawResultsRepo{
+		connection: connectionFactory.gorm,
+	}
+
+	ResultsRepoInstance = &ResultsRepo{
+		connection: connectionFactory.gorm,
+		rawRepo: RawResultsRepoInstance,
 	}
 }
 func (repo *ResultsRepo) Create(result core.StepResult) {
@@ -30,10 +40,7 @@ func (repo *ResultsRepo) Create(result core.StepResult) {
 
 func (repo *ResultsRepo) Get(limit int, offset int) []core.StepResult {
 	var dto []Result
-	repo.connection.
-		Limit(limit).
-		Offset(offset).
-		Find(&dto)
+	dto = repo.rawRepo.Get(limit, offset)
 	results := []core.StepResult{}
 	for _, elem := range dto {
 		results = append(results, *elem.toStepResult())
@@ -41,7 +48,26 @@ func (repo *ResultsRepo) Get(limit int, offset int) []core.StepResult {
 	return results
 }
 
+func (repo *RawResultsRepo) Get(limit int, offset int) []Result {
+	var dto []Result
+	repo.connection.
+		Limit(limit).
+		Offset(offset).
+		Find(&dto)
+	return dto
+}
+
 func (repo *ResultsRepo) GetByExecutionId(id string, limit int, offset int) []core.StepResult {
+	var dto []Result
+	dto = repo.rawRepo.GetByExecutionId(id, limit, offset)
+	results := []core.StepResult{}
+	for _, elem := range dto {
+		results = append(results, *elem.toStepResult())
+	}
+	return results
+}
+
+func (repo *RawResultsRepo) GetByExecutionId(id string, limit int, offset int) []Result {
 	var dto []Result
 	repo.connection.
 		Preload("Metrics").
@@ -49,11 +75,7 @@ func (repo *ResultsRepo) GetByExecutionId(id string, limit int, offset int) []co
 		Offset(offset).
 		Where("execution_id = ?", id).
 		Find(&dto)
-	results := []core.StepResult{}
-	for _, elem := range dto {
-		results = append(results, *elem.toStepResult())
-	}
-	return results
+	return dto
 }
 
 func (repo *ResultsRepo) GetById(id string) core.StepResult {
