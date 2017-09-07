@@ -3,3 +3,7 @@ glide.yaml
 .project
 .idea/
 vendor/
+
+deploy/slave/tmp/
+
+deploy/master/tmp/

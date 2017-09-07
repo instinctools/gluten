@@ -9,6 +9,7 @@ import (
 var pathToGenFile string
 
 func init() {
+	// TODO: add default path 
 	generateCmd.Flags().StringVarP(&pathToGenFile, "path-to-file", "p", "", "Path to file 4 gen json")
 	RootCmd.AddCommand(generateCmd)
 }
