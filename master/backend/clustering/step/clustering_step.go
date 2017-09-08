@@ -1,12 +1,14 @@
-package clustering
+package step
 
 import (
 	"bitbucket.org/instinctools/gluten/core"
 	"bitbucket.org/instinctools/gluten/core/steps"
+	"bitbucket.org/instinctools/gluten/master/backend/ctx"
 )
 
 var (
 	clusteredStepAlias = "CLUSTERED_STEP"
+	nodeStore          = ctx.GlobalContext.NodeStore
 )
 
 func init() {
@@ -44,17 +46,15 @@ func (step *ClusteredStep) BeforeStep() {
 }
 
 func (step *ClusteredStep) Run(context *core.Execution, handler core.ResultHandler) {
-	for _, node := range GetNodes() {
-		SubmitOverRPC(node, context, &steps.CompositeStep{
-			core.BaseTestStep{
-				step.GetCommon(),
-				nil,
-				step.GetSubSteps(),
-			}})
-		handler.Handle(core.StepResult{
-			ExecutionID: context.ID,
-			StepType:    step.GetStepType(),
-			Metrics:     []core.Metric{{Key: "NODE", Val: node}},
-		})
-	}
+	nodeStore.SubmitToAll(context, &steps.CompositeStep{
+		core.BaseTestStep{
+			step.GetCommon(),
+			nil,
+			step.GetSubSteps(),
+		}})
+	handler.Handle(core.StepResult{
+		ExecutionID: context.ID,
+		StepType:    step.GetStepType(),
+		Metrics:     []core.Metric{{Key: "NODES", Val: nodeStore.GetNodes()}},
+	})
 }

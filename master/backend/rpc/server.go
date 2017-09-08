@@ -15,12 +15,24 @@ import (
 )
 
 type RpcServer struct {
-	exec_service *service.ExecutionService
+	execService *service.ExecutionService
+	nodeStore   *node_store.NodeStore
+	port        int
 }
 
-func LaunchRpcServer(exec_service *service.ExecutionService, port int) {
-	rpc := &RpcServer{exec_service}
-	lis, err := net.Listen("tcp", ":"+strconv.Itoa(port))
+func NewRpcServer(execService *service.ExecutionService, nodeStore *node_store.NodeStore, port int) *RpcServer {
+	var server *RpcServer
+	defer server.startListening()
+	server = &RpcServer{
+		execService,
+		nodeStore,
+		port,
+	}
+	return server
+}
+
+func (rpc *RpcServer) startListening() {
+	lis, err := net.Listen("tcp", ":"+strconv.Itoa(rpc.port))
 	if err != nil {
 		logging.WithFields(logging.Fields{
 			"error": err,
@@ -38,12 +50,12 @@ func LaunchRpcServer(exec_service *service.ExecutionService, port int) {
 }
 
 func (s *RpcServer) SayHello(ctx context.Context, in *pb_slave.Request) (*pb_slave.Response, error) {
-	node_store.RegisterNode(in.RemoteAddress)
+	s.nodeStore.RegisterNode(in.RemoteAddress)
 	return &pb_slave.Response{Message: "OK"}, nil
 }
 
 func (s *RpcServer) SendConfig(ctx context.Context, in *pb_cli.Project) (*pb_cli.ResponseMessage, error) {
 	service.AddProject(utils.ParseProto2Project(in))
-	s.exec_service.ExecuteProject(service.GetByName(in.Name))
+	s.execService.ExecuteProject(service.GetByName(in.Name))
 	return &pb_cli.ResponseMessage{Message: "Project accepted & launched"}, nil
 }

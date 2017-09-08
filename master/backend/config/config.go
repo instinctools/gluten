@@ -12,10 +12,6 @@ type Config struct {
 	DB   DB    `yaml:"db"`
 }
 
-var (
-	GlobalConfig *Config
-)
-
 type DB struct {
 	Migrations Migrations
 	Connection Connection
@@ -36,17 +32,17 @@ type Nodes struct {
 	ExitTimeout     time.Duration
 }
 
-func init() {
-	readConfig()
+func GetDefaultConfig() *Config {
+	return getConfig("master-config")
 }
 
-func readConfig() {
+func getConfig(name string) *Config {
 	project_path, _ := os.Getwd()
-	viper.SetConfigName("master-config")
+	viper.SetConfigName(name)
 	viper.AddConfigPath(project_path)
 	viper.ReadInConfig()
 
-	GlobalConfig = &Config{
+	return &Config{
 		Node: Nodes{
 			RetrieveTimeout: viper.GetDuration("nodes.retrieve-timeout") * time.Second,
 			ExitTimeout:     viper.GetDuration("nodes.exit-timeout") * time.Second,
