@@ -26,7 +26,7 @@ export class ProjectComponent implements OnInit {
     }
 
     buildProject(json: string) {
-        this.projectService.buildProject(json).subscribe(x => {
+        this.projectService.runProject(json).subscribe(x => {
 
         });
 

@@ -29,8 +29,8 @@ export class Constraints {
         return "results/"
     }
 
-    public static get buildProject(): string {
-        return "build-project/"
+    public static get run(): string {
+        return "run/"
     }
 
     public static get projects(): string {

@@ -52,7 +52,7 @@ func GetNodes(writer http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	writer.WriteHeader(http.StatusOK)
 }
 
-func BuildProject(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func RunProject(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {

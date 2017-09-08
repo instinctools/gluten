@@ -11,10 +11,10 @@ import {HeadersService} from "../headers.service";
 export class ProjectService {
 
     private projectsURL: string;
-    private buildProjectURL: string;
+    private runProjectURL: string;
 
     constructor(private http: Http) {
-        this.buildProjectURL = Constraints.baseURL + Constraints.buildProject;
+        this.runProjectURL = Constraints.baseURL + Constraints.projects + Constraints.run;
         this.projectsURL = Constraints.baseURL + Constraints.projects;
     }
 
@@ -31,9 +31,9 @@ export class ProjectService {
             .catch(ProjectService.handleError);
     }
 
-    buildProject(json: string): Observable<any> {
+    runProject(json: string): Observable<any> {
         return this.http
-            .post(this.buildProjectURL, json, {headers: HeadersService.prepareHeaders()})
+            .post(this.runProjectURL, json, {headers: HeadersService.prepareHeaders()})
             .map(ProjectService.extractData)
             .catch(ProjectService.handleError);
     }

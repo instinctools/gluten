@@ -13,7 +13,7 @@ var (
 
 	NODES_URL string = base_url + "nodes/"
 
-	BUILD_PROJECT_URL string = base_url + "build-project/"
+	BUILD_PROJECT_URL string = PROJECTS_URL + "run/"
 
 	PROJECTS_URL string = base_url + "projects/"
 
