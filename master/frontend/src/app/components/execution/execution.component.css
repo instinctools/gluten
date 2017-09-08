@@ -1,0 +1,19 @@
+table {
+    font-size: 20px;
+    width: 100%; /* Ширина таблицы */
+    border-collapse: collapse; /* Убираем двойные линии между ячейками */
+}
+
+btn.btn-magick.btn3d {
+    bottom: 0;
+}
+
+tbody tr:hover {
+    background: #8c8c93;
+    color: #fff;
+}
+
+.label {
+    text-align: center;
+    font-size: 20px;
+}

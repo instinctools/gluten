@@ -8,17 +8,14 @@ import {HttpModule} from "@angular/http";
 import {FormsModule} from "@angular/forms";
 import {ResultComponent} from './components/result/result.component';
 import {NodeComponent} from './components/node/node.component';
-//angular-material modules
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MdButtonModule, MdCheckboxModule} from '@angular/material';
+import { AlertModule } from 'ngx-bootstrap';
+import {MenuComponent} from "./components/menu/menu.component";
+import {ProjectComponent} from "./components/project/project.component";
 
 
 @NgModule({
     imports: [
-        MdButtonModule, MdCheckboxModule,
-        NoopAnimationsModule,
-        BrowserAnimationsModule,
+        AlertModule.forRoot(),
         BrowserModule,
         FormsModule,
         HttpModule,
@@ -31,7 +28,9 @@ import {MdButtonModule, MdCheckboxModule} from '@angular/material';
         AppComponent,
         ExecutionComponent,
         ResultComponent,
-        NodeComponent
+        NodeComponent,
+        MenuComponent,
+        ProjectComponent
     ],
     providers: [
         appRoutingProviders,

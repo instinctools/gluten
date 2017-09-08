@@ -5,6 +5,8 @@ import (
 	"bitbucket.org/instinctools/gluten/core/persistence"
 	//	"bitbucket.org/instinctools/gluten/shared/logging"
 	"github.com/google/uuid"
+	"bitbucket.org/instinctools/gluten/core/result_handlers"
+	"bitbucket.org/instinctools/gluten/shared/persistence/gorm"
 )
 
 type ExecutionService struct {
@@ -12,14 +14,19 @@ type ExecutionService struct {
 	executionRepo persistence.ExecutionRepo
 }
 
-func NewExecutionService(runner core.TestRunner, executionRepo persistence.ExecutionRepo) *ExecutionService {
-	return &ExecutionService{
+var (
+	ExecutionServiceInstance *ExecutionService
+)
+
+func init() {
+	runner := core.NewDefaultRunner(&result_handlers.LoggableResultHandler{})
+	ExecutionServiceInstance = &ExecutionService{
 		runner,
-		executionRepo,
+		gorm.ExecutionsRepoInstance,
 	}
 }
 
-func (service *ExecutionService) ExecuteProject(project *core.Project) *core.Execution{
+func (service *ExecutionService) ExecuteProject(project *core.Project) *core.Execution {
 	execution := &core.Execution{
 		ID:     uuid.New().String(),
 		Status: core.STATUS_CREATED,

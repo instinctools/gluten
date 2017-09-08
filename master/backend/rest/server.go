@@ -16,11 +16,13 @@ func LaunchWebServer(port int) {
 	//TODO - remove CORS filter ...
 	handler := cors.Default().Handler(router)
 
-	router.GET(EXECUTIONS_URL, GetExecution)
+	router.POST(EXECUTIONS_URL, GetExecution)
 	router.GET(RESULTS_URL, GetResults)
 	router.POST(STOP_EXECUTION_URL, StopExecution)
-	router.POST(EXECUTIONS_URL, StartExecution)
 	router.GET(NODES_URL, GetNodes)
+	router.POST(BUILD_PROJECT_URL, BuildProject)
+	router.GET(PROJECTS_URL, GetProjects)
+	router.GET(EDIT_PROJECT_URL, EditProjectByKey)
 
 	router.MethodNotAllowed = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		// no implementation

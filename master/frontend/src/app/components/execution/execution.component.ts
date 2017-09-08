@@ -14,6 +14,9 @@ export class ExecutionComponent implements OnInit {
     public executions: Execution[];
     public statusUI: string;
 
+    //for pagination
+    private offset: number;
+
     //for UI
     public statuses: Map<string, string>;
 
@@ -22,10 +25,14 @@ export class ExecutionComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.offset = 0;
+
         this.statusUI = "";
         this.executions = [];
         this.initData();
         this.initStatusMap();
+        this.route.params.subscribe(x => {
+        })
     }
 
     initStatusMap() {
@@ -41,21 +48,11 @@ export class ExecutionComponent implements OnInit {
         this.router.navigate(['/result', id]);
     }
 
-    showNodes() {
-        this.router.navigate(['/node']);
-    }
-
     initData() {
-        this.executionService.getAll().subscribe(x => {
+        this.executionService.getAll(this.offset).subscribe(x => {
                 this.executions = x
             }
         )
-    }
-
-    startExecution(id: string) {
-        this.executionService.startExecution(id).subscribe(x => {
-        });
-        console.log("this ID will be start execution on slave  " + id);
     }
 
     stopExecution(id: string) {
@@ -64,8 +61,22 @@ export class ExecutionComponent implements OnInit {
         console.log("this ID will be stop execution on slave  " + id);
     }
 
-    convertToDate(count: number): string {
-        let unixNano = new Date(count);
-        return unixNano.toTimeString();
+    isValidButton(status: string): boolean {
+        return status != "RUNNING";
+    }
+
+    convertToDate(unix: number): string {
+        let date = new Date(unix / 1000000);
+        return date.toDateString();
+    }
+
+    prevPage() {
+        this.offset -= 7;
+        this.initData();
+    }
+
+    nextPage() {
+        this.offset += 7;
+        this.initData();
     }
 }

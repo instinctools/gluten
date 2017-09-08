@@ -36,10 +36,7 @@ var RootCmd = &cobra.Command{
 		if rpcPort == 0 || webPort == 0 {
 			os.Exit(1)
 		} else {
-			runner := core.NewDefaultRunner(&result_handlers.LoggableResultHandler{})
-			exec_repo := gorm.ExecutionsRepoInstance
-			exec_service := service.NewExecutionService(runner, exec_repo)
-			go rpc.LaunchRpcServer(exec_service, rpcPort)
+			go rpc.LaunchRpcServer(service.ExecutionServiceInstance, rpcPort)
 			logging.WithFields(logging.Fields{"port": rpcPort}).Error("Rpc server has been successfully started on port")
 			rest.LaunchWebServer(webPort)
 		}

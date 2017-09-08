@@ -17,10 +17,9 @@ export class NodeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.iterator = 1;
+        this.iterator = 0;
         this.nodes = [];
         this.init();
-
     }
 
     init() {
