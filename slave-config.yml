@@ -1,4 +1,4 @@
-master.url: "localhost"
-db.url: "host=localhost user=postgres dbname=gluten sslmode=disable password=1"
+master.url: "gluten-master:8888"
+db.url: "host=gluten-db user=postgres dbname=gluten sslmode=disable password=1"
 rpc.port: 7000
 jobs.sayhello.timeout: 5
