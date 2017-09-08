@@ -15,7 +15,7 @@ cd ./tmp
 cp -rf ../nginx.conf ./
 cd ..
 cp -rf ../../master/frontend/dist ./
-docker run --name gluten-nginx -d -p 80:80 -v $WORK_DIR/nginx.conf:/etc/nginx/nginx.conf -v $WORK_DIR/dist/:/usr/share/nginx/html  nginx || docker restart gluten-nginx
+docker run --name gluten-nginx --network gluten -d -p 80:80 -v $WORK_DIR/nginx.conf:/etc/nginx/nginx.conf -v $WORK_DIR/dist/:/usr/share/nginx/html  nginx || docker restart gluten-nginx
 
 # gluten-master
 docker rm -f gluten-master
