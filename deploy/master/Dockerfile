@@ -8,4 +8,4 @@ ADD ./master-config.yml /opt/gluten-master/master-config.yml
 
 EXPOSE 8888 8889
 
-/opt/gluten-master/master -r 8888 -w 8889
+ENTRYPOINT ["/opt/gluten-master/master", "-r", "8888", "-w", "8889"]

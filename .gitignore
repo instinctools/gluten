@@ -7,3 +7,7 @@ vendor/
 deploy/slave/tmp/
 
 deploy/master/tmp/
+
+deploy/master/dist/
+
+master/frontend/dist/

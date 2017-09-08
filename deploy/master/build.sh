@@ -1,5 +1,5 @@
 #!/bin/bash
-# gluten-master deploy
+# gluten-master build
 
 #create tmp folder
 rm -rf ./tmp
@@ -14,5 +14,5 @@ cp -rf ../../../master-config.yml ./
 #build gluten-master
 go build ../../../master/backend
 
-#deploy gluten-master
+#build gluten-master image
 docker build -t gluten/master .
