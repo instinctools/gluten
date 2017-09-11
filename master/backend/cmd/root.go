@@ -3,8 +3,6 @@ package cmd
 import (
 	"os"
 
-	"bitbucket.org/instinctools/gluten/core"
-	"bitbucket.org/instinctools/gluten/core/result_handlers"
 	"bitbucket.org/instinctools/gluten/master/backend/ctx"
 	"bitbucket.org/instinctools/gluten/master/backend/migration"
 	"bitbucket.org/instinctools/gluten/master/backend/rest"
@@ -39,8 +37,6 @@ var RootCmd = &cobra.Command{
 		if rpcPort == 0 || webPort == 0 {
 			os.Exit(1)
 		} else {
-			runner := core.NewDefaultRunner(&result_handlers.LoggableResultHandler{})
-
 			exec_repo := gorm.NewGormExecutionsRepo(ctx.GlobalContext.AppConfig.DB.Connection.URL)
 			exec_service := service.NewExecutionService(runner, exec_repo)
 			go rpc.LaunchRpcServer(exec_service, rpcPort)
