@@ -12,11 +12,9 @@ import {HeadersService} from "../headers.service";
 export class ExecutionService {
 
     private executionURL: string;
-    public buildProjectURL: string;
 
     constructor(private http: Http) {
         this.executionURL = Constraints.baseURL + Constraints.executions;
-        this.buildProjectURL= Constraints.baseURL + Constraints.buildProject;
     }
 
     getAll(offset: number): Observable<Execution[]> {
