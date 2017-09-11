@@ -15,3 +15,11 @@ func AddProject(p *core.Project) {
 func GetByName(name string) *core.Project {
 	return projects[name]
 }
+
+func GetProjects() []string {
+	keys := make([]string, 0, len(projects))
+	for k := range projects {
+		keys = append(keys, k)
+	}
+	return keys
+}

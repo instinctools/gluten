@@ -6,17 +6,31 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type GormExecutionsRepo struct {
+type ExecutionsRepo struct {
+	rawRepo    *RawExecutionsRepo
 	connection *gorm.DB
 }
 
-func NewGormExecutionsRepo(URL string) *GormExecutionsRepo {
-	return &GormExecutionsRepo{
-		InitDb(URL),
+type RawExecutionsRepo struct {
+	connection *gorm.DB
+}
+
+var (
+	ExecutionsRepoInstance    *ExecutionsRepo
+	RawExecutionsRepoInstance *RawExecutionsRepo
+)
+
+func init() {
+	RawExecutionsRepoInstance = &RawExecutionsRepo{
+		connection: connectionFactory.gorm,
+	}
+	ExecutionsRepoInstance = &ExecutionsRepo{
+		rawRepo:    RawExecutionsRepoInstance,
+		connection: connectionFactory.gorm,
 	}
 }
 
-func (repo *GormExecutionsRepo) Create(execution *core.Execution) {
+func (repo *ExecutionsRepo) Create(execution *core.Execution) {
 	tx := repo.connection.Begin()
 	err := tx.Create(NewExecution(execution)).Error
 	if err != nil {
@@ -29,12 +43,9 @@ func (repo *GormExecutionsRepo) Create(execution *core.Execution) {
 	}
 }
 
-func (repo *GormExecutionsRepo) Get(limit int, offset int) []core.Execution {
+func (repo *ExecutionsRepo) Get(limit int, offset int) []core.Execution {
 	var dto []Execution
-	repo.connection.
-		Limit(limit).
-		Offset(offset).
-		Find(&dto)
+	dto = repo.rawRepo.Get(limit, offset)
 	executions := []core.Execution{}
 	for _, elem := range dto {
 		executions = append(executions, *elem.toExecution())
@@ -42,16 +53,25 @@ func (repo *GormExecutionsRepo) Get(limit int, offset int) []core.Execution {
 	return executions
 }
 
-func (repo *GormExecutionsRepo) GetById(id string) core.Execution {
+func (repo *RawExecutionsRepo) Get(limit int, offset int) []Execution {
+	var dto []Execution
+	repo.connection.
+		Limit(limit).
+		Offset(offset).
+		Find(&dto)
+	return dto
+}
+
+func (repo *ExecutionsRepo) GetById(id string) core.Execution {
 	var dto Execution
 	repo.connection.First(&dto, id)
 	return *dto.toExecution()
 }
 
-func (repo *GormExecutionsRepo) Update(execution core.Execution) {
+func (repo *ExecutionsRepo) Update(execution core.Execution) {
 	repo.connection.Find(&Execution{}).Update(execution)
 }
 
-func (repo *GormExecutionsRepo) Delete(execution core.Execution) {
+func (repo *ExecutionsRepo) Delete(execution core.Execution) {
 	repo.connection.Find(&Execution{}).Delete(execution)
 }

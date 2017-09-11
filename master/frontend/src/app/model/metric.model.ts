@@ -1,6 +1,6 @@
 export class Metric {
 
-  public ExecutionResultID: number;
+  public ResultID: number;
   public Key: string;
   public Value: string;
 }

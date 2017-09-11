@@ -4,12 +4,14 @@
     <tr>
       <th>ID</th>
       <th>Created</th>
+      <th>StepType</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let res of results">
-      <td>{{res.ID}}</td>
-      <td>{{res.Created}}</td>
+      <td>{{res.Id}}</td>
+      <td>{{convertToDate(res.Created)}}</td>
+      <td>{{res.StepType}}</td>
     </tr>
     </tbody>
   </table>

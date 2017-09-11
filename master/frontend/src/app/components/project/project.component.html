@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-2">
+            <h2>Projects</h2>
+            <div class="nav navbar-nav navbar-right" *ngFor="let p of projects">
+                <a (click)="editStructure(p)" class="list-group-item">{{p}}</a>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <h1><strong>PUT YOUR PROJECT STRUCTURE</strong></h1>
+            <div class="form-group">
+            <textarea [(ngModel)]="project"
+                      rows="100" name="comment[text]"
+                      id="comment_text"
+                      cols="200" class="ui-autocomplete-input"
+                      autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" required>
+            </textarea>
+                <button class="btn btn-primary btn-lg btn3d" (click)="buildProject(project)">GO RUN</button>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -7,26 +7,32 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"strconv"
+	"encoding/json"
 
-	log "bitbucket.org/instinctools/gluten/shared/logging"
+	node "bitbucket.org/instinctools/gluten/master/backend/clustering"
+	"bitbucket.org/instinctools/gluten/master/backend/service"
+	"bitbucket.org/instinctools/gluten/shared/persistence/gorm"
+	"bitbucket.org/instinctools/gluten/shared/utils"
+	"strconv"
 )
 
 func GetExecution(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//	json.NewEncoder(writer).Encode(repo.ExecutionRepo.Get(10, 0))
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(writer, "Error reading request body",
+			http.StatusInternalServerError)
+	}
+	offset, _ := strconv.Atoi(string(body))
+	println(offset)
+	json.NewEncoder(writer).Encode(gorm.RawExecutionsRepoInstance.Get(8, offset))
 	writer.WriteHeader(http.StatusOK)
 }
 
 func GetResults(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
-	id, err := strconv.ParseInt(p.ByName("id"), 10, 64)
-	if err != nil && uint(id) != 0 {
-		log.WithFields(log.Fields{
-			"id": id,
-		}).Fatal("Error convert")
-	}
-	//	json.NewEncoder(writer).Encode(repo.GetResults(uint(id)))
+	id := p.ByName("id")
+	json.NewEncoder(writer).Encode(gorm.RawResultsRepoInstance.GetByExecutionId(id, 8, 0))
 	writer.WriteHeader(200)
 }
 
@@ -40,19 +46,35 @@ func StopExecution(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	w.WriteHeader(201)
 }
 
-func StartExecution(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	w.Header().Set("Content-Type", "application/json")
+func GetNodes(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(writer).Encode(node.GetNodes())
+	writer.WriteHeader(http.StatusOK)
+}
+
+func RunProject(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, "Error reading request body",
+		http.Error(writer, "Error reading request body",
 			http.StatusInternalServerError)
 	}
+	project := utils.ParseProto2Project(utils.DeserializeJsonToProto(string(body)))
+	service.AddProject(project)
+	service.ExecutionServiceInstance.ExecuteProject(service.GetByName(project.Name))
+	writer.WriteHeader(http.StatusOK)
+}
 
-	fmt.Fprint(w, "POST done")
+func GetProjects(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(writer).Encode(service.GetProjects())
+	writer.WriteHeader(http.StatusOK)
+}
 
-	// no implementation
-	//submit current execution and start him
-
-	fmt.Println(string(body))
-	w.WriteHeader(201)
+func EditProjectByKey(writer http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+	key := p.ByName("key")
+	//TODO: no implementation; need deserialization core.Project to JSON
+	println(key)
+	writer.WriteHeader(http.StatusOK)
 }
