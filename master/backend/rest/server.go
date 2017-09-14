@@ -1,11 +1,12 @@
 package rest
 
 import (
+	"net/http"
+	"strconv"
+
 	"bitbucket.org/instinctools/gluten/shared/logging"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
-	"net/http"
-	"strconv"
 )
 
 func LaunchWebServer(port int) {
@@ -15,13 +16,16 @@ func LaunchWebServer(port int) {
 	//TODO - remove CORS filter ...
 	handler := cors.Default().Handler(router)
 
-	router.GET(EXECUTIONS_URL, GetExecution)
+	router.POST(EXECUTIONS_URL, GetExecution)
 	router.GET(RESULTS_URL, GetResults)
 	router.POST(STOP_EXECUTION_URL, StopExecution)
-	router.POST(EXECUTIONS_URL, StartExecution)
+	router.GET(NODES_URL, GetNodes)
+	router.POST(BUILD_PROJECT_URL, RunProject)
+	router.GET(PROJECTS_URL, GetProjects)
+	router.GET(EDIT_PROJECT_URL, EditProjectByKey)
 
 	router.MethodNotAllowed = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		// not implementation
+		// no implementation
 		w.WriteHeader(405)
 	})
 

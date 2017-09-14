@@ -5,23 +5,20 @@ import {Http} from '@angular/http';
 import "rxjs/Rx";
 import {Constraints} from "../../helpers/constraints";
 import {HeadersService} from "../headers.service";
-import {Result} from "../../model/result.model";
-
 
 @Injectable()
-export class ResultService {
+export class NodeService {
 
-  private executionURL: string;
+  private nodesURL: string;
 
   constructor(private http: Http) {
-    this.executionURL = Constraints.baseURL + Constraints.executions;
+    this.nodesURL = Constraints.baseURL + Constraints.nodes;
   }
 
-  getAll(id: string): Observable<Result[]> {
-    return this.http
-      .get(this.executionURL + id + Constraints.separator + Constraints.results, {headers: HeadersService.prepareHeaders()})
-      .map(ResultService.extractData)
-      .catch(ResultService.handleError)
+  getAll(): Observable<string[]> {
+    return this.http.get(this.nodesURL, {headers: HeadersService.prepareHeaders()})
+        .map(NodeService.extractData)
+        .catch(NodeService.handleError)
   }
 
   private static extractData(res: Response) {
@@ -33,6 +30,4 @@ export class ResultService {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);
   }
-
 }
-

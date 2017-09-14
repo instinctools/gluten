@@ -11,40 +11,34 @@ import {HeadersService} from "../headers.service";
 @Injectable()
 export class ExecutionService {
 
-  private executionURL: string;
+    private executionURL: string;
 
-  constructor(private http: Http) {
-    this.executionURL = Constraints.baseURL + Constraints.executionURL;
-  }
+    constructor(private http: Http) {
+        this.executionURL = Constraints.baseURL + Constraints.executions;
+    }
 
-  getAll(): Observable<Execution[]> {
-    return this.http.get(this.executionURL, {headers: HeadersService.prepareHeaders()})
-      .map(ExecutionService.extractData)
-      .catch(ExecutionService.handleError)
-  }
+    getAll(offset: number): Observable<Execution[]> {
+        return this.http
+            .post(this.executionURL, offset, {headers: HeadersService.prepareHeaders()})
+            .map(ExecutionService.extractData)
+            .catch(ExecutionService.handleError)
+    }
 
-  startExecution(id: number): Observable<any> {
-    return this.http
-      .post(this.executionURL, id, {headers: HeadersService.prepareHeaders()})
-      .map(ExecutionService.extractData)
-      .catch(ExecutionService.handleError);
-  }
+    stopExecution(id: string): Observable<any> {
+        return this.http
+            .post(this.executionURL + id + Constraints.separator + Constraints.stopExecution, {headers: HeadersService.prepareHeaders()})
+            .map(ExecutionService.extractData)
+            .catch(ExecutionService.handleError);
+    }
 
-  stopExecution(id: number): Observable<any> {
-    return this.http
-      .post(this.executionURL + id + Constraints.separator + Constraints.stopExecution, {headers: HeadersService.prepareHeaders()})
-      .map(ExecutionService.extractData)
-      .catch(ExecutionService.handleError);
-  }
+    private static extractData(res: Response) {
+        console.log(res.json());
+        return res.json();
+    }
 
-  private static extractData(res: Response) {
-    console.log(res.json());
-    return res.json();
-  }
-
-  private static handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
-  }
+    private static handleError(error: any): Promise<any> {
+        console.error('An error occurred', error);
+        return Promise.reject(error.message || error);
+    }
 
 }

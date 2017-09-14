@@ -7,9 +7,7 @@ import (
 	"bitbucket.org/instinctools/gluten/master/backend/migration"
 	"bitbucket.org/instinctools/gluten/master/backend/rest"
 	"bitbucket.org/instinctools/gluten/master/backend/rpc"
-	"bitbucket.org/instinctools/gluten/master/backend/service"
 	"bitbucket.org/instinctools/gluten/shared/logging"
-	"bitbucket.org/instinctools/gluten/shared/persistence/gorm"
 	"github.com/spf13/cobra"
 )
 
@@ -37,9 +35,8 @@ var RootCmd = &cobra.Command{
 		if rpcPort == 0 || webPort == 0 {
 			os.Exit(1)
 		} else {
-			exec_repo := gorm.NewGormExecutionsRepo(ctx.GlobalContext.AppConfig.DB.Connection.URL)
-			exec_service := service.NewExecutionService(runner, exec_repo)
-			go rpc.LaunchRpcServer(exec_service, rpcPort)
+			//TODO - move ports to configs
+			rpc.NewRpcServer(ctx.GlobalContext.ExecutionService, ctx.GlobalContext.NodeStore, rpcPort)
 			logging.WithFields(logging.Fields{"port": rpcPort}).Error("Rpc server has been successfully started on port")
 			rest.LaunchWebServer(webPort)
 		}

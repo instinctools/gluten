@@ -32,21 +32,23 @@ func NewRpcServer(execService *service.ExecutionService, nodeStore *node_store.N
 }
 
 func (rpc *RpcServer) startListening() {
-	lis, err := net.Listen("tcp", ":"+strconv.Itoa(rpc.port))
-	if err != nil {
-		logging.WithFields(logging.Fields{
-			"error": err,
-		}).Error("Error during starting rpc server")
-	}
-	s := grpc.NewServer()
-	pb_cli.RegisterProtoServiceServer(s, rpc)
-	pb_slave.RegisterProtoServiceServer(s, rpc)
-	reflection.Register(s)
-	if err := s.Serve(lis); err != nil {
-		logging.WithFields(logging.Fields{
-			"error": err,
-		}).Error("Error during serving")
-	}
+	go func() {
+		lis, err := net.Listen("tcp", ":"+strconv.Itoa(rpc.port))
+		if err != nil {
+			logging.WithFields(logging.Fields{
+				"error": err,
+			}).Error("Error during starting rpc server")
+		}
+		s := grpc.NewServer()
+		pb_cli.RegisterProtoServiceServer(s, rpc)
+		pb_slave.RegisterProtoServiceServer(s, rpc)
+		reflection.Register(s)
+		if err := s.Serve(lis); err != nil {
+			logging.WithFields(logging.Fields{
+				"error": err,
+			}).Error("Error during serving")
+		}
+	}()
 }
 
 func (s *RpcServer) SayHello(ctx context.Context, in *pb_slave.Request) (*pb_slave.Response, error) {
@@ -55,7 +57,6 @@ func (s *RpcServer) SayHello(ctx context.Context, in *pb_slave.Request) (*pb_sla
 }
 
 func (s *RpcServer) SendConfig(ctx context.Context, in *pb_cli.Project) (*pb_cli.ResponseMessage, error) {
-	service.AddProject(utils.ParseProto2Project(in))
-	s.execService.ExecuteProject(service.GetByName(in.Name))
+	s.execService.ExecuteProject(utils.ParseProto2Project(in))
 	return &pb_cli.ResponseMessage{Message: "Project accepted & launched"}, nil
 }

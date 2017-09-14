@@ -30,7 +30,6 @@ func overrideConfig() {
 	if rpcPort > 0 {
 		conf.RpcPort = rpcPort
 	}
-
 }
 
 var RootCmd = &cobra.Command{

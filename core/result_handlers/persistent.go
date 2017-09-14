@@ -14,6 +14,6 @@ func NewPersistentResultHandler(resultRepo persistence.ResultRepo) *PersistentRe
 		resultRepo: resultRepo}
 }
 
-func (h PersistentResultHandler) Handle(result core.StepResult) {
+func (h PersistentResultHandler) Handle(result *core.StepResult) {
 	h.resultRepo.Create(result)
 }
